@@ -33,6 +33,7 @@ const translations = {
 let language = localStorage.getItem("mm_language") || "es";
 let patientCountry = localStorage.getItem("mm_country") || "ES";
 const t = text => fixDisplayText(language === "en" ? (translations[text] || text) : text);
+const uiText = (es,en) => language === "en" ? en : es;
 
 function decodeMojibakeOnce(value){
   const text=String(value||"");
@@ -393,15 +394,15 @@ async function enterAuthenticatedUser(user){
     profile=snap.data();
   }catch(error){
     state.user=null;
-    return {ok:false,message:"Has iniciado sesiÃ³n, pero no se pudo leer la aprobaciÃ³n del usuario. Prueba a borrar cach? o entra en una ventana de inc?gnito."};
+    return {ok:false,message:uiText("Has iniciado sesi\u00f3n, pero no se pudo leer la aprobaci\u00f3n del usuario. Prueba a borrar cach\u00e9 o entra en una ventana de inc\u00f3gnito.","You signed in, but the user approval could not be read. Try clearing the cache or using an incognito window.")};
   }
-  if(!profile){await fb.signOut(fb.auth);return {ok:false,message:"No se encontr? el perfil de esta cuenta."};}
+  if(!profile){await fb.signOut(fb.auth);return {ok:false,message:uiText("No se encontr\u00f3 el perfil de esta cuenta.","The profile for this account was not found.")};}
   if(profile.status!=="approved"){
-    const message=profile.status==="blocked"?"Tu cuenta estÃ¡ bloqueada. Contacta con el administrador.":"Tu solicitud todavÃ­a no ha sido aprobada.";
+    const message=profile.status==="blocked"?uiText("Tu cuenta est\u00e1 bloqueada. Contacta con el administrador.","Your account is blocked. Contact the administrator."):uiText("Tu solicitud todav\u00eda no ha sido aprobada.","Your request has not been approved yet.");
     await fb.signOut(fb.auth);return {ok:false,message};
   }
   if(profile.role==="admin"){
-    state.user=null;await fb.signOut(fb.auth);return {ok:false,message:"Esta cuenta es de administraci?n. Entra desde la web de administrador."};
+    state.user=null;await fb.signOut(fb.auth);return {ok:false,message:uiText("Esta cuenta es de administraci\u00f3n. Entra desde la web de administrador.","This is an administrator account. Sign in from the administrator website.")};
   }
   state.user={uid:user.uid,email:user.email,...profile};
   if(["es","en"].includes(profile.preferredLanguage)){language=profile.preferredLanguage;localStorage.setItem("mm_language",language)}
@@ -661,7 +662,7 @@ function friendlyOcrError(error){
 }
 async function renderOcrCandidates(candidates,rawText=""){
   const container=$("#ocrCandidates"),status=$("#ocrStatus");
-  status.textContent=patientCountry==="GB"?"Revisa el nombre en la MHRA.":t("Comprobando el nombre en CIMA?â‚¬?");
+  status.textContent=patientCountry==="GB"?uiText("Revisa el nombre en la MHRA.","Check the name in MHRA."):uiText("Comprobando el nombre en CIMA\u2026","Checking the name in CIMA\u2026");
   if(patientCountry==="GB")candidates=candidates.map(candidate=>({...candidate,ocrName:candidate.name,name:candidate.name||"",cimaId:"",dose:"",frequency:"",duration:"",times:[],instructions:""}));
   else{
     const terms=[...new Set([
@@ -761,7 +762,7 @@ $("#medicineSearch").oninput=event=>{
   const query=event.target.value.trim(),status=$("#medicineSearchStatus"),results=$("#medicineSearchResults");
   results.innerHTML="";
   if(query.length<3){status.textContent=t("Escribe al menos 3 letras.");return}
-  status.textContent=patientCountry==="GB"?t("Comprobando en la MHRA?â‚¬?"):t("Buscando en la AEMPS?â‚¬?");
+  status.textContent=patientCountry==="GB"?uiText("Comprobando en la MHRA\u2026","Checking MHRA\u2026"):uiText("Buscando en la AEMPS\u2026","Searching AEMPS\u2026");
   medicineSearchTimer=setTimeout(()=>searchOfficialMedicine(query),350);
 };
 function searchOfficialMedicine(query){return patientCountry==="GB"?searchMhra(query):searchCima(query)}
@@ -791,7 +792,7 @@ async function searchCima(query){
     status.textContent=items.length?t(`${items.length} resultados oficiales`):t("No se encontraron medicamentos.");
     results.innerHTML=items.map((item,index)=>`<button class="search-result" data-result="${index}"><b>${safe(item.nombre)}</b><small>${safe(item.pactivos||"")}${item.labtitular?` ? ${safe(item.labtitular)}`:""}</small></button>`).join("");
     $$('[data-result]',results).forEach(button=>button.onclick=()=>selectCimaMedicine(items[Number(button.dataset.result)]));
-  }catch(error){if(error.name==="AbortError")return;status.innerHTML=`${t("No se pudo consultar CIMA en este momento.")} <a target="_blank" rel="noopener" href="https://cima.aemps.es/cima/publico/home.html">${t("Abrir buscador oficial")}</a>`}
+  }catch(error){if(error.name==="AbortError")return;status.innerHTML=`${uiText("No se pudo consultar CIMA en este momento.","CIMA could not be reached right now.")} <a target="_blank" rel="noopener" href="https://cima.aemps.es/cima/publico/home.html">${t("Abrir buscador oficial")}</a>`}
 }
 async function selectCimaMedicine(item){
   const panel=$("#medicineSearchPanel"),selected=$("#selectedMedicine");
@@ -864,23 +865,23 @@ async function validateCimaName(form,focusOnError=true){
   if(patientCountry==="GB"){
     const name=form.name.value.trim();
     if(name.length>=3&&form.officialSource.value==="MHRA"){showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${name}`);return true}
-    showCimaValidation("invalid","Comprueba el medicamento en MHRA y pulsa Â«Usar este nombreÂ».");if(focusOnError)form.name.focus();return false;
+    showCimaValidation("invalid",uiText("Comprueba el medicamento en MHRA y pulsa \u00abUsar este nombre\u00bb.","Check the medicine in MHRA and tap \u201cUse this name\u201d."));if(focusOnError)form.name.focus();return false;
   }
-  const name=form.name.value.trim();if(name.length<3){form.cimaId.value="";showCimaValidation("invalid",t("No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre."));if(focusOnError)form.name.focus();return false}
+  const name=form.name.value.trim();if(name.length<3){form.cimaId.value="";showCimaValidation("invalid",uiText("No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre.","No reliable match was found in CIMA. Check the name."));if(focusOnError)form.name.focus();return false}
   if(form.cimaId.value){showCimaValidation("valid",t("Medicamento verificado en CIMA"));return true}
-  showCimaValidation("checking",t("Comprobando el nombre en CIMA?â‚¬?"));
-  try{const match=await lookupCimaMatch(name);if(form.name.value.trim()!==name)return false;if(!match){form.name.value="";form.cimaId.value="";form.activeIngredient.value="";showCimaValidation("invalid",t("No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre."));if(focusOnError)form.name.focus();return false}form.name.value=match.nombre;form.cimaId.value=match.nregistro||"";form.activeIngredient.value=match.pactivos||"";showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${match.nombre}`);return true}catch(error){showCimaValidation("invalid",t("No se pudo consultar CIMA. IntÃ©ntalo de nuevo."));if(focusOnError)form.name.focus();return false}
+  showCimaValidation("checking",uiText("Comprobando el nombre en CIMA\u2026","Checking the name in CIMA\u2026"));
+  try{const match=await lookupCimaMatch(name);if(form.name.value.trim()!==name)return false;if(!match){form.name.value="";form.cimaId.value="";form.activeIngredient.value="";showCimaValidation("invalid",uiText("No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre.","No reliable match was found in CIMA. Check the name."));if(focusOnError)form.name.focus();return false}form.name.value=match.nombre;form.cimaId.value=match.nregistro||"";form.activeIngredient.value=match.pactivos||"";showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${match.nombre}`);return true}catch(error){showCimaValidation("invalid",uiText("No se pudo consultar CIMA. Int\u00e9ntalo de nuevo.","CIMA could not be reached. Try again."));if(focusOnError)form.name.focus();return false}
 }
 let cimaNameTimer,cimaNameController;
 function clearCimaNameSuggestions(){clearTimeout(cimaNameTimer);cimaNameController?.abort();$("#cimaNameSuggestions").innerHTML=""}
 async function loadCimaNameSuggestions(query,form){
-  const suggestions=$("#cimaNameSuggestions");cimaNameController=new AbortController();showCimaValidation("checking",t("Comprobando el nombre en CIMA?â‚¬?"));
+  const suggestions=$("#cimaNameSuggestions");cimaNameController=new AbortController();showCimaValidation("checking",uiText("Comprobando el nombre en CIMA\u2026","Checking the name in CIMA\u2026"));
   if(patientCountry==="GB"){
     showCimaValidation("checking",t("Comprueba el nombre en el registro oficial brit?nico."));
     suggestions.innerHTML=`<div class="cima-no-results"><a class="secondary" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(query)}">${language==="en"?`Search ?â‚¬Å“${safe(query)}?â‚¬? in MHRA ?â€ â€”`:`Buscar ?${safe(query)}? en MHRA ?â€ â€”`}</a><button class="primary" type="button" data-confirm-mhra-name>${t("Usar este nombre")}</button></div>`;
     $("[data-confirm-mhra-name]",suggestions).onclick=()=>{form.officialSource.value="MHRA";clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${query}`);form.dose.focus()};return;
   }
-  try{const response=await fetch(`https://cima.aemps.es/cima/rest/medicamentos?nombre=${encodeURIComponent(query)}&autorizados=1&comerc=1`,{signal:cimaNameController.signal});if(!response.ok)throw new Error("CIMA");const data=await response.json();if(form.name.value.trim()!==query)return;const items=(data.resultados||[]).slice(0,6);showCimaValidation("","");suggestions.innerHTML=items.map((item,index)=>`<button type="button" role="option" data-cima-name-result="${index}"><b>${safe(item.nombre)}</b><small>${safe(item.pactivos||"")}${item.labtitular?` ? ${safe(item.labtitular)}`:""}</small></button>`).join("")||`<div class="cima-no-results">${t("No se encontraron medicamentos.")}</div>`;$$('[data-cima-name-result]',suggestions).forEach(button=>button.onclick=async()=>{const item=items[Number(button.dataset.cimaNameResult)];form.name.value=item.nombre||"";form.cimaId.value=item.nregistro||"";form.officialSource.value="CIMA";form.activeIngredient.value=item.pactivos||"";form.medicineImageUrl.value="";try{const detailResponse=await fetch(`https://cima.aemps.es/cima/rest/medicamento?nregistro=${encodeURIComponent(item.nregistro)}`);if(detailResponse.ok){const detail=await detailResponse.json();form.medicineImageUrl.value=findCimaPhoto(detail)||"";form.activeIngredient.value=detail.pactivos||form.activeIngredient.value}}catch(error){}clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${item.nombre}`);form.dose.focus()})}catch(error){if(error.name==="AbortError")return;showCimaValidation("invalid",t("No se pudo consultar CIMA. IntÃ©ntalo de nuevo."));suggestions.innerHTML=""}
+  try{const response=await fetch(`https://cima.aemps.es/cima/rest/medicamentos?nombre=${encodeURIComponent(query)}&autorizados=1&comerc=1`,{signal:cimaNameController.signal});if(!response.ok)throw new Error("CIMA");const data=await response.json();if(form.name.value.trim()!==query)return;const items=(data.resultados||[]).slice(0,6);showCimaValidation("","");suggestions.innerHTML=items.map((item,index)=>`<button type="button" role="option" data-cima-name-result="${index}"><b>${safe(item.nombre)}</b><small>${safe(item.pactivos||"")}${item.labtitular?` ? ${safe(item.labtitular)}`:""}</small></button>`).join("")||`<div class="cima-no-results">${uiText("No se encontraron medicamentos.","No medicines found.")}</div>`;$$('[data-cima-name-result]',suggestions).forEach(button=>button.onclick=async()=>{const item=items[Number(button.dataset.cimaNameResult)];form.name.value=item.nombre||"";form.cimaId.value=item.nregistro||"";form.officialSource.value="CIMA";form.activeIngredient.value=item.pactivos||"";form.medicineImageUrl.value="";try{const detailResponse=await fetch(`https://cima.aemps.es/cima/rest/medicamento?nregistro=${encodeURIComponent(item.nregistro)}`);if(detailResponse.ok){const detail=await detailResponse.json();form.medicineImageUrl.value=findCimaPhoto(detail)||"";form.activeIngredient.value=detail.pactivos||form.activeIngredient.value}}catch(error){}clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${item.nombre}`);form.dose.focus()})}catch(error){if(error.name==="AbortError")return;showCimaValidation("invalid",uiText("No se pudo consultar CIMA. Int\u00e9ntalo de nuevo.","CIMA could not be reached. Try again."));suggestions.innerHTML=""}
 }
 $("[name=name]",$("#medicineForm")).addEventListener("input",event=>{const form=event.currentTarget.form,query=event.currentTarget.value.trim();form.cimaId.value="";form.officialSource.value="";form.activeIngredient.value="";showCimaValidation("","");clearCimaNameSuggestions();if(query.length<3)return;cimaNameTimer=setTimeout(()=>loadCimaNameSuggestions(query,form),300)});
 function discardMedicineDraft(){
@@ -962,15 +963,15 @@ $("#registerForm").onsubmit=async e=>{
 };
 $("#loginForm").onsubmit=async e=>{
   e.preventDefault();const form=e.target,data=Object.fromEntries(new FormData(form)),status=$(".form-status",form),submit=$("button[type=submit]",form);
-  status.textContent="Comprobando usuario y contraseÃ±a?â‚¬?";submit.disabled=true;
+  status.textContent=uiText("Comprobando usuario y contrase\u00f1a\u2026","Checking email and password\u2026");submit.disabled=true;
   try{
     if(fb){
       userLoginInProgress=true;
       state.user=null;
-      status.textContent="Conectando con Firebase?â‚¬?";
+      status.textContent=uiText("Conectando con Firebase\u2026","Connecting to Firebase\u2026");
       if(fb.auth.currentUser&&fb.auth.currentUser.email?.toLowerCase()!==String(data.email||"").toLowerCase())await fb.signOut(fb.auth);
       const credential=await fb.signInWithEmailAndPassword(fb.auth,data.email,data.password);
-      status.textContent="Cuenta encontrada. Comprobando aprobaciÃ³n?â‚¬?";
+      status.textContent=uiText("Cuenta encontrada. Comprobando aprobaci\u00f3n\u2026","Account found. Checking approval\u2026");
       const result=await enterAuthenticatedUser(credential.user);
       if(result.ok){clearLoginError();form.closest("dialog").close();form.reset();status.textContent="";openView("today");setTimeout(()=>{if(state.user)openView("today")},300);}
       else{const message=result.message||"No se pudo completar el acceso.";rememberLoginError(message);status.textContent=message;if(!form.closest("dialog").open)openDialogById("loginDialog");}
@@ -1004,7 +1005,13 @@ $("#forgotPasswordButton")?.addEventListener("click",async()=>{
 });
 $$('[data-user-logout]').forEach(button=>button.onclick=async()=>{button.disabled=true;try{closePreferences();if(fb)await fb.signOut(fb.auth);state.user=null;showLanding()}finally{button.disabled=false}});
 $("#adminLogoutButton").onclick=async()=>{if(fb)await fb.signOut(fb.auth);state.user=null;showLanding()};
-function humanError(code){return code==="demo-blocked"?"Tu cuenta estÃ¡ bloqueada.":code==="demo-pending"?"Tu alta todavÃ­a estÃ¡ pendiente de aprobaciÃ³n.":code?.includes("invalid-credential")?"Correo o contraseÃ±a incorrectos.":code?.includes("email-already")?"Ya existe una cuenta con ese correo.":"No se pudo completar la operaciÃ³n. IntÃ©ntalo de nuevo."}
+function humanError(code){
+  return code==="demo-blocked"?uiText("Tu cuenta est\u00e1 bloqueada.","Your account is blocked."):
+    code==="demo-pending"?uiText("Tu alta todav\u00eda est\u00e1 pendiente de aprobaci\u00f3n.","Your registration is still awaiting approval."):
+    code?.includes("invalid-credential")?uiText("Correo o contrase\u00f1a incorrectos.","Incorrect email or password."):
+    code?.includes("email-already")?uiText("Ya existe una cuenta con ese correo.","An account with that email already exists."):
+    uiText("No se pudo completar la operaci\u00f3n. Int\u00e9ntalo de nuevo.","The operation could not be completed. Try again.");
+}
 
 localStorage.removeItem("mm_font");document.body.classList.remove("font-large","font-xlarge");document.documentElement.style.fontSize="";setHighContrast(localStorage.getItem("mm_contrast")==="true",false);
 setPatientCountry(patientCountry,false);
