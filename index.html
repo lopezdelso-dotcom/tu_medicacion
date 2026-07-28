@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fbfaf5">
+  <meta name="description" content="Mi MedicaciÃƒÂ³n: organiza y confirma tus tratamientos de forma sencilla.">
+  <title>Mi MedicaciÃƒÂ³n</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260727-79">
+  <link rel="stylesheet" href="mobile.css?v=20260727-79">
+  <link rel="stylesheet" href="admin.css?v=20260727-79">
+  <link rel="stylesheet" href="supervisor.css?v=20260727-79">
+  <link rel="stylesheet" href="user-controls.css?v=20260727-79">
+  <link rel="stylesheet" href="selection-flow.css?v=20260727-79">
+  <link rel="stylesheet" href="ocr.css?v=20260727-79">
+  <link rel="stylesheet" href="medication.css?v=20260727-79">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Mi MedicaciÃƒÂ³n, inicio">
+      <span><b>Mi MedicaciÃƒÂ³n</b></span>
+    </a>
+    <div class="header-tools">
+      <button class="language direct-language active" data-language="es" aria-label="Castellano" aria-pressed="true" type="button"><span>ES</span></button>
+      <button class="language direct-language" data-language="en" aria-label="English" aria-pressed="false" type="button"><span>EN</span></button>
+    </div>
+  </header>
+
+  <div id="preferencesBackdrop" class="preferences-backdrop" hidden aria-hidden="true"></div>
+  <aside id="preferencesPanel" class="accessibility preferences-panel" hidden aria-label="Preferencias">
+    <button id="closePreferencesButton" class="close icon-close preferences-close" type="button" aria-label="Cerrar">?Ã¢â‚¬â€</button>
+    <strong>Idioma</strong>
+    <div class="language-picker preference-options" role="group" aria-label="Seleccionar idioma / Choose language">
+      <button class="language active" data-language="es" aria-label="Cambiar a castellano" aria-pressed="true" title="Castellano"><span>Castellano</span></button>
+      <button class="language" data-language="en" aria-label="Switch to English" aria-pressed="false" title="English"><span>English</span></button>
+    </div>
+    <label class="toggle user-preference-only"><input id="contrastToggle" type="checkbox"> Alto contraste</label>
+    <strong class="user-preference-only">PaÃƒÂ­s del paciente</strong>
+    <div class="country-picker preference-options user-preference-only" role="group" aria-label="PaÃƒÂ­s del paciente">
+      <button type="button" data-country="ES" aria-pressed="true"><span aria-hidden="true">????</span> Espa?a</button>
+      <button type="button" data-country="GB" aria-pressed="false"><span aria-hidden="true">????</span> Reino Unido</button>
+    </div>
+  </aside>
+
+  <main id="contenido">
+    <section id="landing" class="landing">
+      <div class="hero-copy">
+        <span class="eyebrow">HECHO PARA TI</span>
+        <h1>Tu Medicacion,<br><em>clara y a mano.</em></h1>
+        <p>Guarda tus medicamentos, revisa cuÃƒÂ¡ndo tomar cada medicina y consulta informaciÃƒÂ³n oficial con tranquilidad.</p>
+        <div class="actions">
+          <button class="primary" data-open="registerDialog">Darse de alta</button>
+          <button class="secondary" type="button" data-open="loginDialog" onclick="document.body.classList.add('modal-open');document.getElementById('loginDialog').showModal()">Ya tengo cuenta</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="appView" class="app-view user-area" hidden>
+      <header class="user-header">
+        <button id="openUserMenu" class="user-menu-open" type="button" aria-label="MenÃƒÂº" aria-expanded="false" aria-controls="userMenu"><span aria-hidden="true">?Ã‹Å“?</span><span>MenÃƒÂº</span></button>
+        <img src="app-icon.png?v=20260727-79" alt="Tu Medicacion" class="user-header-icon">
+      </header>
+      <div class="user-shell">
+        <div id="userMenuOverlay" class="user-menu-overlay" hidden></div>
+        <nav id="userMenu" class="user-menu" aria-label="Secciones principales">
+          <div class="user-menu-profile">
+            <button id="closeUserMenu" class="menu-close-button" type="button" aria-label="Cerrar menÃƒÂº"></button>
+            <div class="menu-avatar-row">
+              <div class="avatar menu-avatar" id="menuUserPhoto" aria-hidden="true">+</div>
+              <div><b id="menuUserName">Usuario</b><small id="menuUserEmail">Modo demostraci?Ã†â€™?n</small></div>
+            </div>
+          </div>
+          <button data-view="medicines"><span aria-hidden="true">??</span>Medicaci?n</button>
+          <button class="active" data-view="today"><span aria-hidden="true">?</span>Tomas</button>
+          <button data-view="sideEffects"><span aria-hidden="true">&#9432;</span>Consultar efectos secundarios</button>
+          <button data-view="profile"><span aria-hidden="true">+</span>Editar perfil</button>
+          <button id="userAccessibilityButton" type="button" aria-expanded="false" aria-controls="preferencesPanel"><span aria-hidden="true">&#9881;</span>Preferencias</button>
+          <button id="logoutButton" class="logout-menu" data-user-logout><span aria-hidden="true">&#8592;</span>Cerrar sesiÃ³n</button>
+        </nav>
+        <main class="user-content">
+          <div id="today" class="view active-view">
+            <div class="today-toolbar">
+              <button id="previousDayButton" class="secondary day-nav-button" type="button" aria-label="D?a anterior">?</button>
+              <div class="today-heading"><p class="eyebrow" id="todayDate"></p><h1 id="todayTitle">Tomas de hoy</h1></div>
+              <button id="nextDayButton" class="secondary day-nav-button" type="button" aria-label="D?a siguiente">?</button>
+            </div>
+            <button id="calendarButton" class="secondary wide calendar-button" type="button">?? Ver semana completa</button>
+            <input id="calendarDateInput" class="calendar-date-input" type="date" aria-label="Elegir fecha">
+            <div id="schedule" class="today-schedule"></div>
+            <section id="weekCalendarPanel" class="week-calendar-panel" hidden aria-label="Calendario semanal de tomas">
+              <button id="closeWeekCalendarButton" class="secondary medicine-back-button" type="button">? Atr?s</button>
+              <div class="week-calendar-toolbar">
+                <button id="previousWeekButton" class="secondary week-nav-button week-nav-prev" type="button" aria-label="Semana anterior"></button>
+                <div class="week-calendar-heading">
+                  <p class="eyebrow">Calendario semanal</p>
+                  <h2 id="weekCalendarTitle">Semana</h2>
+                </div>
+                <button id="nextWeekButton" class="secondary week-nav-button week-nav-next" type="button" aria-label="Semana siguiente"></button>
+              </div>
+              <div id="weekCalendarDays" class="week-calendar-days"></div>
+              <div id="weekCalendarLegend" class="week-calendar-legend"></div>
+            </section>
+          </div>
+          <div id="medicines" class="view" hidden>
+            <div class="medicines-heading"><button class="primary add-medicine-button" data-view-button="documents">+ AÃƒÂ±adir nuevo medicamento</button><p class="lead">Resumen de todos los tratamientos que tomas.</p></div>
+            <div id="medicineList" class="card-list"></div>
+            <article id="medicineDetail" class="medicine-detail" hidden></article>
+          </div>
+          <div id="documents" class="view" hidden>
+        <button id="changeMethodButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
+        <p class="lead">Elige cÃƒÂ³mo quieres aÃƒÂ±adir la medicaciÃƒÂ³n.</p>
+        <div class="medication-methods" role="group" aria-label="Forma de aÃƒÂ±adir medicaciÃƒÂ³n">
+          <button class="method-card" data-medication-mode="upload"><span aria-hidden="true">??</span><b>Fotografiar medicamento</b><small>Haz una foto de la caja o el envase</small></button>
+          <button class="method-card" data-medication-mode="search"><span aria-hidden="true">??</span><b>Buscar un medicamento</b><small id="officialSearchMethodNote">Consulta la fuente oficial de medicamentos</small></button>
+        </div>
+        <div id="medicineSearchPanel" class="medicine-search-panel" hidden>
+          <label for="medicineSearch"><b>Nombre del medicamento</b><input id="medicineSearch" type="search" autocomplete="off" placeholder="Escribe al menos 3 letras"></label>
+          <p id="officialMedicineSourceNote" class="source-note">Resultados oficiales de CIMA ? Agencia Espa?ola de Medicamentos y Productos Sanitarios</p>
+          <div id="medicineSearchStatus" role="status" aria-live="polite"></div>
+          <div id="medicineSearchResults" class="search-results"></div>
+          <div id="selectedMedicine" class="selected-medicine" hidden></div>
+        </div>
+        <label id="uploadChoice" class="upload-zone" for="documentInput" hidden>
+          <span aria-hidden="true">??</span><b>Hacer foto o elegir archivo</b>
+          <small>JPG, PNG o PDF Ã‚Â· mÃƒÂ¡ximo 10 MB</small>
+        </label>
+        <input id="documentInput" class="sr-only" type="file" accept="image/*" capture="environment">
+        <div id="reviewPanel" class="review-panel" hidden>
+          <div id="documentPreview" class="document-preview" aria-label="Vista previa del documento"></div>
+          <div id="ocrStatus" class="ocr-status" role="status" aria-live="polite"></div>
+          <div id="ocrCandidates" class="ocr-candidates" hidden></div>
+          <div class="notice warning"><b>Medicamento encontrado</b><br>Confirma si coincide con el medicamento fotografiado.</div>
+          <form id="medicineForm">
+            <input name="cimaId" type="hidden">
+            <input name="officialSource" type="hidden">
+            <input name="medicineImageUrl" type="hidden">
+            <input name="activeIngredient" type="hidden">
+            <label class="medicine-identity-field">Nombre del medicamento<input name="name" required autocomplete="off"></label>
+            <div id="cimaValidationStatus" class="cima-validation" role="status" aria-live="polite"></div>
+            <div id="cimaNameSuggestions" class="cima-name-suggestions" role="listbox" aria-label="Sugerencias oficiales de CIMA"></div>
+            <label class="medicine-identity-field">Dosis (si aparece)<input name="dose" placeholder="Ej.: 10 mg"></label>
+            <input name="time" type="hidden">
+            <input name="instructions" type="hidden">
+            <div id="scheduleWizard" class="schedule-wizard">
+              <button id="scheduleBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
+              <section class="schedule-step active" data-schedule-step="frequency">
+                <h2>Frecuencia de administraci&oacute;n</h2>
+                <div class="choice-grid">
+                  <button type="button" class="method-card" data-frequency="daily"><b>De lunes a domingo</b></button>
+                  <button type="button" class="method-card" data-frequency="custom"><b>Algunos d&iacute;as</b></button>
+                </div>
+                <button id="goFrequencyNextStep" class="primary wide" type="button" disabled>Continuar</button>
+              </section>
+              <section class="schedule-step" data-schedule-step="days" hidden>
+                <h2>&iquest;Qu&eacute; d&iacute;as lo tomas?</h2>
+                <div id="weekdayPicker" class="weekday-picker" hidden>
+                  <label><input type="checkbox" name="days" value="mon">Lunes</label>
+                  <label><input type="checkbox" name="days" value="tue">Martes</label>
+                  <label><input type="checkbox" name="days" value="wed">Mi&eacute;rcoles</label>
+                  <label><input type="checkbox" name="days" value="thu">Jueves</label>
+                  <label><input type="checkbox" name="days" value="fri">Viernes</label>
+                  <label><input type="checkbox" name="days" value="sat">S&aacute;bado</label>
+                  <label><input type="checkbox" name="days" value="sun">Domingo</label>
+                </div>
+                <button id="goMealsStep" class="primary wide" type="button" disabled>Continuar</button>
+              </section>
+              <section class="schedule-step" data-schedule-step="meals" hidden>
+                <h2>&iquest;Cu&aacute;ndo lo tomas?</h2>
+                <div class="meal-picker compact-meal-picker">
+                  <label class="meal-time-row" data-meal-row="breakfast"><span class="meal-choice"><input type="checkbox" name="meals" value="breakfast">Desayuno</span><span class="time-stepper" data-time-stepper="breakfast" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>08</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
+                  <label class="meal-time-row" data-meal-row="lunch"><span class="meal-choice"><input type="checkbox" name="meals" value="lunch">Comida</span><span class="time-stepper" data-time-stepper="lunch" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>14</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
+                  <label class="meal-time-row" data-meal-row="dinner"><span class="meal-choice"><input type="checkbox" name="meals" value="dinner">Cena</span><span class="time-stepper" data-time-stepper="dinner" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>21</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
+                  <label class="meal-time-row" data-meal-row="extra"><span class="meal-choice"><input type="checkbox" name="meals" value="extra">Toma adicional</span><span class="time-stepper" data-time-stepper="extra" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>12</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
+                </div>
+                <button id="goPosologyStep" class="primary wide" type="button" disabled>Continuar</button>
+              </section>
+              <section class="schedule-step" data-schedule-step="posology" hidden>
+                <h2>Posolog&iacute;a</h2>
+                <div class="posology-grid">
+                  <label>Cantidad<input name="doseAmount" type="number" inputmode="decimal" min="0" step="0.5" placeholder="1"></label>
+                  <label>Unidad<select name="doseUnit"></select></label>
+                </div>
+                <button id="goCommentsStep" class="primary wide" type="button">Continuar</button>
+              </section>
+              <section class="schedule-step" data-schedule-step="comments" hidden>
+                <h2>Comentarios</h2>
+                <label class="comments-field">Notas opcionales<textarea name="comments" rows="4" placeholder="Ej.: tomar con agua"></textarea></label>
+              </section>
+            </div>
+            <label class="schedule-date-field">Fecha de inicio<input name="startDate" required type="date"></label>
+            <label class="schedule-date-field">Fecha de fin (opcional)<input name="endDate" type="date"></label>
+            <div class="medicine-form-actions">
+              <button class="primary" type="submit">Guardar medicamento</button>
+              <button id="discardMedicineButton" class="secondary" type="button">Descartar</button>
+            </div>
+          </form>
+        </div>
+          </div>
+          <div id="profile" class="view" hidden>
+            <h1>Modificar perfil</h1>
+            <form id="profileForm" class="panel profile-panel profile-edit-card">
+              <div class="profile-photo-editor">
+                <div id="editProfilePhotoPreview" class="profile-photo-preview add-photo-preview" aria-hidden="true">+</div>
+                <div class="profile-photo-actions">
+                  <b>A&ntilde;adir o cambiar foto</b>
+                  <div class="photo-choice-buttons">
+                    <label class="mini-photo-button" for="editProfilePhotoCameraInput" data-es="C&aacute;mara" data-en="Camera">C&aacute;mara</label>
+                    <label class="mini-photo-button" for="editProfilePhotoInput" data-es="Galer&iacute;a" data-en="Gallery">Galer&iacute;a</label>
+                  </div>
+                </div>
+                <input id="editProfilePhotoCameraInput" class="sr-only" name="editProfilePhotoCamera" type="file" accept="image/*" capture="user">
+                <input id="editProfilePhotoInput" class="sr-only" name="editProfilePhoto" type="file" accept="image/*">
+              </div>
+              <div class="form-grid">
+                <label>Nombre<input name="name" required autocomplete="given-name"></label>
+                <label>Apellidos<input name="lastName" required autocomplete="family-name"></label>
+                <label>Fecha de nacimiento<input name="birthDate" type="date" autocomplete="bday"></label>
+                <label>Tel&eacute;fono m&oacute;vil<input name="phone" type="tel" autocomplete="tel" inputmode="tel"></label>
+                <label class="full-field">Pa&iacute;s del paciente<select name="country" required><option value="ES">Espa&ntilde;a</option><option value="GB">Reino Unido</option></select></label>
+                <label class="full-field profile-readonly">Correo electr&oacute;nico<input id="profileEmailInput" name="email" type="email" readonly aria-describedby="profileEmailNote"><small id="profileEmailNote">El correo se usa para entrar y no se puede cambiar desde aqu&iacute;.</small></label>
+              </div>
+              <div class="dialog-actions profile-actions">
+                <button class="primary" type="submit">Guardar cambios</button>
+              </div>
+              <p class="form-status" role="status"></p>
+            </form>
+          </div>
+          <div id="sideEffects" class="view" hidden><h1>Consultar efectos secundarios</h1><p class="lead">Selecciona uno de tus medicamentos confirmados.</p><div class="notice warning effects-health-notice"><b>Informaci&oacute;n sanitaria oficial</b><br>Si tienes s&iacute;ntomas graves o inesperados, contacta con un profesional sanitario. En urgencias, llama al 112.</div><h2 class="effects-list-title">Mi medicaci&oacute;n</h2><div id="effectsStatus" role="status" aria-live="polite"></div><div id="effectsResults" class="effects-medicine-list"></div><article id="effectsDetail" class="effects-detail" hidden></article></div>
+        </main>
+      </div>
+    </section>
+    <section id="adminView" class="admin-view" hidden>
+      <header class="admin-header"><div><span class="admin-badge">ADMINISTRACI?N</span><h1>Panel de control</h1><p id="adminIdentity"></p></div><button id="adminLogoutButton" class="secondary">Cerrar sesi?n</button></header>
+      <div class="admin-layout">
+        <aside class="admin-sidebar"><b>Mi MedicaciÃƒÂ³n</b><button class="active">Solicitudes de alta</button><p>Esta ÃƒÂ¡rea estÃƒÂ¡ reservada exclusivamente para administradores.</p></aside>
+        <main class="admin-content"><div class="admin-title"><div><span class="eyebrow">GESTI?N DE USUARIOS</span><h2>Altas pendientes</h2><p>Comprueba los datos antes de aprobar una cuenta.</p></div><div class="admin-count"><strong id="pendingCount">0</strong><span>Pendientes</span></div></div><div id="requestList" class="card-list"></div></main>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="registerDialog" class="register-dialog">
+    <form id="registerForm" method="dialog">
+      <div class="login-dialog-header register-dialog-header">
+        <img src="app-icon.png?v=20260727-79" alt="Tu Medicacion" class="login-app-icon">
+        <button class="close icon-close" type="button" data-close aria-label="Cerrar">?</button>
+      </div>
+      <div class="profile-photo-field compact-profile-photo">
+        <div id="profilePhotoPreview" class="profile-photo-preview add-photo-preview" aria-hidden="true">+</div>
+        <div class="add-photo-copy">
+          <span class="add-photo-text" data-es="AÃƒÂ±adir foto (opcional)" data-en="Add photo (optional)">AÃƒÂ±adir foto (opcional)</span>
+          <div class="photo-choice-buttons">
+            <label class="mini-photo-button" for="profilePhotoCameraInput" data-es="C?mara" data-en="Camera">C?mara</label>
+            <label class="mini-photo-button" for="profilePhotoInput" data-es="Galer?a" data-en="Gallery">Galer?a</label>
+          </div>
+        </div>
+        <input id="profilePhotoCameraInput" class="sr-only" name="profilePhotoCamera" type="file" accept="image/*" capture="user">
+        <input id="profilePhotoInput" class="sr-only" name="profilePhoto" type="file" accept="image/*">
+      </div>
+      <div class="form-grid"><label>Nombre<input name="name" required autocomplete="given-name"></label><label>Apellidos<input name="lastName" required autocomplete="family-name"></label><label>Fecha de nacimiento<input name="birthDate" required type="date" autocomplete="bday"></label><label>TelÃƒÂ©fono mÃƒÂ³vil<input name="phone" required type="tel" autocomplete="tel" inputmode="tel"></label><label class="full-field">PaÃƒÂ­s del paciente<select name="country" required><option value="">Selecciona tu paÃƒÂ­s</option><option value="ES">EspaÃƒÂ±a</option><option value="GB">Reino Unido</option></select></label><label class="full-field">Correo electrÃƒÂ³nico<input name="email" required type="email" autocomplete="email"></label><label class="full-field">ContraseÃƒÂ±a<input name="password" required type="password" minlength="8" autocomplete="new-password"><small>MÃƒÂ­nimo 8 caracteres.</small></label></div>
+      <label class="confirm"><input name="privacy" required type="checkbox"> He leÃƒÂ­do y acepto la polÃƒÂ­tica de privacidad.</label><label class="confirm"><input name="healthConsent" required type="checkbox"> Consiento el tratamiento de mis datos de salud para prestar el servicio.</label>
+      <div class="dialog-actions"><button class="secondary" type="button" data-close>Cancelar</button><button class="primary" type="submit">Darme de alta</button></div><p class="form-status" role="status"></p>
+    </form>
+  </dialog>
+  <dialog id="loginDialog" class="login-dialog"><form id="loginForm">
+    <div class="login-dialog-header">
+      <img src="app-icon.png?v=20260727-79" alt="Tu Medicacion" class="login-app-icon">
+      <button class="close icon-close" type="button" data-close aria-label="Cerrar">?</button>
+    </div>
+    <label>Correo electrÃƒÂ³nico<input name="email" required type="email" autocomplete="email"></label>
+    <label>Contrase&ntilde;a<input name="password" required type="password" autocomplete="current-password"></label>
+    <button id="forgotPasswordButton" class="forgot-password-button" type="button">He olvidado mi contraseÃƒÂ±a</button>
+    <div class="dialog-actions"><button class="secondary" type="button" data-close>Cancelar</button><button class="primary" type="submit">Entrar</button></div>
+    <p class="form-status" role="status"></p>
+  </form></dialog>
+  <dialog id="resetPasswordDialog" class="login-dialog"><form id="resetPasswordForm">
+    <div class="login-dialog-header">
+      <img src="app-icon.png?v=20260727-79" alt="Tu Medicacion" class="login-app-icon">
+      <button class="close icon-close" type="button" data-close aria-label="Cerrar">?</button>
+    </div>
+    <h2 data-es="Crear nueva contrase&ntilde;a" data-en="Create a new password">Crear nueva contrase&ntilde;a</h2>
+    <p data-es="Escribe la nueva contrase&ntilde;a para tu cuenta." data-en="Enter the new password for your account.">Escribe la nueva contrase&ntilde;a para tu cuenta.</p>
+    <label><span data-es="Nueva contrase&ntilde;a" data-en="New password">Nueva contrase&ntilde;a</span><input name="password" required type="password" minlength="8" autocomplete="new-password"></label>
+    <div class="dialog-actions"><button class="secondary" type="button" data-close data-es="Cancelar" data-en="Cancel">Cancelar</button><button class="primary" type="submit" data-es="Guardar contrase&ntilde;a" data-en="Save password">Guardar contrase&ntilde;a</button></div>
+    <p class="form-status" role="status"></p>
+  </form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="firebase-config.js?v=20260727-79"></script>
+  <script type="module" src="app.js?v=20260727-79"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+# Local Firebase / deployment cache
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Real local Firebase web config. Keep firebase-config.example.js in Git.
+firebase-config.js
+
+# Dependencies
+node_modules/
+functions/node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+*service-account*.json
+*serviceAccount*.json
+*-service-account.json
+
+# Local editor / OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Codex local working metadata
+.agents/
+.codex/

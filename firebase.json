@@ -1,0 +1,6 @@
+{
+  "hosting": {"public": ".", "ignore": ["firebase.json", ".firebaserc", ".git/**", ".agents/**", ".codex/**", "**/.*", "**/node_modules/**", "functions/**", "firebase-debug.log", "firebase-config.example.js", "README.md", "firestore.rules", "storage.rules"], "headers": [{"source": "**", "headers": [{"key": "X-Content-Type-Options", "value": "nosniff"}, {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"}, {"key": "Permissions-Policy", "value": "camera=(self)"}]}, {"source": "**/*.@(html|js|css)", "headers": [{"key": "Cache-Control", "value": "no-cache, no-store, must-revalidate"}]}], "rewrites": [{"source": "/reset-password", "destination": "/index.html"}]},
+  "firestore": {"rules": "firestore.rules"},
+  "storage": {"rules": "storage.rules"},
+  "functions": {"source": "functions"}
+}
