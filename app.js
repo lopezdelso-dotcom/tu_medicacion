@@ -900,6 +900,7 @@ function renderSideEffectsMedicines(){
   results.innerHTML=medicines.map((item,index)=>`<button class="effects-medicine-button" data-own-medicine="${index}"><span class="effects-pill-icon" aria-hidden="true"></span><span><b>${safe(medicineShortName(item))}</b></span><span class="effects-arrow-icon" aria-hidden="true"></span></button>`).join("")||`<div class="panel">${t("Todavía no tienes medicamentos confirmados.")}</div>`;
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
 }
+$("#sideEffectsBackButton")?.addEventListener("click",()=>openView("today"));
 function cleanSideEffectPoint(text){
   return fixDisplayText(String(text||""))
     .replace(/\s+/g," ")
