@@ -6,5 +6,33 @@ body.admin-mode .admin-view{min-height:100vh}
 [hidden]{display:none!important}
 .admin-standalone{margin:0;background:#eef3f0}.admin-login{min-height:100vh;display:grid;place-items:center;padding:1rem;background:radial-gradient(circle at 70% 20%,#d7e8df,transparent 35%),#eef3f0}.admin-login-card{width:min(440px,100%);display:grid;gap:1rem;background:#fff;border:1px solid var(--line);border-radius:24px;padding:2rem;box-shadow:0 24px 70px #173f3524}.admin-login-card h1{font-size:2.2rem;margin:0}.admin-login-card>p{margin:0;color:#60746e}.admin-login-card label{display:grid;gap:.4rem;font-weight:700}.admin-login-card input{min-height:52px;padding:.8rem;border:2px solid #9ab0a8;border-radius:10px}.admin-login-card>a{text-align:center;color:var(--green)}.admin-login-mark{display:grid;place-items:center;width:56px;height:56px;border-radius:15px;background:#173f35;color:#fff;font-size:2rem}.admin-standalone .admin-view{min-height:100vh}
 .admin-menu{display:grid;gap:.4rem;margin:1.5rem 0}.admin-sidebar .admin-menu button{margin:0}.admin-sidebar .admin-menu button:not(.active){background:transparent;color:#526860}.user-status{display:inline-block;padding:.3rem .65rem;border-radius:999px;background:var(--mint);color:var(--green);font-size:.8rem;font-weight:700}.user-status.blocked{background:#f9dfdc;color:#8a2d28}.user-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}.user-actions button{min-height:44px}.delete-user{margin-left:auto}
+
+@media(max-width:760px){
+  .admin-title{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:.75rem!important;
+    align-items:stretch!important;
+  }
+  .admin-count{
+    width:100%!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    gap:.65rem!important;
+    text-align:left!important;
+    padding:.75rem .9rem!important;
+  }
+  .admin-count strong{
+    font-size:1.65rem!important;
+    line-height:1!important;
+  }
+  .admin-count span{
+    font-size:.95rem!important;
+    line-height:1.15!important;
+    white-space:normal!important;
+  }
+}
 body.admin-standalone{padding-bottom:0!important;overflow-x:hidden!important}body.admin-standalone::after,body.admin-standalone .tabs,body.admin-standalone footer{display:none!important;content:none!important;height:0!important;min-height:0!important;padding:0!important;margin:0!important}.admin-standalone .toast:empty,.admin-standalone .toast:not(.show){display:none!important}
 @media(max-width:760px){body.admin-standalone{padding-bottom:0!important}.admin-standalone .admin-view{margin-bottom:0!important;min-height:100vh!important}.admin-standalone main{padding-bottom:0!important}}
