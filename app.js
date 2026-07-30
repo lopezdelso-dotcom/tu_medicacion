@@ -86,7 +86,7 @@ function forceCriticalSymbols(){
   setText("#previousDayButton",cp(0x2190));
   setText("#nextDayButton",cp(0x2192));
   setText("#calendarButton",cp(0x1F4C5)+" "+t("Ver semana completa"));
-  setText("#closeWeekCalendarButton",(language==="en"?"View daily view":"Ver vista diaria"));
+  setText("#closeWeekCalendarButton",cp(0x1F4C5)+" "+(language==="en"?"View daily view":"Ver vista diaria"));
   setText("#changeMethodButton",(language==="en"?"Back":"Atrás"));
   setText("#scheduleBackButton",(language==="en"?"Back":"Atrás"));
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
