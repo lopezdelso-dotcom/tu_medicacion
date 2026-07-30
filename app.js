@@ -1430,19 +1430,29 @@ function currentPerfectMonthStreak(){
 }
 function streakBadge(streak){
   if(streak>=12)return {icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"Legendary year":"Año legendario"};
-  if(streak>=6)return {icon:String.fromCodePoint(0x1F451),label:language==="en"?"Gold streak":"Racha de oro"};
+  if(streak>=6)return {icon:String.fromCodePoint(0x1F451),label:language==="en"?"Six-month crown":"Corona de 6 meses"};
+  if(streak>=5)return {icon:String.fromCodePoint(0x1F31F),label:language==="en"?"Five-month star":"Estrella de 5 meses"};
+  if(streak>=4)return {icon:String.fromCodePoint(0x1F48E),label:language==="en"?"Four-month gem":"Gema de 4 meses"};
   if(streak>=3)return {icon:String.fromCodePoint(0x1F947),label:language==="en"?"Three-month medal":"Medalla de 3 meses"};
   if(streak>=2)return {icon:String.fromCodePoint(0x1F948),label:language==="en"?"Two-month badge":"Insignia de 2 meses"};
   if(streak>=1)return {icon:String.fromCodePoint(0x1F949),label:language==="en"?"First perfect month":"Primer mes perfecto"};
   return {icon:String.fromCodePoint(0x25CB),label:language==="en"?"No active streak":"Sin racha activa"};
+}
+function achievementMedicineName(medicine){
+  const text=medicineShortName(medicine).replace(/\s+/g," ").trim();
+  const parts=text.split(/\s+/);
+  if(parts.length<=3)return text;
+  const strength=parts.find(part=>/\d/.test(part)&&/(mg|g|ml|ui|kui|%)?/i.test(part));
+  return [parts[0],strength].filter(Boolean).join(" ");
 }
 function renderAchievements(){
   const months=achievementMonths(12),locale=language==="en"?"en-GB":"es-ES",streak=currentPerfectMonthStreak(),badge=streakBadge(streak);
   $("#achievementStreak").innerHTML=`<span class="achievement-main-badge">${safe(badge.icon)}</span><div><h2>${safe(badge.label)}</h2><p>${streak?`${streak} ${language==="en"?"perfect month(s) in a row":"mes(es) perfectos seguidos"}`:language==="en"?"A missed month resets the streak to zero.":"Si fallas un mes, la racha vuelve a cero."}</p></div>`;
   const header=months.map(month=>`<div class="achievement-month">${safe(new Intl.DateTimeFormat(locale,{month:"short",year:"2-digit"}).format(month))}</div>`).join("");
   const totalRow=`<div class="achievement-row achievement-total-row"><div class="achievement-med-name">Total</div>${months.map(month=>{const stats=monthStatsTotal(month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`;
-  const medRows=state.medicines.filter(m=>m.confirmed).map(m=>`<div class="achievement-row"><div class="achievement-med-name">${safe(medicineShortName(m))}</div>${months.map(month=>{const stats=monthStatsForMedicine(m.id,month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`).join("");
+  const medRows=state.medicines.filter(m=>m.confirmed).map(m=>`<div class="achievement-row"><div class="achievement-med-name" title="${safe(medicineShortName(m))}">${safe(achievementMedicineName(m))}</div>${months.map(month=>{const stats=monthStatsForMedicine(m.id,month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`).join("");
   $("#achievementGrid").innerHTML=`<div class="achievement-table" style="--achievement-months:${months.length}"><div class="achievement-row achievement-header"><div></div>${header}</div>${totalRow}${medRows||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`}</div>`;
+  requestAnimationFrame(()=>{const scroller=$("#achievementGrid");if(scroller)scroller.scrollLeft=scroller.scrollWidth});
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
