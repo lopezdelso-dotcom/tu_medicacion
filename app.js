@@ -1028,6 +1028,7 @@ $("#closeUserMenu")?.addEventListener("click",closeUserMenu);
 $("#userMenuOverlay")?.addEventListener("click",closeUserMenu);
 $$(".user-menu [data-view]").forEach(button=>button.addEventListener("click",closeUserMenu));
 document.addEventListener("keydown",event=>{if(event.key==="Escape")closeUserMenu()});
+$("#profileCloseButton")?.addEventListener("click",()=>openView("today"));
 function openDialogById(id){
   const dialog=$("#"+id);if(!dialog)return;
   document.body.classList.add("modal-open");

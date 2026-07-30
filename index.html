@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260727-81">
+  <link rel="stylesheet" href="user-controls.css?v=20260730-85">
   <link rel="stylesheet" href="selection-flow.css?v=20260727-81">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -201,7 +201,10 @@
         </div>
           </div>
           <div id="profile" class="view" hidden>
-            <h1>Modificar perfil</h1>
+            <div class="profile-view-header">
+              <h1>Modificar perfil</h1>
+              <button id="profileCloseButton" class="profile-close-button" type="button" aria-label="Cerrar"></button>
+            </div>
             <form id="profileForm" class="panel profile-panel profile-edit-card">
               <div class="profile-photo-editor">
                 <div id="editProfilePhotoPreview" class="profile-photo-preview add-photo-preview" aria-hidden="true">+</div>
@@ -289,7 +292,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260727-81"></script>
-  <script type="module" src="app.js?v=20260730-84"></script>
+  <script type="module" src="app.js?v=20260730-85"></script>
 </body>
 </html>
 

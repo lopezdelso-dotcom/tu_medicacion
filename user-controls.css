@@ -187,6 +187,10 @@ body.user-mode .preferences-panel{
 .effects-medicine-button .effects-pill-icon::before{content:"\01F48A"}
 .effects-medicine-button .effects-arrow-icon::before{content:"\203A"}
 
+.profile-view-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;max-width:760px;margin:0 auto 1rem}
+.profile-view-header h1{margin:0}
+.profile-close-button{display:grid;place-items:center;width:44px;height:44px;min-width:44px;border:2px solid var(--green);border-radius:50%;background:#fff;color:var(--green);padding:0;font-size:0;line-height:1}
+.profile-close-button::before{content:"\00D7";font-size:1.65rem;line-height:1;font-weight:800}
 .profile-edit-card{display:grid;gap:1rem;max-width:760px;margin:0 auto}
 .profile-photo-editor{display:flex;align-items:center;gap:.85rem;padding:.2rem 0 .45rem;border-bottom:1px solid var(--line)}
 .profile-photo-editor .add-photo-preview{width:82px!important;height:82px!important;flex:0 0 82px}
@@ -201,6 +205,8 @@ body.user-mode .preferences-panel{
 .profile-actions{justify-content:flex-start;margin-top:.2rem}
 .profile-actions .primary{min-width:210px}
 @media(max-width:760px){
+  .profile-view-header{margin-bottom:.75rem}
+  .profile-close-button{width:46px;height:46px;min-width:46px}
   .profile-edit-card{padding:1rem!important;gap:.75rem}
   .profile-edit-card .form-grid{gap:.85rem!important}
   .profile-edit-card .form-grid input,
