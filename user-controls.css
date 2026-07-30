@@ -258,6 +258,9 @@ body.user-mode .preferences-panel{
 .achievement-row{display:grid;grid-template-columns:minmax(150px,180px) repeat(var(--achievement-months),68px);gap:.35rem;align-items:stretch}
 .achievement-row>div{border-radius:12px;background:#fff;border:1px solid var(--line);padding:.55rem;min-height:48px}
 .achievement-header>div{background:transparent;border:0;min-height:30px;color:#60746e;font-size:.78rem;font-weight:900;text-transform:capitalize;text-align:center}
+.achievement-month{display:grid!important;place-items:center!important;gap:.05rem!important;line-height:1!important}
+.achievement-month span{display:block}
+.achievement-month small{display:block;font-size:.72rem;color:#7b8c86}
 .achievement-header>div:first-child{position:sticky;left:0;z-index:4;background:#fbfaf5;border-radius:0;box-shadow:10px 0 16px #fbfaf5}
 .achievement-med-name{position:sticky;left:0;z-index:3;display:flex;align-items:center;font-size:.8rem;font-weight:900;line-height:1.08;box-shadow:10px 0 16px #fbfaf5;white-space:normal;overflow:hidden}
 .achievement-total-row .achievement-med-name{background:#dff1e7;color:var(--green)}

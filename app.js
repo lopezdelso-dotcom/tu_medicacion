@@ -1415,7 +1415,7 @@ function monthStart(date){return new Date(date.getFullYear(),date.getMonth(),1,1
 function monthEnd(date){return new Date(date.getFullYear(),date.getMonth()+1,0,12)}
 function addMonths(date,delta){return new Date(date.getFullYear(),date.getMonth()+delta,1,12)}
 function completedMonthStart(offset=0){const today=new Date();return new Date(today.getFullYear(),today.getMonth()-1-offset,1,12)}
-function achievementMonths(count=12){return Array.from({length:count},(_,index)=>addMonths(completedMonthStart(count-1),index))}
+function achievementMonths(count=12){count=Math.min(count,12);return Array.from({length:count},(_,index)=>addMonths(completedMonthStart(count-1),index))}
 function monthStatsForMedicine(medicineId,month){return complianceStats(medicineId,monthStart(month),monthEnd(month))}
 function monthStatsTotal(month){return complianceStats(null,monthStart(month),monthEnd(month))}
 function isPerfect(stats){return stats.expected>0&&stats.taken===stats.expected}
@@ -1448,7 +1448,7 @@ function achievementMedicineName(medicine){
 function renderAchievements(){
   const months=achievementMonths(12),locale=language==="en"?"en-GB":"es-ES",streak=currentPerfectMonthStreak(),badge=streakBadge(streak);
   $("#achievementStreak").innerHTML=`<span class="achievement-main-badge">${safe(badge.icon)}</span><div><h2>${safe(badge.label)}</h2><p>${streak?`${streak} ${language==="en"?"perfect month(s) in a row":"mes(es) perfectos seguidos"}`:language==="en"?"A missed month resets the streak to zero.":"Si fallas un mes, la racha vuelve a cero."}</p></div>`;
-  const header=months.map(month=>`<div class="achievement-month">${safe(new Intl.DateTimeFormat(locale,{month:"short",year:"2-digit"}).format(month))}</div>`).join("");
+  const header=months.map(month=>`<div class="achievement-month"><span>${safe(new Intl.DateTimeFormat(locale,{month:"short"}).format(month).replace(".",""))}</span><small>${safe(new Intl.DateTimeFormat(locale,{year:"2-digit"}).format(month))}</small></div>`).join("");
   const totalRow=`<div class="achievement-row achievement-total-row"><div class="achievement-med-name">Total</div>${months.map(month=>{const stats=monthStatsTotal(month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`;
   const medRows=state.medicines.filter(m=>m.confirmed).map(m=>`<div class="achievement-row"><div class="achievement-med-name" title="${safe(medicineShortName(m))}">${safe(achievementMedicineName(m))}</div>${months.map(month=>{const stats=monthStatsForMedicine(m.id,month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`).join("");
   $("#achievementGrid").innerHTML=`<div class="achievement-table" style="--achievement-months:${months.length}"><div class="achievement-row achievement-header"><div></div>${header}</div>${totalRow}${medRows||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`}</div>`;
