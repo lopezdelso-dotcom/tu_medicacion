@@ -477,7 +477,7 @@ function renderSchedule(){
     const doses=medicines.map(m=>`<div class="day-dose"><div class="dose-top"><b>${safe(m.time)}</b><button class="status-button" data-take data-medicine="${safe(m.id)}" data-date="${iso}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(m))}</strong><p>${safe(t(m.instructions||"Seg?n indicaci?n m?dica"))}</p></div></div>`).join("");
     return `<article class="day-group"><header class="day-heading ${index===0?"today":""}"><h3>${safe(label)}</h3><span>${safe(fullDate)}</span></header>${doses||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
   }).join("");
-  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?t("?Å“â€œ Tomada"):t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
 }
 async function recordIntake(medicineId,date,taken){
   if(!state.user)return;
@@ -1254,7 +1254,7 @@ renderSchedule=function(){
     return meals.map(meal=>({medicine:m,meal}));
   }).sort((a,b)=>(a.meal.time||"").localeCompare(b.meal.time||""));
   $("#schedule").innerHTML=`<article class="day-group">${doses.map(item=>`<div class="day-dose"><div class="dose-top"><b>${safe(item.meal.label||item.meal.time||"")}</b><button class="status-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong><p>${safe(item.meal.time||"")}</p></div></div>`).join("")||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
-  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?t("âœ“ Tomada"):t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
 };
 function normaliseSelectedScheduleDate(){selectedScheduleDate=new Date(selectedScheduleDate);selectedScheduleDate.setHours(12,0,0,0)}
 function selectedDateIso(){normaliseSelectedScheduleDate();return selectedScheduleDate.toISOString().slice(0,10)}
@@ -1324,8 +1324,8 @@ renderSchedule=function(){
   normaliseSelectedScheduleDate();formatSelectedDate();
   const iso=selectedDateIso(),doses=dosesForDate(selectedScheduleDate);
   const grouped=doses.reduce((acc,item)=>{const key=item.meal.label||item.meal.time||t("Toma");(acc[key]||=[]).push(item);return acc},{});
-  $("#schedule").innerHTML=`<article class="day-group compact-dose-list">${doses.length?Object.entries(grouped).map(([label,items])=>`<section class="dose-meal-group"><h2>${safe(label)}</h2>${items.map(item=>`<div class="day-dose compact-dose"><span class="dose-time">${safe(item.meal.time||"")}</span><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong>${medicineDoseLine(item.medicine)?`<p>${safe(medicineDoseLine(item.medicine))}</p>`:""}</div><button class="status-button compact-check-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}" aria-label="${t("Pendiente de tomar")}" aria-pressed="false">â—‹</button></div>`).join("")}</section>`).join(""):`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
-  $$("[data-take]").forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?"âœ“":"â—‹";b.setAttribute("aria-label",taken?t("Tomada"):t("Pendiente de tomar"));b.setAttribute("aria-pressed",String(taken));await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $("#schedule").innerHTML=`<article class="day-group compact-dose-list">${doses.length?Object.entries(grouped).map(([label,items])=>`<section class="dose-meal-group"><h2>${safe(label)}</h2>${items.map(item=>`<div class="day-dose compact-dose"><span class="dose-time">${safe(item.meal.time||"")}</span><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong>${medicineDoseLine(item.medicine)?`<p>${safe(medicineDoseLine(item.medicine))}</p>`:""}</div><button class="status-button compact-check-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}" aria-label="${t("Pendiente de tomar")}" aria-pressed="false">${String.fromCodePoint(0x25CB)}</button></div>`).join("")}</section>`).join(""):`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
+  $$("[data-take]").forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB);b.setAttribute("aria-label",taken?t("Tomada"):t("Pendiente de tomar"));b.setAttribute("aria-pressed",String(taken));await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
 };
 $("#previousDayButton")?.addEventListener("click",()=>{normaliseSelectedScheduleDate();selectedScheduleDate.setDate(selectedScheduleDate.getDate()-1);renderSchedule()});
 $("#nextDayButton")?.addEventListener("click",()=>{normaliseSelectedScheduleDate();selectedScheduleDate.setDate(selectedScheduleDate.getDate()+1);renderSchedule()});
