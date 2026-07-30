@@ -105,6 +105,7 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
 .user-menu button[data-view="medicines"]>span[aria-hidden="true"]:first-child::before{content:"\1F48A"}
 .user-menu button[data-view="today"]>span[aria-hidden="true"]:first-child::before{content:"\2713"}
 .user-menu button[data-view="sideEffects"]>span[aria-hidden="true"]:first-child::before{content:"\24D8"}
+.user-menu button[data-view="compliance"]>span[aria-hidden="true"]:first-child::before{content:"%"}
 .user-menu button[data-view="profile"]>span[aria-hidden="true"]:first-child::before{content:"+"}
 .user-menu #userAccessibilityButton>span[aria-hidden="true"]:first-child::before{content:"\2699"}
 .user-menu [data-user-logout]>span[aria-hidden="true"]:first-child::before{content:"\2190"}
@@ -229,6 +230,22 @@ body.user-mode .preferences-panel{
 .status-button.future-disabled,
 .compact-check-button.future-disabled{opacity:.38!important;cursor:not-allowed!important;filter:grayscale(.35)!important}
 .compact-check-button.future-disabled{border-color:#aebbb5!important;color:#6d7b75!important;background:#eef3f0!important}
+.user-menu button[data-view="compliance"]{background:#e8f5ee!important;color:#1e654e!important}
+.compliance-list{display:grid;gap:.75rem;margin-top:1rem}
+.compliance-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.85rem;width:100%;text-align:left;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);padding:1rem}
+.compliance-card b{display:block;font-size:1rem;line-height:1.15}
+.compliance-card small{display:block;margin-top:.18rem;color:#60746e;font-size:.82rem}
+.compliance-card>strong{display:grid;place-items:center;min-width:64px;height:64px;border-radius:18px;background:#dff1e7;color:var(--green);font-size:1.25rem}
+.compliance-detail-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.2rem}
+.compliance-month-nav{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:.65rem;margin:.75rem 0 1rem;text-align:center}
+.compliance-month-nav button{display:grid;place-items:center;min-height:48px;border:2px solid var(--green);border-radius:14px;background:#fff;color:var(--green);font-weight:900;font-size:1.4rem}
+.compliance-month-nav b{text-transform:capitalize}
+.compliance-big-percent{display:flex;align-items:baseline;gap:.7rem;margin:1rem 0;padding:1rem;border-radius:16px;background:#dff1e7;color:var(--green)}
+.compliance-big-percent strong{font-size:2.4rem;line-height:1}
+.compliance-big-percent span{font-weight:800}
+.compliance-table{width:100%;border-collapse:collapse;margin-top:1rem}
+.compliance-table th,.compliance-table td{padding:.7rem .55rem;border-bottom:1px solid var(--line);text-align:left}
+.compliance-table th{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:#60746e}
 @media(max-width:760px){
   .today-toolbar{grid-template-columns:46px minmax(0,1fr) 46px!important;margin-bottom:.35rem!important}
   .day-nav-button{min-width:46px!important;min-height:46px!important;border-radius:14px!important;font-size:1.45rem!important}
@@ -241,6 +258,10 @@ body.user-mode .preferences-panel{
   .compact-dose .dose-time{font-size:.78rem!important}
   .compact-dose .dose-medicine strong{font-size:.8rem!important}
   .compact-check-button{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;font-size:1.25rem!important;border-width:2px!important}
+  .compliance-card{padding:.85rem;border-radius:16px}
+  .compliance-card>strong{min-width:56px;height:56px;font-size:1.05rem}
+  .compliance-detail-card{padding:1rem}
+  .compliance-big-percent strong{font-size:2rem}
 }
 
 /* Encoding-safe menu icons. The text inside the icon span may be corrupted by
@@ -263,6 +284,7 @@ body.user-mode .preferences-panel{
 .user-menu button[data-view="medicines"]>span[aria-hidden="true"]:first-child::before{content:"\01F48A"}
 .user-menu button[data-view="today"]>span[aria-hidden="true"]:first-child::before{content:"\2713"}
 .user-menu button[data-view="sideEffects"]>span[aria-hidden="true"]:first-child::before{content:"\24D8"}
+.user-menu button[data-view="compliance"]>span[aria-hidden="true"]:first-child::before{content:"%"}
 .user-menu button[data-view="profile"]>span[aria-hidden="true"]:first-child::before{content:"+"}
 .user-menu #userAccessibilityButton>span[aria-hidden="true"]:first-child::before{content:"\2699"}
 .user-menu [data-user-logout]>span[aria-hidden="true"]:first-child::before{content:"\2190"}

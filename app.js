@@ -8,6 +8,7 @@ const state = {
     {id:"demo-1",name:"Enalapril",dose:"10 mg",time:"09:00",instructions:"Con el desayuno",confirmed:true},
     {id:"demo-2",name:"Atorvastatina",dose:"20 mg",time:"21:00",instructions:"DespuÃ©s de cenar",confirmed:true}
   ],
+  intakes: JSON.parse(localStorage.getItem("mm_intakes") || "{}"),
   requests: JSON.parse(localStorage.getItem("mm_requests") || "[]")
 };
 
@@ -91,6 +92,7 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
   document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2713));
   document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x24D8));
+  document.querySelectorAll('[data-view="compliance"] span[aria-hidden="true"]').forEach(el=>el.textContent="%");
   document.querySelectorAll('[data-view="profile"] span[aria-hidden="true"]').forEach(el=>el.textContent="+");
   document.querySelectorAll('#userAccessibilityButton span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2699));
   document.querySelectorAll('[data-user-logout] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2190));
@@ -414,11 +416,11 @@ async function enterAuthenticatedUser(user){
     openView("today");
     toast("Has accedido, pero hubo un problema al preparar la pantalla. Recarga la pÃ¡gina.",7000);
   }
-  try{await loadMedicines();renderAll();}
+  try{await loadMedicines();await loadIntakes();renderAll();}
   catch(error){state.medicines=[];try{renderAll()}catch(renderError){}toast("Has accedido, pero no se pudo cargar la medicaciÃ³n.");}
   return {ok:true};
 }
-const userViewIds=["today","medicines","documents","sideEffects","profile"];
+const userViewIds=["today","medicines","documents","sideEffects","compliance","profile"];
 let suppressHashNavigation=false;
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)?value:""}
 function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
@@ -453,6 +455,7 @@ function openView(id,options={}){
   $$(".user-menu [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
   if(id==="admin") renderRequests();
   if(id==="sideEffects") renderSideEffectsMedicines();
+  if(id==="compliance") renderComplianceSummary();
   if(id==="profile") hydrateProfileForm();
   if(id==="documents"&&!options.keepDocumentState)resetMedicationMethodScreen();
   if(state.user&&id!=="admin"){
@@ -483,8 +486,8 @@ async function recordIntake(medicineId,date,taken){
   if(!state.user)return;
   if(taken&&isFutureIntakeDate(date)){toast(uiText("No puedes marcar como tomada una medicaci\u00f3n futura.","You cannot mark a future dose as taken."));return}
   const id=`${date}_${medicineId}`,medicine=state.medicines.find(item=>item.id===medicineId);
-  if(fb){const ref=fb.doc(fb.db,"users",state.user.uid,"intakes",id);if(taken)await fb.setDoc(ref,{medicineId,medicineName:medicine?.name||"",dose:medicine?.dose||"",scheduledDate:date,scheduledTime:medicine?.time||"",status:"taken",takenAt:fb.serverTimestamp()});else await fb.deleteDoc(ref)}
-  else{const intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");if(taken)intakes[id]={medicineId,medicineName:medicine?.name,date,status:"taken"};else delete intakes[id];localStorage.setItem("mm_intakes",JSON.stringify(intakes))}
+  if(fb){const ref=fb.doc(fb.db,"users",state.user.uid,"intakes",id);if(taken){const intake={medicineId,medicineName:medicine?.name||"",dose:medicine?.dose||"",scheduledDate:date,scheduledTime:medicine?.time||"",status:"taken"};await fb.setDoc(ref,{...intake,takenAt:fb.serverTimestamp()});state.intakes[id]={id,...intake}}else{await fb.deleteDoc(ref);delete state.intakes[id]}}
+  else{const intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");if(taken)intakes[id]={id,medicineId,medicineName:medicine?.name,date,scheduledDate:date,status:"taken"};else delete intakes[id];state.intakes=intakes;localStorage.setItem("mm_intakes",JSON.stringify(intakes))}
 }
 function intakeBaseIso(date){return String(date||"").slice(0,10)}
 function todayIso(){const today=new Date();today.setHours(12,0,0,0);return today.toISOString().slice(0,10)}
@@ -620,6 +623,12 @@ async function loadMedicines(){
   if(demo||!state.user) return;
   const snap=await fb.getDocs(fb.query(fb.collection(fb.db,"users",state.user.uid,"medicines"),fb.where("confirmed","==",true)));
   state.medicines=snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+async function loadIntakes(){
+  if(demo||!state.user){state.intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");return}
+  const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"intakes"));
+  state.intakes={};
+  snap.docs.forEach(d=>{state.intakes[d.id]={id:d.id,...d.data()}});
 }
 function safe(value=""){ const d=document.createElement("div"); d.textContent=fixDisplayText(value); return d.innerHTML; }
 async function saveUserPreferences(updates){
@@ -924,6 +933,7 @@ function renderSideEffectsMedicines(){
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
 }
 $("#sideEffectsBackButton")?.addEventListener("click",()=>openView("today"));
+$("#complianceBackButton")?.addEventListener("click",()=>openView("today"));
 function cleanSideEffectPoint(text){
   return fixDisplayText(String(text||""))
     .replace(/\s+/g," ")
@@ -1324,6 +1334,77 @@ function dosesForDate(date){
     }
     return [{medicine:m,meal:{key:"custom",label:m.instructions||t("Toma"),time:m.time||""}}];
   }).sort((a,b)=>(a.meal.time||"").localeCompare(b.meal.time||""));
+}
+let complianceMonth=new Date();
+function yesterdayDate(){const date=new Date();date.setHours(12,0,0,0);date.setDate(date.getDate()-1);return date}
+function dateFromIso(iso){const date=new Date(`${iso}T12:00:00`);return Number.isNaN(date.getTime())?null:date}
+function medicineFirstDate(medicine){
+  const candidates=[medicine.startDate,medicine.createdAt?.slice?.(0,10)].filter(Boolean).sort();
+  return dateFromIso(candidates[0]||todayIso());
+}
+function scheduledItemsForMedicineDate(medicine,date){
+  const iso=date.toISOString().slice(0,10),weekday=["sun","mon","tue","wed","thu","fri","sat"][date.getDay()];
+  const first=medicine.startDate||medicine.createdAt?.slice?.(0,10)||"";
+  if((first&&first>iso)||(medicine.endDate&&medicine.endDate<iso))return[];
+  if(medicine.schedule?.meals?.length){
+    const days=medicine.schedule.days||["mon","tue","wed","thu","fri","sat","sun"];
+    if(!days.includes(weekday))return[];
+    return medicine.schedule.meals.map(meal=>({medicine,meal}));
+  }
+  return [{medicine,meal:{key:"custom",label:medicine.instructions||t("Toma"),time:medicine.time||""}}];
+}
+function expectedIntakeKey(item,iso){return `${iso}_${item.meal.key||item.meal.label}_${item.medicine.id}`}
+function isIntakeTaken(medicineId,dateKey){
+  const iso=intakeBaseIso(dateKey);
+  return Object.values(state.intakes||{}).some(intake=>{
+    if(intake?.status&&intake.status!=="taken")return false;
+    if(intake?.medicineId!==medicineId)return false;
+    const scheduled=String(intake.scheduledDate||intake.date||"");
+    const intakeId=String(intake.id||"");
+    const isCustom=dateKey.endsWith("_custom");
+    return scheduled===dateKey||intakeId===`${dateKey}_${medicineId}`||(isCustom&&(scheduled===iso||intakeId===`${iso}_${medicineId}`));
+  });
+}
+function complianceStatsForMedicine(medicine,startDate,endDate){
+  const stats={medicine,expected:0,taken:0,days:[]};
+  const current=cloneDay(startDate),last=cloneDay(endDate);
+  while(current<=last){
+    const iso=current.toISOString().slice(0,10),items=scheduledItemsForMedicineDate(medicine,current);
+    const expected=items.length,taken=items.filter(item=>isIntakeTaken(medicine.id,expectedIntakeKey(item,iso))).length;
+    stats.expected+=expected;stats.taken+=taken;
+    if(expected)stats.days.push({iso,expected,taken});
+    current.setDate(current.getDate()+1);
+  }
+  stats.percent=stats.expected?Math.round((stats.taken/stats.expected)*100):0;
+  return stats;
+}
+function complianceStats(medicineId=null,startDate=null,endDate=null){
+  const end=endDate?cloneDay(endDate):yesterdayDate();
+  const meds=state.medicines.filter(m=>m.confirmed&&(medicineId?m.id===medicineId:true));
+  const stats=meds.map(m=>complianceStatsForMedicine(m,startDate||medicineFirstDate(m),end));
+  const expected=stats.reduce((sum,item)=>sum+item.expected,0),taken=stats.reduce((sum,item)=>sum+item.taken,0);
+  return {medicineId,medicines:stats,expected,taken,percent:expected?Math.round((taken/expected)*100):0};
+}
+function renderComplianceSummary(){
+  complianceMonth=new Date();
+  $("#complianceSummary").hidden=false;$("#complianceDetail").hidden=true;
+  const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...state.medicines.filter(m=>m.confirmed).map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
+  $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
+  $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
+}
+function showComplianceDetail(id){
+  $("#complianceSummary").hidden=true;const detail=$("#complianceDetail");detail.hidden=false;
+  complianceMonth.setHours(12,0,0,0);
+  const monthStart=new Date(complianceMonth.getFullYear(),complianceMonth.getMonth(),1,12),monthEnd=new Date(complianceMonth.getFullYear(),complianceMonth.getMonth()+1,0,12),yesterday=yesterdayDate();
+  const end=monthEnd>yesterday?yesterday:monthEnd;
+  const stats=id==="total"?complianceStats(null,monthStart,end):complianceStats(id,monthStart,end);
+  const title=id==="total"?(language==="en"?"Total":"Total"):medicineShortName(state.medicines.find(m=>m.id===id));
+  const monthLabel=new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{month:"long",year:"numeric"}).format(monthStart);
+  const daysMap={};stats.medicines.forEach(medStats=>medStats.days.forEach(day=>{const row=daysMap[day.iso]||{expected:0,taken:0};row.expected+=day.expected;row.taken+=day.taken;daysMap[day.iso]=row}));
+  const rows=Object.entries(daysMap).sort(([a],[b])=>a.localeCompare(b)).map(([iso,row])=>`<tr><td>${safe(new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{day:"numeric",weekday:"short"}).format(dateFromIso(iso)))}</td><td>${row.taken}/${row.expected}</td><td>${row.expected?Math.round(row.taken/row.expected*100):0}%</td></tr>`).join("");
+  detail.innerHTML=`<button class="secondary medicine-back-button" type="button" data-back-compliance>${language==="en"?"Back":"Atrás"}</button><div class="compliance-detail-card"><h1>${safe(title)}</h1><div class="compliance-month-nav"><button type="button" data-compliance-month="-1" aria-label="${language==="en"?"Previous month":"Mes anterior"}">${String.fromCodePoint(0x2190)}</button><b>${safe(monthLabel)}</b><button type="button" data-compliance-month="1" aria-label="${language==="en"?"Next month":"Mes siguiente"}">${String.fromCodePoint(0x2192)}</button></div><div class="compliance-big-percent"><strong>${stats.percent}%</strong><span>${stats.taken}/${stats.expected} ${language==="en"?"doses":"tomas"}</span></div><table class="compliance-table"><thead><tr><th>${language==="en"?"Day":"Día"}</th><th>${language==="en"?"Taken":"Tomadas"}</th><th>%</th></tr></thead><tbody>${rows||`<tr><td colspan="3">${language==="en"?"No scheduled doses this month.":"Sin tomas programadas este mes."}</td></tr>`}</tbody></table></div>`;
+  $("[data-back-compliance]",detail).onclick=renderComplianceSummary;
+  $$("[data-compliance-month]",detail).forEach(button=>button.onclick=()=>{complianceMonth.setMonth(complianceMonth.getMonth()+Number(button.dataset.complianceMonth));showComplianceDetail(id)});
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
