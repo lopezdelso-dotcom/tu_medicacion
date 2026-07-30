@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260730-90">
+  <link rel="stylesheet" href="user-controls.css?v=20260730-91">
   <link rel="stylesheet" href="selection-flow.css?v=20260727-81">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -78,6 +78,7 @@
           <button class="active" data-view="today"><span aria-hidden="true">?</span>Tomas</button>
           <button data-view="sideEffects"><span aria-hidden="true">&#9432;</span>Consultar efectos secundarios</button>
           <button data-view="compliance"><span aria-hidden="true">%</span>Cumplimiento</button>
+          <button data-view="achievements"><span aria-hidden="true">*</span>Logros</button>
           <button data-view="profile"><span aria-hidden="true">+</span>Editar perfil</button>
           <button id="userAccessibilityButton" type="button" aria-expanded="false" aria-controls="preferencesPanel"><span aria-hidden="true">&#9881;</span>Preferencias</button>
           <button id="logoutButton" class="logout-menu" data-user-logout><span aria-hidden="true">&#8592;</span>Cerrar sesiÃ³n</button>
@@ -244,6 +245,13 @@
             </section>
             <section id="complianceDetail" class="compliance-detail" hidden></section>
           </div>
+          <div id="achievements" class="view" hidden>
+            <button id="achievementsBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
+            <h1>Logros</h1>
+            <p class="lead">Emblemas por meses completos con todas las tomas realizadas.</p>
+            <div id="achievementStreak" class="achievement-streak-card"></div>
+            <div id="achievementGrid" class="achievements-scroll"></div>
+          </div>
         </main>
       </div>
     </section>
@@ -303,7 +311,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260727-81"></script>
-  <script type="module" src="app.js?v=20260730-89"></script>
+  <script type="module" src="app.js?v=20260730-91"></script>
 </body>
 </html>
 

@@ -93,6 +93,7 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2713));
   document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x24D8));
   document.querySelectorAll('[data-view="compliance"] span[aria-hidden="true"]').forEach(el=>el.textContent="%");
+  document.querySelectorAll('[data-view="achievements"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F3C5));
   document.querySelectorAll('[data-view="profile"] span[aria-hidden="true"]').forEach(el=>el.textContent="+");
   document.querySelectorAll('#userAccessibilityButton span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2699));
   document.querySelectorAll('[data-user-logout] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2190));
@@ -420,7 +421,7 @@ async function enterAuthenticatedUser(user){
   catch(error){state.medicines=[];try{renderAll()}catch(renderError){}toast("Has accedido, pero no se pudo cargar la medicaciÃ³n.");}
   return {ok:true};
 }
-const userViewIds=["today","medicines","documents","sideEffects","compliance","profile"];
+const userViewIds=["today","medicines","documents","sideEffects","compliance","achievements","profile"];
 let suppressHashNavigation=false;
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)?value:""}
 function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
@@ -456,6 +457,7 @@ function openView(id,options={}){
   if(id==="admin") renderRequests();
   if(id==="sideEffects") renderSideEffectsMedicines();
   if(id==="compliance") renderComplianceSummary();
+  if(id==="achievements") renderAchievements();
   if(id==="profile") hydrateProfileForm();
   if(id==="documents"&&!options.keepDocumentState)resetMedicationMethodScreen();
   if(state.user&&id!=="admin"){
@@ -934,6 +936,7 @@ function renderSideEffectsMedicines(){
 }
 $("#sideEffectsBackButton")?.addEventListener("click",()=>openView("today"));
 $("#complianceBackButton")?.addEventListener("click",()=>openView("today"));
+$("#achievementsBackButton")?.addEventListener("click",()=>openView("today"));
 function cleanSideEffectPoint(text){
   return fixDisplayText(String(text||""))
     .replace(/\s+/g," ")
@@ -1407,6 +1410,39 @@ function showComplianceDetail(id){
   detail.innerHTML=`<button class="secondary medicine-back-button" type="button" data-back-compliance>${language==="en"?"Back":"Atrás"}</button><div class="compliance-detail-card"><h1>${safe(title)}</h1><div class="compliance-month-nav"><button type="button" data-compliance-month="-1" aria-label="${language==="en"?"Previous month":"Mes anterior"}">${String.fromCodePoint(0x2190)}</button><b>${safe(monthLabel)}</b><button type="button" data-compliance-month="1" aria-label="${language==="en"?"Next month":"Mes siguiente"}">${String.fromCodePoint(0x2192)}</button></div><div class="compliance-big-percent"><strong>${stats.percent}%</strong><span>${stats.taken}/${stats.expected} ${language==="en"?"doses":"tomas"}</span></div><table class="compliance-table"><thead><tr><th>${language==="en"?"Day":"Día"}</th><th>${language==="en"?"Taken":"Tomadas"}</th><th>%</th></tr></thead><tbody>${rows||`<tr><td colspan="3">${language==="en"?"No scheduled doses this month.":"Sin tomas programadas este mes."}</td></tr>`}</tbody></table></div>`;
   $("[data-back-compliance]",detail).onclick=renderComplianceSummary;
   $$("[data-compliance-month]",detail).forEach(button=>button.onclick=()=>{complianceMonth.setMonth(complianceMonth.getMonth()+Number(button.dataset.complianceMonth));showComplianceDetail(id)});
+}
+function monthStart(date){return new Date(date.getFullYear(),date.getMonth(),1,12)}
+function monthEnd(date){return new Date(date.getFullYear(),date.getMonth()+1,0,12)}
+function addMonths(date,delta){return new Date(date.getFullYear(),date.getMonth()+delta,1,12)}
+function completedMonthStart(offset=0){const today=new Date();return new Date(today.getFullYear(),today.getMonth()-1-offset,1,12)}
+function achievementMonths(count=12){return Array.from({length:count},(_,index)=>addMonths(completedMonthStart(count-1),index))}
+function monthStatsForMedicine(medicineId,month){return complianceStats(medicineId,monthStart(month),monthEnd(month))}
+function monthStatsTotal(month){return complianceStats(null,monthStart(month),monthEnd(month))}
+function isPerfect(stats){return stats.expected>0&&stats.taken===stats.expected}
+function currentPerfectMonthStreak(){
+  let streak=0;
+  for(let index=0;index<36;index++){
+    const stats=monthStatsTotal(completedMonthStart(index));
+    if(isPerfect(stats))streak++;
+    else break;
+  }
+  return streak;
+}
+function streakBadge(streak){
+  if(streak>=12)return {icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"Legendary year":"Año legendario"};
+  if(streak>=6)return {icon:String.fromCodePoint(0x1F451),label:language==="en"?"Gold streak":"Racha de oro"};
+  if(streak>=3)return {icon:String.fromCodePoint(0x1F947),label:language==="en"?"Three-month medal":"Medalla de 3 meses"};
+  if(streak>=2)return {icon:String.fromCodePoint(0x1F948),label:language==="en"?"Two-month badge":"Insignia de 2 meses"};
+  if(streak>=1)return {icon:String.fromCodePoint(0x1F949),label:language==="en"?"First perfect month":"Primer mes perfecto"};
+  return {icon:String.fromCodePoint(0x25CB),label:language==="en"?"No active streak":"Sin racha activa"};
+}
+function renderAchievements(){
+  const months=achievementMonths(12),locale=language==="en"?"en-GB":"es-ES",streak=currentPerfectMonthStreak(),badge=streakBadge(streak);
+  $("#achievementStreak").innerHTML=`<span class="achievement-main-badge">${safe(badge.icon)}</span><div><h2>${safe(badge.label)}</h2><p>${streak?`${streak} ${language==="en"?"perfect month(s) in a row":"mes(es) perfectos seguidos"}`:language==="en"?"A missed month resets the streak to zero.":"Si fallas un mes, la racha vuelve a cero."}</p></div>`;
+  const header=months.map(month=>`<div class="achievement-month">${safe(new Intl.DateTimeFormat(locale,{month:"short",year:"2-digit"}).format(month))}</div>`).join("");
+  const totalRow=`<div class="achievement-row achievement-total-row"><div class="achievement-med-name">Total</div>${months.map(month=>{const stats=monthStatsTotal(month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`;
+  const medRows=state.medicines.filter(m=>m.confirmed).map(m=>`<div class="achievement-row"><div class="achievement-med-name">${safe(medicineShortName(m))}</div>${months.map(month=>{const stats=monthStatsForMedicine(m.id,month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`).join("");
+  $("#achievementGrid").innerHTML=`<div class="achievement-table" style="--achievement-months:${months.length}"><div class="achievement-row achievement-header"><div></div>${header}</div>${totalRow}${medRows||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`}</div>`;
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
