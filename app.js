@@ -477,13 +477,35 @@ function renderSchedule(){
     const doses=medicines.map(m=>`<div class="day-dose"><div class="dose-top"><b>${safe(m.time)}</b><button class="status-button" data-take data-medicine="${safe(m.id)}" data-date="${iso}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(m))}</strong><p>${safe(t(m.instructions||"Seg?n indicaci?n m?dica"))}</p></div></div>`).join("");
     return `<article class="day-group"><header class="day-heading ${index===0?"today":""}"><h3>${safe(label)}</h3><span>${safe(fullDate)}</span></header>${doses||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
   }).join("");
-  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $$('[data-take]').forEach(b=>setupTakeButton(b));
 }
 async function recordIntake(medicineId,date,taken){
   if(!state.user)return;
+  if(taken&&isFutureIntakeDate(date)){toast(uiText("No puedes marcar como tomada una medicaci\u00f3n futura.","You cannot mark a future dose as taken."));return}
   const id=`${date}_${medicineId}`,medicine=state.medicines.find(item=>item.id===medicineId);
   if(fb){const ref=fb.doc(fb.db,"users",state.user.uid,"intakes",id);if(taken)await fb.setDoc(ref,{medicineId,medicineName:medicine?.name||"",dose:medicine?.dose||"",scheduledDate:date,scheduledTime:medicine?.time||"",status:"taken",takenAt:fb.serverTimestamp()});else await fb.deleteDoc(ref)}
   else{const intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");if(taken)intakes[id]={medicineId,medicineName:medicine?.name,date,status:"taken"};else delete intakes[id];localStorage.setItem("mm_intakes",JSON.stringify(intakes))}
+}
+function intakeBaseIso(date){return String(date||"").slice(0,10)}
+function todayIso(){const today=new Date();today.setHours(12,0,0,0);return today.toISOString().slice(0,10)}
+function isFutureIntakeDate(date){const iso=intakeBaseIso(date);return Boolean(iso&&iso>todayIso())}
+function setupTakeButton(button,compact=false){
+  const future=isFutureIntakeDate(button.dataset.date);
+  button.disabled=future;
+  button.classList.toggle("future-disabled",future);
+  if(future){
+    button.setAttribute("aria-label",uiText("No disponible para fechas futuras","Not available for future dates"));
+    button.setAttribute("title",uiText("No puedes marcar tomas futuras","Future doses cannot be marked as taken"));
+    return;
+  }
+  button.onclick=async()=>{
+    button.classList.toggle("taken");
+    const taken=button.classList.contains("taken");
+    button.textContent=compact?(taken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada"));
+    button.setAttribute("aria-label",taken?t("Tomada"):t("Pendiente de tomar"));
+    button.setAttribute("aria-pressed",String(taken));
+    await recordIntake(button.dataset.medicine,button.dataset.date,taken);
+  };
 }
 function medicineShortName(medicine){
   const raw=String(medicine?.name||"").trim().replace(/\s+/g," ");
@@ -1255,7 +1277,7 @@ renderSchedule=function(){
     return meals.map(meal=>({medicine:m,meal}));
   }).sort((a,b)=>(a.meal.time||"").localeCompare(b.meal.time||""));
   $("#schedule").innerHTML=`<article class="day-group">${doses.map(item=>`<div class="day-dose"><div class="dose-top"><b>${safe(item.meal.label||item.meal.time||"")}</b><button class="status-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong><p>${safe(item.meal.time||"")}</p></div></div>`).join("")||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
-  $$('[data-take]').forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada");await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $$('[data-take]').forEach(b=>setupTakeButton(b));
 };
 function normaliseSelectedScheduleDate(){selectedScheduleDate=new Date(selectedScheduleDate);selectedScheduleDate.setHours(12,0,0,0)}
 function selectedDateIso(){normaliseSelectedScheduleDate();return selectedScheduleDate.toISOString().slice(0,10)}
@@ -1326,7 +1348,7 @@ renderSchedule=function(){
   const iso=selectedDateIso(),doses=dosesForDate(selectedScheduleDate);
   const grouped=doses.reduce((acc,item)=>{const key=item.meal.label||item.meal.time||t("Toma");(acc[key]||=[]).push(item);return acc},{});
   $("#schedule").innerHTML=`<article class="day-group compact-dose-list">${doses.length?Object.entries(grouped).map(([label,items])=>`<section class="dose-meal-group"><h2>${safe(label)}</h2>${items.map(item=>`<div class="day-dose compact-dose"><span class="dose-time">${safe(item.meal.time||"")}</span><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong>${medicineDoseLine(item.medicine)?`<p>${safe(medicineDoseLine(item.medicine))}</p>`:""}</div><button class="status-button compact-check-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}" aria-label="${t("Pendiente de tomar")}" aria-pressed="false">${String.fromCodePoint(0x25CB)}</button></div>`).join("")}</section>`).join(""):`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
-  $$("[data-take]").forEach(b=>b.onclick=async()=>{b.classList.toggle("taken");const taken=b.classList.contains("taken");b.textContent=taken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB);b.setAttribute("aria-label",taken?t("Tomada"):t("Pendiente de tomar"));b.setAttribute("aria-pressed",String(taken));await recordIntake(b.dataset.medicine,b.dataset.date,taken)});
+  $$("[data-take]").forEach(b=>setupTakeButton(b,true));
 };
 $("#previousDayButton")?.addEventListener("click",()=>{normaliseSelectedScheduleDate();selectedScheduleDate.setDate(selectedScheduleDate.getDate()-1);renderSchedule()});
 $("#nextDayButton")?.addEventListener("click",()=>{normaliseSelectedScheduleDate();selectedScheduleDate.setDate(selectedScheduleDate.getDate()+1);renderSchedule()});
