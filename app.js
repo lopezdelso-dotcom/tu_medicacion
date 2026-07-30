@@ -949,10 +949,35 @@ async function loadSideEffects(item){
   }catch(error){$("#effectsStatus").textContent=t("No se pudo cargar esta secciÃ³n del prospecto.")}
 }
 $("#medicineForm").onsubmit=async e=>{e.preventDefault();const form=e.target,submit=$("button[type=submit]",form);submit.disabled=true;try{if(!await validateCimaName(form))return;const data=Object.fromEntries(new FormData(form));const med={name:data.name,dose:data.dose,time:data.time,instructions:data.instructions,startDate:data.startDate,endDate:data.endDate||null,cimaId:data.cimaId||null,officialSource:data.officialSource||officialMedicineSource(),country:patientCountry,imageUrl:data.medicineImageUrl||null,activeIngredient:data.activeIngredient||null,confirmed:true,createdAt:new Date().toISOString()};if(fb&&state.user){const ref=await fb.addDoc(fb.collection(fb.db,"users",state.user.uid,"medicines"),med);med.id=ref.id;state.medicines.push(med)}else{med.id=crypto.randomUUID();state.medicines.push(med);localStorage.setItem("mm_medicines",JSON.stringify(state.medicines))}renderAll();openView("medicines");form.reset();showCimaValidation("","");$("#reviewPanel").hidden=true;toast("MedicaciÃ³n confirmada y guardada.")}finally{submit.disabled=false}};
+function ageFromBirthDate(value){
+  if(!value)return null;
+  const birth=new Date(`${value}T12:00:00`);
+  if(Number.isNaN(birth.getTime()))return null;
+  const today=new Date();
+  let age=today.getFullYear()-birth.getFullYear();
+  const birthdayThisYear=new Date(today.getFullYear(),birth.getMonth(),birth.getDate());
+  if(today<birthdayThisYear)age--;
+  return age;
+}
+function validateAdultBirthDate(form){
+  const input=form.elements.birthDate,status=$(".form-status",form),age=ageFromBirthDate(input.value);
+  const underAgeMessage=uiText("No puedes crear una cuenta si tienes menos de 18 a\u00f1os.","You cannot create an account if you are under 18.");
+  if(age!==null&&age<18){
+    status.textContent=underAgeMessage;
+    input.setCustomValidity(underAgeMessage);
+    input.reportValidity();
+    return false;
+  }
+  input.setCustomValidity("");
+  if(status.textContent===underAgeMessage)status.textContent="";
+  return true;
+}
+$("#registerForm [name=birthDate]")?.addEventListener("change",event=>validateAdultBirthDate(event.currentTarget.form));
 $("#registerForm").onsubmit=async e=>{
   e.preventDefault();
   const form=e.target,status=$(".form-status",form),submit=$("button[type=submit]",form);
   const data=Object.fromEntries(new FormData(form));
+  if(!validateAdultBirthDate(form))return;
   const profile={name:`${data.name} ${data.lastName}`.trim(),firstName:data.name,lastName:data.lastName,birthDate:data.birthDate,phone:data.phone,country:data.country,preferredLanguage:language,highContrast:localStorage.getItem("mm_contrast")==="true",email:data.email,status:"pending",role:"user",privacyAcceptedAt:new Date().toISOString(),healthConsentAt:new Date().toISOString()};
   status.textContent="Creando tu cuenta?â‚¬?";submit.disabled=true;
   let photoUploadFailed=false;
