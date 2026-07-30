@@ -1387,12 +1387,14 @@ function complianceStats(medicineId=null,startDate=null,endDate=null){
 }
 function renderComplianceSummary(){
   complianceMonth=new Date();
+  $("#complianceBackButton").hidden=false;
   $("#complianceSummary").hidden=false;$("#complianceDetail").hidden=true;
   const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...state.medicines.filter(m=>m.confirmed).map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
   $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
   $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
 }
 function showComplianceDetail(id){
+  $("#complianceBackButton").hidden=true;
   $("#complianceSummary").hidden=true;const detail=$("#complianceDetail");detail.hidden=false;
   complianceMonth.setHours(12,0,0,0);
   const monthStart=new Date(complianceMonth.getFullYear(),complianceMonth.getMonth(),1,12),monthEnd=new Date(complianceMonth.getFullYear(),complianceMonth.getMonth()+1,0,12),yesterday=yesterdayDate();
