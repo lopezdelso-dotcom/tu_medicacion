@@ -86,7 +86,7 @@ function forceCriticalSymbols(){
   setText("#previousDayButton",cp(0x2190));
   setText("#nextDayButton",cp(0x2192));
   setText("#calendarButton",cp(0x1F4C5)+" "+t("Ver semana completa"));
-  setText("#closeWeekCalendarButton",(language==="en"?"Back":"Atrás"));
+  setText("#closeWeekCalendarButton",(language==="en"?"View daily view":"Ver vista diaria"));
   setText("#changeMethodButton",(language==="en"?"Back":"Atrás"));
   setText("#scheduleBackButton",(language==="en"?"Back":"Atrás"));
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
@@ -1468,8 +1468,10 @@ function renderWeekCalendar(){
   $("#weekCalendarDays").innerHTML=days.map(date=>{
     const dayLabel=new Intl.DateTimeFormat(locale,{weekday:"short",day:"numeric"}).format(date);
     const doses=dosesForDate(date);
-    return `<article class="week-day-card"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${t("Sin tomas")}</p>`}</article>`;
+    const iso=date.toISOString().slice(0,10);
+    return `<button type="button" class="week-day-card" data-week-day="${safe(iso)}"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${t("Sin tomas")}</p>`}</button>`;
   }).join("");
+  $$("[data-week-day]",$("#weekCalendarDays")).forEach(button=>button.onclick=()=>{const next=new Date(`${button.dataset.weekDay}T12:00:00`);if(Number.isNaN(next.getTime()))return;selectedScheduleDate=next;hideWeekCalendar()});
   const used=state.medicines.filter(m=>m.confirmed&&days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
   $("#weekCalendarLegend").innerHTML=used.length?`<h3>${t("Leyenda")}</h3>${used.map(m=>`<div class="legend-row"><i style="background:${safe(colors[m.id]||"#247a5a")}"></i><span>${safe(medicineShortName(m))}</span></div>`).join("")}`:"";
 }
