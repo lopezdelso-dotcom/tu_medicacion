@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260731-106">
+  <link rel="stylesheet" href="user-controls.css?v=20260731-107">
   <link rel="stylesheet" href="selection-flow.css?v=20260727-81">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -89,6 +89,7 @@
           <button data-view="sideEffects"><span aria-hidden="true">&#9432;</span>Consultar efectos secundarios</button>
           <button data-view="compliance"><span aria-hidden="true">%</span>Cumplimiento</button>
           <button data-view="achievements"><span aria-hidden="true">*</span>Logros</button>
+          <button data-view="reminders" hidden><span aria-hidden="true">!</span>Recordatorios</button>
           <button data-view="profile"><span aria-hidden="true">+</span>Editar perfil</button>
           <button id="userAccessibilityButton" type="button" aria-expanded="false" aria-controls="preferencesPanel"><span aria-hidden="true">&#9881;</span>Preferencias</button>
           <button id="logoutButton" class="logout-menu" data-user-logout><span aria-hidden="true">&#8592;</span>Cerrar sesiÃ³n</button>
@@ -245,6 +246,21 @@
             </form>
           </div>
           <div id="sideEffects" class="view" hidden><button id="sideEffectsBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button><h1>Consultar efectos secundarios</h1><p class="lead">Selecciona uno de tus medicamentos confirmados.</p><div class="notice warning effects-health-notice"><b>Informaci&oacute;n sanitaria oficial</b><br>Si tienes s&iacute;ntomas graves o inesperados, contacta con un profesional sanitario. En urgencias, llama al 112.</div><div id="effectsStatus" role="status" aria-live="polite"></div><div id="effectsResults" class="effects-medicine-list"></div><article id="effectsDetail" class="effects-detail" hidden></article></div>
+          <div id="reminders" class="view" hidden>
+            <h1>Recordatorios</h1>
+            <p class="lead">Recibe avisos en este dispositivo cuando llegue la hora de una toma.</p>
+            <div class="reminder-card">
+              <span class="reminder-icon" aria-hidden="true"></span>
+              <div>
+                <h2>Notificaciones de tomas</h2>
+                <p>Activa los recordatorios en tu móvil o tablet. Puedes desactivarlos cuando quieras.</p>
+                <button id="enableRemindersButton" class="primary" type="button">Activar recordatorios</button>
+                <button id="disableRemindersButton" class="secondary" type="button" hidden>Desactivar recordatorios</button>
+                <p id="reminderStatus" class="form-status" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="notice warning reminder-notice"><b>Importante</b><br>Los recordatorios son una ayuda. No sustituyen la pauta indicada por un profesional sanitario.</div>
+          </div>
           <div id="compliance" class="view" hidden>
             <button id="complianceBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
             <section id="complianceSummary">
@@ -321,7 +337,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260727-81"></script>
-  <script type="module" src="app.js?v=20260731-110"></script>
+  <script type="module" src="app.js?v=20260731-113"></script>
 </body>
 </html>
 

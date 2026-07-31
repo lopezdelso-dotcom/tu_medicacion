@@ -1,9 +1,11 @@
 ﻿const {onCall,HttpsError}=require("firebase-functions/v2/https");
+const {onSchedule}=require("firebase-functions/v2/scheduler");
 const {defineSecret}=require("firebase-functions/params");
 const {initializeApp}=require("firebase-admin/app");
 const {getAuth}=require("firebase-admin/auth");
 const {getFirestore}=require("firebase-admin/firestore");
 const {getStorage}=require("firebase-admin/storage");
+const {getMessaging}=require("firebase-admin/messaging");
 const {DocumentProcessorServiceClient}=require("@google-cloud/documentai");
 const {google}=require("googleapis");
 const crypto=require("crypto");
@@ -15,6 +17,90 @@ const gmailClientSecret=defineSecret("GMAIL_CLIENT_SECRET");
 const gmailRefreshToken=defineSecret("GMAIL_REFRESH_TOKEN");
 const appUrl="https://mi-medicacion-senior-lopez.web.app";
 const appFromEmail="informacion.tu.medicacion@gmail.com";
+
+function madridDateParts(date=new Date()){
+  const parts=Object.fromEntries(new Intl.DateTimeFormat("en-GB",{
+    timeZone:"Europe/Madrid",weekday:"short",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false
+  }).formatToParts(date).filter(part=>part.type!=="literal").map(part=>[part.type,part.value]));
+  const weekMap={Mon:"mon",Tue:"tue",Wed:"wed",Thu:"thu",Fri:"fri",Sat:"sat",Sun:"sun"};
+  return {iso:`${parts.year}-${parts.month}-${parts.day}`,weekday:weekMap[parts.weekday]||"",minutes:Number(parts.hour)*60+Number(parts.minute)};
+}
+function dateOnlyValue(value){
+  if(!value)return "";
+  if(typeof value==="string")return value.slice(0,10);
+  if(value.toDate)return value.toDate().toISOString().slice(0,10);
+  return "";
+}
+function isMedicineActiveForDate(medicine,iso,weekday){
+  if(!medicine||medicine.confirmed===false)return false;
+  const start=dateOnlyValue(medicine.startDate);
+  const end=dateOnlyValue(medicine.endDate);
+  const deleted=dateOnlyValue(medicine.deletedAt);
+  if(start&&iso<start)return false;
+  if(end&&iso>end)return false;
+  if(deleted&&iso>=deleted)return false;
+  const days=medicine.schedule?.days;
+  if(Array.isArray(days)&&days.length&&!days.includes(weekday))return false;
+  return true;
+}
+function reminderMeals(medicine){
+  const meals=medicine.schedule?.meals;
+  if(Array.isArray(meals)&&meals.length)return meals.filter(meal=>meal?.time);
+  if(medicine.time)return [{key:"dose",label:"Toma",time:medicine.time}];
+  return [];
+}
+function intakeDocId(iso,meal,medicineId){
+  return `${iso}_${meal.key||meal.label||"dose"}_${medicineId}`;
+}
+function shortMedicineName(name=""){
+  const tokens=String(name).trim().split(/\s+/).filter(Boolean);
+  const firstDose=tokens.findIndex(token=>/^\d/.test(token));
+  return tokens.slice(0,firstDose>0?Math.min(firstDose+2,tokens.length):Math.min(4,tokens.length)).join(" ")||String(name).trim();
+}
+
+exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"every 10 minutes",timeZone:"Europe/Madrid"},async()=>{
+  const db=getFirestore(),messaging=getMessaging(),now=madridDateParts(),windowEnd=now.minutes+10;
+  const users=await db.collection("users").where("status","==","approved").get();
+  for(const userDoc of users.docs){
+    const profile=userDoc.data();
+    if(profile.role!=="user"||profile.remindersEnabled!==true)continue;
+    const tokensSnap=await userDoc.ref.collection("notificationTokens").where("enabled","==",true).get();
+    const tokenRows=tokensSnap.docs.map(doc=>({id:doc.id,token:doc.data().token})).filter(row=>row.token);
+    if(!tokenRows.length)continue;
+    const medicinesSnap=await userDoc.ref.collection("medicines").get();
+    for(const medicineDoc of medicinesSnap.docs){
+      const medicine={id:medicineDoc.id,...medicineDoc.data()};
+      if(!isMedicineActiveForDate(medicine,now.iso,now.weekday))continue;
+      for(const meal of reminderMeals(medicine)){
+        const [hour,minute]=String(meal.time||"").split(":").map(Number);
+        if(!Number.isFinite(hour)||!Number.isFinite(minute))continue;
+        const mealMinutes=hour*60+minute;
+        if(mealMinutes<now.minutes||mealMinutes>=windowEnd)continue;
+        const logId=intakeDocId(now.iso,meal,medicine.id);
+        const logRef=userDoc.ref.collection("reminderLogs").doc(logId);
+        if((await logRef.get()).exists)continue;
+        const intake=await userDoc.ref.collection("intakes").doc(logId).get();
+        if(intake.exists&&intake.data().taken)continue;
+        const isEnglish=profile.preferredLanguage==="en";
+        const medicineName=shortMedicineName(medicine.name||"");
+        const title=isEnglish?"Medication reminder":"Recordatorio de medicación";
+        const body=isEnglish?`It is time for ${medicineName}.`:`Es la hora de ${medicineName}.`;
+        const response=await messaging.sendEachForMulticast({
+          tokens:tokenRows.map(row=>row.token),
+          notification:{title,body},
+          data:{url:`${appUrl}/#today`,medicineId:medicine.id,mealKey:meal.key||"dose",scheduledDate:now.iso}
+        });
+        await logRef.set({medicineId:medicine.id,mealKey:meal.key||"dose",scheduledDate:now.iso,scheduledTime:meal.time,sentAt:new Date(),successCount:response.successCount,failureCount:response.failureCount});
+        await Promise.all(response.responses.map((result,index)=>{
+          const code=result.error?.code||"";
+          if(!code.includes("registration-token-not-registered")&&!code.includes("invalid-registration-token"))return null;
+          return userDoc.ref.collection("notificationTokens").doc(tokenRows[index].id).set({enabled:false,disabledAt:new Date(),disableReason:code},{merge:true});
+        }).filter(Boolean));
+      }
+    }
+  }
+  return null;
+});
 
 exports.checkPasswordResetEligibility=onCall({region:"europe-west1"},async request=>{
   const email=String(request.data?.email||"").trim().toLowerCase();

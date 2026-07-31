@@ -6,5 +6,6 @@ window.__FIREBASE_CONFIG__ = {
   projectId: "TU_PROYECTO",
   storageBucket: "TU_PROYECTO.firebasestorage.app",
   messagingSenderId: "",
-  appId: ""
+  appId: "",
+  vapidKey: "CLAVE_PUBLICA_WEB_PUSH_DE_FIREBASE"
 };

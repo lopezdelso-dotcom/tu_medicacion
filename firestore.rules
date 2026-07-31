@@ -25,6 +25,9 @@ service cloud.firestore {
         allow read: if own(uid) && approved();
         allow create, update, delete: if own(uid) && approved();
       }
+      match /notificationTokens/{tokenId} {
+        allow read, create, update, delete: if own(uid) && approved();
+      }
       match /documentDrafts/{draftId} {
         allow read, update, delete: if own(uid) && approved();
         allow create: if false;

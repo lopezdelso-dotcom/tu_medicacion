@@ -1,4 +1,5 @@
 ﻿const firebaseConfig = window.__FIREBASE_CONFIG__ || null;
+const firebaseVapidKey = firebaseConfig?.vapidKey || "";
 let fb = null;
 const demo = !firebaseConfig;
 
@@ -78,6 +79,9 @@ function repairVisibleText(root=document.body){
   });
 }
 function repairAppText(){repairVisibleText();forceCriticalSymbols()}
+function updateReminderMenuVisibility(){
+  document.querySelectorAll('.user-menu [data-view="reminders"]').forEach(button=>{button.hidden=!remindersAvailable()});
+}
 function forceCriticalSymbols(){
   const cp=(...codes)=>String.fromCodePoint(...codes);
   const setText=(selector,text)=>{const el=$(selector);if(el&&el.textContent!==text)el.textContent=text};
@@ -94,6 +98,7 @@ function forceCriticalSymbols(){
     medicines:language==="en"?"Medication":"Medicación",
     today:language==="en"?"Doses":"Tomas",
     sideEffects:language==="en"?"Side effects":"Consultar efectos secundarios",
+    reminders:language==="en"?"Reminders":"Recordatorios",
     compliance:language==="en"?"Adherence":"Cumplimiento",
     achievements:language==="en"?"Achievements":"Logros",
     profile:language==="en"?"Edit profile":"Editar perfil"
@@ -108,6 +113,7 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
   document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2713));
   document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x24D8));
+  document.querySelectorAll('[data-view="reminders"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F514));
   document.querySelectorAll('[data-view="compliance"] span[aria-hidden="true"]').forEach(el=>el.textContent="%");
   document.querySelectorAll('[data-view="achievements"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F3C5));
   document.querySelectorAll('[data-view="profile"] span[aria-hidden="true"]').forEach(el=>el.textContent="+");
@@ -115,6 +121,7 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-user-logout] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2190));
   document.querySelectorAll('[data-medication-mode="upload"] span[aria-hidden="true"], #uploadChoice > span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F4F7));
   document.querySelectorAll('[data-medication-mode="search"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F50E));
+  updateReminderMenuVisibility();
 }
 
 function repairMojibake(value=""){
@@ -357,8 +364,9 @@ async function initFirebase(){
   const dbMod=await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js");
   const storageMod=await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js");
   const fnMod=await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js");
+  const msgMod=await import("https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging.js").catch(()=>null);
   const app=appMod.initializeApp(firebaseConfig);
-  fb={auth:authMod.getAuth(app),db:dbMod.getFirestore(app),storage:storageMod.getStorage(app),functions:fnMod.getFunctions(app,"europe-west1"),...authMod,...dbMod,...storageMod,...fnMod};
+  fb={app,auth:authMod.getAuth(app),db:dbMod.getFirestore(app),storage:storageMod.getStorage(app),functions:fnMod.getFunctions(app,"europe-west1"),messagingMod:msgMod,...authMod,...dbMod,...storageMod,...fnMod};
   fb.auth.languageCode=language==="en"?"en":"es";
   try{await fb.setPersistence(fb.auth,fb.browserLocalPersistence)}catch(error){}
   fb.onAuthStateChanged(fb.auth,user=>{
@@ -437,9 +445,15 @@ async function enterAuthenticatedUser(user){
   catch(error){state.medicines=[];try{renderAll()}catch(renderError){}toast("Has accedido, pero no se pudo cargar la medicaciÃ³n.");}
   return {ok:true};
 }
-const userViewIds=["today","medicines","documents","sideEffects","compliance","achievements","profile"];
+const userViewIds=["today","medicines","documents","sideEffects","reminders","compliance","achievements","profile"];
 let suppressHashNavigation=false;
-function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)?value:""}
+function isInstalledAppMode(){
+  return Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches||window.matchMedia?.("(display-mode: fullscreen)")?.matches||navigator.standalone);
+}
+function remindersAvailable(){
+  return isInstalledAppMode();
+}
+function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
 function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
@@ -467,11 +481,13 @@ function showApp(){
   renderAll(); openView(initialView||"today",{replace:!!initialView});
 }
 function openView(id,options={}){
+  if(id==="reminders"&&!remindersAvailable())id="today";
   if(!userViewIds.includes(id)&&id!=="admin")id="today";
   $$(".view").forEach(v=>{v.hidden=v.id!==id;v.classList.toggle("active-view",v.id===id)});
   $$(".user-menu [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
   if(id==="admin") renderRequests();
   if(id==="sideEffects") renderSideEffectsMedicines();
+  if(id==="reminders") renderReminders();
   if(id==="compliance") renderComplianceSummary();
   if(id==="achievements") renderAchievements();
   if(id==="profile") hydrateProfileForm();
@@ -991,6 +1007,94 @@ $("#sideEffectsBackButton").hidden=true;
 $("#sideEffectsBackButton").onclick=()=>openView("today");
 $("#complianceBackButton")?.addEventListener("click",()=>openView("today"));
 $("#achievementsBackButton")?.addEventListener("click",()=>openView("today"));
+
+let currentReminderToken="";
+function remindersSupported(){
+  return Boolean(fb?.messagingMod&&"Notification" in window&&"serviceWorker" in navigator&&window.isSecureContext);
+}
+function reminderTokenDocId(token){
+  return String(token||"").replace(/[^\w-]/g,"_").slice(0,180)||"device";
+}
+function setReminderScreenText(){
+  const title=$("#reminders h1"),lead=$("#reminders .lead"),heading=$(".reminder-card h2"),copy=$(".reminder-card p"),notice=$(".reminder-notice");
+  if(title)title.textContent=uiText("Recordatorios","Reminders");
+  if(lead)lead.textContent=uiText("Recibe avisos en este dispositivo cuando llegue la hora de una toma.","Receive alerts on this device when a dose is due.");
+  if(heading)heading.textContent=uiText("Notificaciones de tomas","Dose notifications");
+  if(copy)copy.textContent=uiText("Activa los recordatorios en tu móvil o tablet. Puedes desactivarlos cuando quieras.","Enable reminders on your phone or tablet. You can turn them off whenever you want.");
+  if(notice)notice.innerHTML=`<b>${uiText("Importante","Important")}</b><br>${uiText("Los recordatorios son una ayuda. No sustituyen la pauta indicada por un profesional sanitario.","Reminders are only a support. They do not replace the schedule given by a healthcare professional.")}`;
+}
+async function renderReminders(){
+  setReminderScreenText();
+  const status=$("#reminderStatus"),enable=$("#enableRemindersButton"),disable=$("#disableRemindersButton");
+  if(!status||!enable||!disable)return;
+  enable.textContent=uiText("Activar recordatorios","Enable reminders");
+  disable.textContent=uiText("Desactivar recordatorios","Disable reminders");
+  enable.disabled=false;
+  disable.disabled=false;
+  if(!remindersSupported()){
+    enable.hidden=true;disable.hidden=true;
+    status.textContent=uiText("Este navegador no permite recordatorios push. En Android, abre la app instalada o Chrome actualizado.","This browser does not support push reminders. On Android, open the installed app or an updated Chrome.");
+    return;
+  }
+  if(!firebaseVapidKey){
+    enable.hidden=false;disable.hidden=true;enable.disabled=true;
+    status.textContent=uiText("Falta configurar la clave Web Push de Firebase para activar los recordatorios.","Firebase Web Push key is not configured yet, so reminders cannot be enabled.");
+    return;
+  }
+  const permission=Notification.permission;
+  enable.hidden=permission==="granted";
+  disable.hidden=permission!=="granted";
+  status.textContent=permission==="granted"
+    ? uiText("Recordatorios activados en este dispositivo.","Reminders enabled on this device.")
+    : permission==="denied"
+      ? uiText("El navegador tiene bloqueadas las notificaciones. Actívalas en los ajustes de Chrome.","Notifications are blocked in the browser. Enable them in Chrome settings.")
+      : uiText("Pulsa el botón para recibir avisos cuando llegue una toma.","Press the button to receive an alert when a dose is due.");
+}
+async function enableReminders(){
+  const status=$("#reminderStatus"),enable=$("#enableRemindersButton");
+  if(!state.user||!fb)return;
+  if(!remindersSupported()||!firebaseVapidKey){renderReminders();return}
+  enable.disabled=true;
+  try{
+    const permission=await Notification.requestPermission();
+    if(permission!=="granted"){renderReminders();return}
+    const registration=await navigator.serviceWorker.register("/service-worker.js");
+    await registration.update?.();
+    const messaging=fb.messagingMod.getMessaging(fb.app);
+    const token=await fb.messagingMod.getToken(messaging,{vapidKey:firebaseVapidKey,serviceWorkerRegistration:registration});
+    if(!token)throw new Error("no-token");
+    currentReminderToken=token;
+    await fb.setDoc(fb.doc(fb.db,"users",state.user.uid,"notificationTokens",reminderTokenDocId(token)),{
+      token,enabled:true,platform:"web-android",userAgent:navigator.userAgent,language,updatedAt:fb.serverTimestamp()
+    },{merge:true});
+    await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid),{remindersEnabled:true,remindersUpdatedAt:fb.serverTimestamp()});
+    if(status)status.textContent=uiText("Recordatorios activados en este dispositivo.","Reminders enabled on this device.");
+  }catch(error){
+    if(status)status.textContent=uiText("No se pudieron activar los recordatorios. Revisa los permisos del navegador.","Reminders could not be enabled. Check browser permissions.");
+  }finally{
+    enable.disabled=false;
+    renderReminders();
+  }
+}
+async function disableReminders(){
+  const status=$("#reminderStatus"),disable=$("#disableRemindersButton");
+  if(!state.user||!fb)return;
+  disable.disabled=true;
+  try{
+    if(currentReminderToken){
+      await fb.setDoc(fb.doc(fb.db,"users",state.user.uid,"notificationTokens",reminderTokenDocId(currentReminderToken)),{enabled:false,disabledAt:fb.serverTimestamp()},{merge:true});
+    }
+    await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid),{remindersEnabled:false,remindersUpdatedAt:fb.serverTimestamp()});
+    if(status)status.textContent=uiText("Recordatorios desactivados en este dispositivo.","Reminders disabled on this device.");
+  }catch(error){
+    if(status)status.textContent=uiText("No se pudieron desactivar los recordatorios.","Reminders could not be disabled.");
+  }finally{
+    disable.disabled=false;
+    renderReminders();
+  }
+}
+$("#enableRemindersButton")?.addEventListener("click",enableReminders);
+$("#disableRemindersButton")?.addEventListener("click",disableReminders);
 function cleanSideEffectPoint(text){
   return fixDisplayText(String(text||""))
     .replace(/\s+/g," ")
@@ -1623,8 +1727,7 @@ if("serviceWorker" in navigator){
   navigator.serviceWorker.register("/service-worker.js").then(registration=>registration.update?.()).catch(()=>{});
 }
 function isAndroidWeb(){
-  const standalone=window.matchMedia?.("(display-mode: standalone)")?.matches||navigator.standalone;
-  return /Android/i.test(navigator.userAgent)&&!standalone;
+  return /Android/i.test(navigator.userAgent)&&!isInstalledAppMode();
 }
 function setupInstallAppButton(){
   const button=$("#installAppButton");

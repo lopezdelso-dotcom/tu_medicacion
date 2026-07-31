@@ -353,6 +353,14 @@ body.user-mode .preferences-panel{
 .compact-check-button.future-disabled{border-color:#aebbb5!important;color:#6d7b75!important;background:#eef3f0!important}
 .user-menu button[data-view="compliance"]{background:#e8f5ee!important;color:#1e654e!important}
 .user-menu button[data-view="achievements"]{background:#fff4d8!important;color:#76540e!important}
+.user-menu button[data-view="reminders"]{background:#eef5ff!important;color:#244f7b!important}
+.reminder-card{display:grid;grid-template-columns:58px minmax(0,1fr);gap:1rem;align-items:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.1rem;margin:1rem 0}
+.reminder-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:14px;background:#e5effb;color:#244f7b;font-size:1.7rem}
+.reminder-icon::before{content:"\1F514"}
+.reminder-card h2{margin:.1rem 0 .35rem;font-size:1.25rem}
+.reminder-card p{margin:.35rem 0;color:#60746e}
+.reminder-card .primary,.reminder-card .secondary{margin:.45rem .45rem .2rem 0}
+.reminder-notice{font-size:.92rem}
 .compliance-list{display:grid;gap:.75rem;margin-top:1rem}
 .compliance-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.85rem;width:100%;text-align:left;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);padding:1rem}
 .compliance-card b{display:block;font-size:1rem;line-height:1.15}
@@ -404,6 +412,8 @@ body.user-mode .preferences-panel{
   .compact-dose .dose-medicine strong{font-size:.8rem!important}
   .compact-check-button{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;font-size:1.25rem!important;border-width:2px!important}
   .compliance-card{padding:.85rem;border-radius:16px}
+  .reminder-card{grid-template-columns:1fr;padding:1rem}
+  .reminder-icon{width:48px;height:48px}
   .compliance-card>strong{min-width:56px;height:56px;font-size:1.05rem}
   .compliance-detail-card{padding:1rem}
   .compliance-detail-card h1{font-size:1.12rem!important;line-height:1.12;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
