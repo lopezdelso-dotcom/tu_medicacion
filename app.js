@@ -451,7 +451,7 @@ function isInstalledAppMode(){
   return Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches||window.matchMedia?.("(display-mode: fullscreen)")?.matches||navigator.standalone);
 }
 function remindersAvailable(){
-  return isInstalledAppMode();
+  return isInstalledAppMode()&&/Android/i.test(navigator.userAgent);
 }
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
 function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }

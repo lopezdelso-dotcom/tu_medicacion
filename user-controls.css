@@ -105,6 +105,7 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
 .user-menu button[data-view="medicines"]>span[aria-hidden="true"]:first-child::before{content:"\1F48A"}
 .user-menu button[data-view="today"]>span[aria-hidden="true"]:first-child::before{content:"\2713"}
 .user-menu button[data-view="sideEffects"]>span[aria-hidden="true"]:first-child::before{content:"\24D8"}
+.user-menu button[data-view="reminders"]>span[aria-hidden="true"]:first-child::before{content:"\1F514"}
 .user-menu button[data-view="compliance"]>span[aria-hidden="true"]:first-child::before{content:"%"}
 .user-menu button[data-view="achievements"]>span[aria-hidden="true"]:first-child::before{content:"\01F3C5"}
 .user-menu button[data-view="profile"]>span[aria-hidden="true"]:first-child::before{content:"+"}
@@ -451,6 +452,7 @@ body.user-mode .preferences-panel{
 .user-menu button[data-view="medicines"]>span[aria-hidden="true"]:first-child::before{content:"\01F48A"}
 .user-menu button[data-view="today"]>span[aria-hidden="true"]:first-child::before{content:"\2713"}
 .user-menu button[data-view="sideEffects"]>span[aria-hidden="true"]:first-child::before{content:"\24D8"}
+.user-menu button[data-view="reminders"]>span[aria-hidden="true"]:first-child::before{content:"\1F514"}
 .user-menu button[data-view="compliance"]>span[aria-hidden="true"]:first-child::before{content:"%"}
 .user-menu button[data-view="achievements"]>span[aria-hidden="true"]:first-child::before{content:"\01F3C5"}
 .user-menu button[data-view="profile"]>span[aria-hidden="true"]:first-child::before{content:"+"}
