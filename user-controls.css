@@ -148,6 +148,26 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
   }
 }
 @media(min-width:761px) and (max-width:1180px){
+  html,body{
+    overflow-x:hidden!important;
+  }
+  body.user-mode .app-view,
+  body.user-mode .user-area,
+  body.user-mode .user-shell{
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    overflow-x:hidden!important;
+  }
+  body.user-mode .user-header{
+    width:100%!important;
+    max-width:100%!important;
+    left:0!important;
+    right:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
   body.user-mode .user-content{
     width:min(100%, 980px)!important;
     max-width:980px!important;
@@ -161,6 +181,19 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
     max-width:980px!important;
     margin-left:auto!important;
     margin-right:auto!important;
+  }
+}
+@media(min-width:761px) and (max-width:1180px) and (orientation:portrait){
+  body.user-mode .user-content,
+  body.user-mode .view{
+    width:100%!important;
+    max-width:760px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  body.user-mode .view{
+    padding-left:1rem!important;
+    padding-right:1rem!important;
   }
 }
 @media(max-width:760px){
