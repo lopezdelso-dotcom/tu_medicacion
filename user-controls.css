@@ -251,7 +251,6 @@ body.user-mode .preferences-panel{
 .compliance-table th{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:#60746e}
 .achievement-streak-card{display:grid;place-items:center;gap:.25rem;margin:1rem 0 0;padding:1rem;border-radius:20px;background:#fff4d8;border:1px solid #e7c76e;color:#5c410b;text-align:center}
 .achievement-main-badge{display:grid;place-items:center;width:86px;height:86px;border-radius:22px;background:#fff;font-size:2.7rem}
-.achievement-streak-number{display:block;font-size:3.6rem;font-weight:950;line-height:.9;color:var(--green)}
 .achievement-streak-card h2{margin:.2rem 0 0;font-size:1.25rem;line-height:1.1}
 .achievement-streak-card p{display:none!important}
 .achievement-milestones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:1rem 0}
@@ -291,7 +290,6 @@ body.user-mode .preferences-panel{
   .compliance-big-percent strong{font-size:2rem}
   .achievement-streak-card{padding:.8rem}
   .achievement-main-badge{width:72px;height:72px;font-size:2.2rem}
-  .achievement-streak-number{font-size:3rem}
   .achievement-streak-card h2{font-size:1rem}
   .achievement-milestones{gap:.35rem;margin:.85rem 0;grid-template-columns:repeat(4,minmax(0,1fr))}
   .achievement-milestone{min-height:92px;border-radius:16px;padding:.25rem}

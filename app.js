@@ -1457,7 +1457,7 @@ function renderAchievements(){
   const streak=currentPerfectMonthStreak();
   const monthText=language==="en"?`${streak} active month${streak===1?"":"s"} streak`:`Racha activa de ${streak} ${streak===1?"mes":"meses"}`;
   $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div>`;
-  $("#achievementStreak").innerHTML=`<span class="achievement-streak-number">${streak}</span><h2>${safe(monthText)}</h2>`;
+  $("#achievementStreak").innerHTML=`<h2>${safe(monthText)}</h2>`;
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
