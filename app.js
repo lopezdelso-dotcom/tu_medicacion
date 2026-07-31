@@ -1643,8 +1643,8 @@ function setupInstallAppButton(){
   button.addEventListener("click",async()=>{
     if(!deferredInstallPrompt){
       const message=uiText(
-        "Chrome todavía no permite abrir la instalación automática. Pulsa los tres puntos de Chrome y elige “Instalar aplicación” o “Añadir a pantalla de inicio”.",
-        "Chrome cannot open automatic installation yet. Tap Chrome’s three-dot menu and choose “Install app” or “Add to home screen”."
+        "Pulsa los tres puntos de Chrome y después pulsa “Abrir Tu Medicación”.",
+        "Tap Chrome’s three-dot menu and then tap “Open Your Medication”."
       );
       toast(message);
       window.alert(message);
