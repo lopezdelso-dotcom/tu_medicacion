@@ -1446,20 +1446,18 @@ function streakBadge(streak){
 }
 function achievementMilestones(streak){
   const items=[
-    {months:1,icon:String.fromCodePoint(0x1F949),label:language==="en"?"1 month":"1 mes"},
-    {months:2,icon:String.fromCodePoint(0x1F948),label:language==="en"?"2 months":"2 meses"},
-    {months:3,icon:String.fromCodePoint(0x1F947),label:language==="en"?"3 months":"3 meses"},
+    {months:1,icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"1 month":"1 mes"},
+    {months:2,icon:String.fromCodePoint(0x1F947),label:language==="en"?"2 months":"2 meses"},
+    {months:3,icon:String.fromCodePoint(0x2B50),label:language==="en"?"3 months":"3 meses"},
     {months:4,icon:String.fromCodePoint(0x1F48E),label:language==="en"?"4 months":"4 meses"}
   ];
   return items.map(item=>`<div class="achievement-milestone ${streak>=item.months?"earned":"locked"}"><span>${safe(item.icon)}</span><b>${safe(item.label)}</b></div>`).join("");
 }
 function renderAchievements(){
-  const months=achievementMonths(12),locale=language==="en"?"en-GB":"es-ES",streak=currentPerfectMonthStreak(),badge=streakBadge(streak);
-  $("#achievementStreak").innerHTML=`<span class="achievement-main-badge">${safe(badge.icon)}</span><div><span class="achievement-streak-number">${streak}</span><h2>${safe(badge.label)}</h2></div>`;
-  const header=months.map(month=>`<div class="achievement-month"><span>${safe(new Intl.DateTimeFormat(locale,{month:"short"}).format(month).replace(".",""))}</span><small>${safe(new Intl.DateTimeFormat(locale,{year:"2-digit"}).format(month))}</small></div>`).join("");
-  const totalRow=`<div class="achievement-row achievement-total-row"><div class="achievement-med-name">Total</div>${months.map(month=>{const stats=monthStatsTotal(month);return `<div class="achievement-cell ${isPerfect(stats)?"perfect":""}" title="${stats.taken}/${stats.expected}">${isPerfect(stats)?String.fromCodePoint(0x1F3C5):String.fromCodePoint(0x25CB)}</div>`}).join("")}</div>`;
-  $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div><div class="achievement-table" style="--achievement-months:${months.length}"><div class="achievement-row achievement-header"><div></div>${header}</div>${totalRow}</div>`;
-  requestAnimationFrame(()=>{const scroller=$("#achievementGrid");if(scroller)scroller.scrollLeft=scroller.scrollWidth});
+  const streak=currentPerfectMonthStreak();
+  const monthText=language==="en"?`${streak} active month${streak===1?"":"s"} streak`:`Racha activa de ${streak} ${streak===1?"mes":"meses"}`;
+  $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div>`;
+  $("#achievementStreak").innerHTML=`<span class="achievement-streak-number">${streak}</span><h2>${safe(monthText)}</h2>`;
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
