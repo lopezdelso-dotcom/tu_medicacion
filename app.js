@@ -1614,7 +1614,7 @@ function isAndroidWeb(){
 function setupInstallAppButton(){
   const button=$("#installAppButton");
   if(!button)return;
-  const update=()=>{button.hidden=!(isAndroidWeb()&&deferredInstallPrompt)};
+  const update=()=>{button.hidden=!isAndroidWeb()};
   window.addEventListener("beforeinstallprompt",event=>{
     if(!isAndroidWeb())return;
     event.preventDefault();
@@ -1626,7 +1626,10 @@ function setupInstallAppButton(){
     update();
   });
   button.addEventListener("click",async()=>{
-    if(!deferredInstallPrompt)return;
+    if(!deferredInstallPrompt){
+      toast(uiText("Si no aparece la instalación, abre el menú de Chrome y pulsa Instalar aplicación.","If the install prompt does not appear, open Chrome menu and tap Install app."));
+      return;
+    }
     const promptEvent=deferredInstallPrompt;
     deferredInstallPrompt=null;
     update();
