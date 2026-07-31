@@ -1603,11 +1603,10 @@ $("#medicineForm").onsubmit=async e=>{
 };
 initFirebase();
 
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("/service-worker.js").catch(()=>{}));
-}
-
 let deferredInstallPrompt=null;
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("/service-worker.js").then(registration=>registration.update?.()).catch(()=>{});
+}
 function isAndroidWeb(){
   const standalone=window.matchMedia?.("(display-mode: standalone)")?.matches||navigator.standalone;
   return /Android/i.test(navigator.userAgent)&&!standalone;
@@ -1628,7 +1627,12 @@ function setupInstallAppButton(){
   });
   button.addEventListener("click",async()=>{
     if(!deferredInstallPrompt){
-      toast(uiText("Si no aparece la instalación, abre el menú de Chrome y pulsa Instalar aplicación.","If the install prompt does not appear, open Chrome menu and tap Install app."));
+      const message=uiText(
+        "Chrome todavía no permite abrir la instalación automática. Pulsa los tres puntos de Chrome y elige “Instalar aplicación” o “Añadir a pantalla de inicio”.",
+        "Chrome cannot open automatic installation yet. Tap Chrome’s three-dot menu and choose “Install app” or “Add to home screen”."
+      );
+      toast(message);
+      window.alert(message);
       return;
     }
     const promptEvent=deferredInstallPrompt;
