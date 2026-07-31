@@ -249,10 +249,16 @@ body.user-mode .preferences-panel{
 .compliance-table{width:100%;border-collapse:collapse;margin-top:1rem}
 .compliance-table th,.compliance-table td{padding:.7rem .55rem;border-bottom:1px solid var(--line);text-align:left}
 .compliance-table th{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:#60746e}
-.achievement-streak-card{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:.9rem;margin:1rem 0;padding:1rem;border-radius:20px;background:#fff4d8;border:1px solid #e7c76e;color:#5c410b}
-.achievement-main-badge{display:grid;place-items:center;width:64px;height:64px;border-radius:18px;background:#fff;font-size:2rem}
-.achievement-streak-card h2{margin:0;font-size:1.25rem;line-height:1.1}
-.achievement-streak-card p{margin:.25rem 0 0;font-weight:800}
+.achievement-streak-card{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;gap:1rem;margin:1rem 0;padding:1.15rem;border-radius:20px;background:#fff4d8;border:1px solid #e7c76e;color:#5c410b}
+.achievement-main-badge{display:grid;place-items:center;width:86px;height:86px;border-radius:22px;background:#fff;font-size:2.7rem}
+.achievement-streak-number{display:block;font-size:3rem;font-weight:950;line-height:.9;color:var(--green)}
+.achievement-streak-card h2{margin:.2rem 0 0;font-size:1.1rem;line-height:1.1}
+.achievement-streak-card p{display:none!important}
+.achievement-milestones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.55rem;margin:1rem 0}
+.achievement-milestone{display:grid;place-items:center;gap:.25rem;min-height:88px;border:1px solid var(--line);border-radius:16px;background:#f0f2f1;color:#7b8782;filter:grayscale(1);opacity:.55;text-align:center}
+.achievement-milestone span{font-size:1.7rem;line-height:1}
+.achievement-milestone b{font-size:.82rem;line-height:1.05}
+.achievement-milestone.earned{background:#fff4d8;border-color:#e7c76e;color:#76540e;filter:none;opacity:1}
 .achievements-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.7rem}
 .achievement-table{display:grid;gap:.35rem;min-width:max-content}
 .achievement-row{display:grid;grid-template-columns:minmax(150px,180px) repeat(var(--achievement-months),68px);gap:.35rem;align-items:stretch}
@@ -283,10 +289,14 @@ body.user-mode .preferences-panel{
   .compliance-detail-card{padding:1rem}
   .compliance-detail-card h1{font-size:1.12rem!important;line-height:1.12;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .compliance-big-percent strong{font-size:2rem}
-  .achievement-streak-card{grid-template-columns:54px minmax(0,1fr);padding:.85rem}
-  .achievement-main-badge{width:54px;height:54px;font-size:1.65rem}
-  .achievement-streak-card h2{font-size:1rem}
-  .achievement-streak-card p{font-size:.82rem}
+  .achievement-streak-card{grid-template-columns:72px minmax(0,1fr);padding:.9rem}
+  .achievement-main-badge{width:72px;height:72px;font-size:2.2rem}
+  .achievement-streak-number{font-size:2.45rem}
+  .achievement-streak-card h2{font-size:.95rem}
+  .achievement-milestones{gap:.35rem;margin:.85rem 0}
+  .achievement-milestone{min-height:74px;border-radius:14px;padding:.25rem}
+  .achievement-milestone span{font-size:1.35rem}
+  .achievement-milestone b{font-size:.72rem}
   .achievement-row{grid-template-columns:minmax(104px,116px) repeat(var(--achievement-months),54px);gap:.28rem}
   .achievement-row>div{min-height:44px;padding:.42rem}
   .achievement-med-name{font-size:.66rem}
