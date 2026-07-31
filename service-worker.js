@@ -1,30 +1,26 @@
 importScripts("https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging-compat.js");
+importScripts("/firebase-config.js");
 
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAW0d7BP_vXNQiH0JT4JrIQ5SQwYbKyHQQ",
-  authDomain: "mi-medicacion-senior-lopez.firebaseapp.com",
-  projectId: "mi-medicacion-senior-lopez",
-  storageBucket: "mi-medicacion-senior-lopez.firebasestorage.app",
-  messagingSenderId: "852901292699",
-  appId: "1:852901292699:web:579bf4b56a7132559b343e"
-};
+const FIREBASE_CONFIG = self.__FIREBASE_CONFIG__;
 
 try {
-  firebase.initializeApp(FIREBASE_CONFIG);
-  firebase.messaging().onBackgroundMessage(payload => {
-    const notification = payload.notification || {};
-    const data = payload.data || {};
-    self.registration.showNotification(notification.title || data.title || "Tu Medicación", {
-      body: notification.body || data.body || "Tienes una toma pendiente.",
-      icon: "/pwa-icons/icon-192.png",
-      badge: "/pwa-icons/maskable-192.png",
-      data: {url: data.url || "/"}
+  if (FIREBASE_CONFIG) {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    firebase.messaging().onBackgroundMessage(payload => {
+      const notification = payload.notification || {};
+      const data = payload.data || {};
+      self.registration.showNotification(notification.title || data.title || "Tu Medicación", {
+        body: notification.body || data.body || "Tienes una toma pendiente.",
+        icon: "/pwa-icons/icon-192.png",
+        badge: "/pwa-icons/maskable-192.png",
+        data: {url: data.url || "/"}
+      });
     });
-  });
+  }
 } catch (error) {}
 
-const CACHE_NAME = "tu-medicacion-pwa-v3";
+const CACHE_NAME = "tu-medicacion-pwa-v4";
 const APP_SHELL = [
   "/",
   "/index.html",
