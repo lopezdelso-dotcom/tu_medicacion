@@ -90,6 +90,21 @@ function forceCriticalSymbols(){
   setText("#installAppButton",language==="en"?"Install app":"Instalar app");
   setText("#changeMethodButton",(language==="en"?"Back":"Atrás"));
   setText("#scheduleBackButton",(language==="en"?"Back":"Atrás"));
+  const menuLabels={
+    medicines:language==="en"?"Medication":"Medicación",
+    today:language==="en"?"Doses":"Tomas",
+    sideEffects:language==="en"?"Side effects":"Consultar efectos secundarios",
+    compliance:language==="en"?"Adherence":"Cumplimiento",
+    achievements:language==="en"?"Achievements":"Logros",
+    profile:language==="en"?"Edit profile":"Editar perfil"
+  };
+  Object.entries(menuLabels).forEach(([view,label])=>{
+    document.querySelectorAll(`.user-menu [data-view="${view}"]`).forEach(button=>{
+      const icon=button.querySelector("span[aria-hidden='true']");
+      const iconText=icon?icon.outerHTML:"";
+      button.innerHTML=iconText+safe(label);
+    });
+  });
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
   document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2713));
   document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x24D8));
