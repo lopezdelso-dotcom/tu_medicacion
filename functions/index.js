@@ -68,6 +68,7 @@ exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"ever
     const tokenRows=tokensSnap.docs.map(doc=>({id:doc.id,token:doc.data().token})).filter(row=>row.token);
     if(!tokenRows.length)continue;
     const medicinesSnap=await userDoc.ref.collection("medicines").get();
+    const pendingByTime=new Map();
     for(const medicineDoc of medicinesSnap.docs){
       const medicine={id:medicineDoc.id,...medicineDoc.data()};
       if(!isMedicineActiveForDate(medicine,now.iso,now.weekday))continue;
@@ -81,22 +82,32 @@ exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"ever
         if((await logRef.get()).exists)continue;
         const intake=await userDoc.ref.collection("intakes").doc(logId).get();
         if(intake.exists&&intake.data().taken)continue;
-        const isEnglish=profile.preferredLanguage==="en";
-        const medicineName=shortMedicineName(medicine.name||"");
-        const title=isEnglish?"Medication reminder":"Recordatorio de medicación";
-        const body=isEnglish?`It is time for ${medicineName}.`:`Es la hora de ${medicineName}.`;
-        const response=await messaging.sendEachForMulticast({
-          tokens:tokenRows.map(row=>row.token),
-          notification:{title,body},
-          data:{url:`${appUrl}/#today`,medicineId:medicine.id,mealKey:meal.key||"dose",scheduledDate:now.iso}
-        });
-        await logRef.set({medicineId:medicine.id,mealKey:meal.key||"dose",scheduledDate:now.iso,scheduledTime:meal.time,sentAt:new Date(),successCount:response.successCount,failureCount:response.failureCount});
-        await Promise.all(response.responses.map((result,index)=>{
-          const code=result.error?.code||"";
-          if(!code.includes("registration-token-not-registered")&&!code.includes("invalid-registration-token"))return null;
-          return userDoc.ref.collection("notificationTokens").doc(tokenRows[index].id).set({enabled:false,disabledAt:new Date(),disableReason:code},{merge:true});
-        }).filter(Boolean));
+        const timeKey=meal.time;
+        if(!pendingByTime.has(timeKey))pendingByTime.set(timeKey,[]);
+        pendingByTime.get(timeKey).push({medicine,meal,logRef,logId});
       }
+    }
+    const isEnglish=profile.preferredLanguage==="en";
+    for(const [time,doses] of pendingByTime.entries()){
+      const names=doses.map(item=>shortMedicineName(item.medicine.name||"")).filter(Boolean);
+      const uniqueNames=[...new Set(names)];
+      const title=isEnglish?"Medication reminder":"Recordatorio de medicación";
+      const body=uniqueNames.length===1
+        ? (isEnglish?`It is time for ${uniqueNames[0]}.`:`Es la hora de ${uniqueNames[0]}.`)
+        : (isEnglish?`It is time for ${uniqueNames.length} medicines: ${uniqueNames.join(", ")}.`:`Es la hora de ${uniqueNames.length} medicamentos: ${uniqueNames.join(", ")}.`);
+      const response=await messaging.sendEachForMulticast({
+        tokens:tokenRows.map(row=>row.token),
+        notification:{title,body},
+        data:{url:`${appUrl}/#today`,tag:`medication-reminder-${now.iso}-${time}`,scheduledDate:now.iso,scheduledTime:time,medicineCount:String(uniqueNames.length)}
+      });
+      await Promise.all(doses.map(item=>item.logRef.set({
+        medicineId:item.medicine.id,mealKey:item.meal.key||"dose",scheduledDate:now.iso,scheduledTime:time,sentAt:new Date(),successCount:response.successCount,failureCount:response.failureCount,groupedCount:doses.length
+      })));
+      await Promise.all(response.responses.map((result,index)=>{
+        const code=result.error?.code||"";
+        if(!code.includes("registration-token-not-registered")&&!code.includes("invalid-registration-token"))return null;
+        return userDoc.ref.collection("notificationTokens").doc(tokenRows[index].id).set({enabled:false,disabledAt:new Date(),disableReason:code},{merge:true});
+      }).filter(Boolean));
     }
   }
   return null;

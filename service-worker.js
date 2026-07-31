@@ -14,13 +14,16 @@ try {
         body: notification.body || data.body || "Tienes una toma pendiente.",
         icon: "/pwa-icons/icon-192.png",
         badge: "/pwa-icons/maskable-192.png",
+        vibrate: [220, 90, 220],
+        tag: data.tag || "medication-reminder",
+        renotify: true,
         data: {url: data.url || "/"}
       });
     });
   }
 } catch (error) {}
 
-const CACHE_NAME = "tu-medicacion-pwa-v5";
+const CACHE_NAME = "tu-medicacion-pwa-v6";
 const APP_SHELL = [
   "/",
   "/index.html",
