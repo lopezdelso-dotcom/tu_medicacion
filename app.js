@@ -529,6 +529,7 @@ function intakeStorageId(medicineId,dateKey){
 }
 function intakeBaseIso(date){return String(date||"").slice(0,10)}
 function todayIso(){const today=new Date();today.setHours(12,0,0,0);return today.toISOString().slice(0,10)}
+function yesterdayIso(){const date=new Date();date.setHours(12,0,0,0);date.setDate(date.getDate()-1);return date.toISOString().slice(0,10)}
 function isFutureIntakeDate(date){const iso=intakeBaseIso(date);return Boolean(iso&&iso>todayIso())}
 function setupTakeButton(button,compact=false){
   const future=isFutureIntakeDate(button.dataset.date);
@@ -593,7 +594,7 @@ function medicineImageMarkup(medicine){
   return '<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>';
 }
 function isMedicineArchived(medicine){return Boolean(medicine?.deletedAt)}
-function activeMedicines(){return state.medicines.filter(m=>m.confirmed&&!isMedicineArchived(m))}
+function activeMedicines(){const today=todayIso();return state.medicines.filter(m=>m.confirmed&&!isMedicineArchived(m)&&(!m.endDate||m.endDate>=today))}
 function renderMedicines(){
   const list=$("#medicineList"),detail=$("#medicineDetail");
   const heading=$(".medicines-heading");
@@ -1396,7 +1397,7 @@ function configureMedicineSchedule(id){
   form.doseAmount.value=medicine.posology?.amount||"";
   populateDoseUnitOptions(medicine.posology?.unit);
   form.comments.value=medicine.comments||medicine.posology?.comments||"";
-  form.startDate.value=medicine.startDate||new Date().toISOString().slice(0,10);
+  form.startDate.value=todayIso();
   form.endDate.value=medicine.endDate||"";
   resetScheduleWizard();
   const days=medicine.schedule?.days?.length?medicine.schedule.days:["mon","tue","wed","thu","fri","sat","sun"];
@@ -1711,9 +1712,21 @@ $("#medicineForm").onsubmit=async e=>{
     if(editingId){
       const index=state.medicines.findIndex(item=>item.id===editingId);
       if(index>=0){
-        if(fb&&state.user)await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid,"medicines",editingId),med);
-        state.medicines[index]={...state.medicines[index],...med,id:editingId,createdAt:state.medicines[index].createdAt||med.updatedAt};
-        localStorage.setItem("mm_medicines",JSON.stringify(state.medicines));
+        const previousMedicine=state.medicines[index];
+        const closeUpdates={endDate:yesterdayIso(),replacedAt:new Date().toISOString()};
+        const nextMed={...previousMedicine,...med,startDate:todayIso(),endDate:data.endDate||null,createdAt:new Date().toISOString(),previousMedicineId:editingId};
+        delete nextMed.id;
+        if(fb&&state.user){
+          await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid,"medicines",editingId),{...closeUpdates,replacedAt:fb.serverTimestamp()});
+          const ref=await fb.addDoc(fb.collection(fb.db,"users",state.user.uid,"medicines"),{...nextMed,createdAt:fb.serverTimestamp()});
+          state.medicines[index]={...previousMedicine,...closeUpdates};
+          state.medicines.push({...nextMed,id:ref.id,createdAt:new Date().toISOString()});
+        }else{
+          state.medicines[index]={...previousMedicine,...closeUpdates};
+          const newId=crypto.randomUUID();
+          state.medicines.push({...nextMed,id:newId});
+          localStorage.setItem("mm_medicines",JSON.stringify(state.medicines));
+        }
       }
     }else if(fb&&state.user){const ref=await fb.addDoc(fb.collection(fb.db,"users",state.user.uid,"medicines"),{...med,createdAt:med.updatedAt});med.id=ref.id;state.medicines.push({...med,id:ref.id,createdAt:med.updatedAt})}else{med.id=crypto.randomUUID();med.createdAt=med.updatedAt;state.medicines.push(med);localStorage.setItem("mm_medicines",JSON.stringify(state.medicines))}
     editingScheduleMedicineId=null;
