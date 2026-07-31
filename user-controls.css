@@ -361,7 +361,8 @@ body.user-mode .preferences-panel{
 .reminder-icon::before{content:"\1F514"}
 .reminder-card h2{margin:.1rem 0 .35rem;font-size:1.25rem}
 .reminder-card p{margin:.35rem 0;color:#60746e}
-.reminder-card .primary,.reminder-card .secondary{margin:.45rem .45rem .2rem 0}
+.reminder-card .primary,.reminder-card .secondary{margin:1rem .45rem .75rem 0}
+.reminder-card #reminderStatus{margin-top:.35rem}
 .reminder-notice{font-size:.92rem}
 .compliance-list{display:grid;gap:.75rem;margin-top:1rem}
 .compliance-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.85rem;width:100%;text-align:left;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);padding:1rem}
