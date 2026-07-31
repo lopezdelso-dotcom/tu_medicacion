@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260731-101">
+  <link rel="stylesheet" href="user-controls.css?v=20260731-102">
   <link rel="stylesheet" href="selection-flow.css?v=20260727-81">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -69,7 +69,10 @@
     <section id="appView" class="app-view user-area" hidden>
       <header class="user-header">
         <button id="openUserMenu" class="user-menu-open" type="button" aria-label="MenÃƒÂº" aria-expanded="false" aria-controls="userMenu"><span aria-hidden="true">?Ã‹Å“?</span><span>MenÃƒÂº</span></button>
-        <img src="app-icon.png?v=20260727-81" alt="Tu Medicacion" class="user-header-icon">
+        <div class="user-header-actions">
+          <button id="installAppButton" class="install-app-button" type="button" hidden>Instalar app</button>
+          <img src="app-icon.png?v=20260727-81" alt="Tu Medicacion" class="user-header-icon">
+        </div>
       </header>
       <div class="user-shell">
         <div id="userMenuOverlay" class="user-menu-overlay" hidden></div>
@@ -318,7 +321,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260727-81"></script>
-  <script type="module" src="app.js?v=20260731-104"></script>
+  <script type="module" src="app.js?v=20260731-105"></script>
 </body>
 </html>
 

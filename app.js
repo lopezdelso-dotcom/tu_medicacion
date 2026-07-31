@@ -1606,6 +1606,36 @@ if("serviceWorker" in navigator){
   window.addEventListener("load",()=>navigator.serviceWorker.register("/service-worker.js").catch(()=>{}));
 }
 
+let deferredInstallPrompt=null;
+function isAndroidWeb(){
+  const standalone=window.matchMedia?.("(display-mode: standalone)")?.matches||navigator.standalone;
+  return /Android/i.test(navigator.userAgent)&&!standalone;
+}
+function setupInstallAppButton(){
+  const button=$("#installAppButton");
+  if(!button)return;
+  const update=()=>{button.hidden=!(isAndroidWeb()&&deferredInstallPrompt)};
+  window.addEventListener("beforeinstallprompt",event=>{
+    if(!isAndroidWeb())return;
+    event.preventDefault();
+    deferredInstallPrompt=event;
+    update();
+  });
+  window.addEventListener("appinstalled",()=>{
+    deferredInstallPrompt=null;
+    update();
+  });
+  button.addEventListener("click",async()=>{
+    if(!deferredInstallPrompt)return;
+    const promptEvent=deferredInstallPrompt;
+    deferredInstallPrompt=null;
+    update();
+    await promptEvent.prompt();
+  });
+  update();
+}
+setupInstallAppButton();
+
 setTimeout(()=>{repairVisibleText();forceCriticalSymbols()},250);
 
 
