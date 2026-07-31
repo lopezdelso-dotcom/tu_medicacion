@@ -234,7 +234,7 @@ Object.assign(translations,{
 });
 function applyLanguage(){
   document.documentElement.lang=language;
-  document.title=language==="en"?"My Medication":"Mi Medicación";
+  document.title=language==="en"?"Your Medication":"Tu Medicación";
   const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT); let node;
   while(node=walker.nextNode()){
     if(!node.parentElement || ["SCRIPT","STYLE"].includes(node.parentElement.tagName)) continue;
@@ -1602,6 +1602,9 @@ $("#medicineForm").onsubmit=async e=>{
 };
 initFirebase();
 
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("/service-worker.js").catch(()=>{}));
+}
 
 setTimeout(()=>{repairVisibleText();forceCriticalSymbols()},250);
 
