@@ -59,7 +59,7 @@ function shortMedicineName(name=""){
 }
 
 exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"every 10 minutes",timeZone:"Europe/Madrid"},async()=>{
-  const db=getFirestore(),messaging=getMessaging(),now=madridDateParts(),windowEnd=now.minutes+10;
+  const db=getFirestore(),messaging=getMessaging(),now=madridDateParts(),windowStart=Math.max(0,now.minutes-10);
   const users=await db.collection("users").where("status","==","approved").get();
   for(const userDoc of users.docs){
     const profile=userDoc.data();
@@ -76,7 +76,7 @@ exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"ever
         const [hour,minute]=String(meal.time||"").split(":").map(Number);
         if(!Number.isFinite(hour)||!Number.isFinite(minute))continue;
         const mealMinutes=hour*60+minute;
-        if(mealMinutes<now.minutes||mealMinutes>=windowEnd)continue;
+        if(mealMinutes<windowStart||mealMinutes>now.minutes)continue;
         const logId=intakeDocId(now.iso,meal,medicine.id);
         const logRef=userDoc.ref.collection("reminderLogs").doc(logId);
         if((await logRef.get()).exists)continue;
