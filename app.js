@@ -930,11 +930,20 @@ function discardMedicineDraft(){
 }
 $("#discardMedicineButton").onclick=discardMedicineDraft;
 function renderSideEffectsMedicines(){
+  setSideEffectsDetailMode(false);
   const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=state.medicines.filter(item=>item.confirmed);detail.hidden=true;$("#effectsStatus").textContent="";
   results.innerHTML=medicines.map((item,index)=>`<button class="effects-medicine-button" data-own-medicine="${index}"><span class="effects-pill-icon" aria-hidden="true"></span><span><b>${safe(medicineShortName(item))}</b></span><span class="effects-arrow-icon" aria-hidden="true"></span></button>`).join("")||`<div class="panel">${t("Todavía no tienes medicamentos confirmados.")}</div>`;
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
 }
-$("#sideEffectsBackButton")?.addEventListener("click",()=>openView("today"));
+function setSideEffectsDetailMode(detailMode){
+  const section=$("#sideEffects");
+  $("h1",section).hidden=detailMode;
+  $(".lead",section).hidden=detailMode;
+  $(".effects-health-notice",section).hidden=detailMode;
+  $("#effectsResults").hidden=detailMode;
+  $("#sideEffectsBackButton").onclick=detailMode?renderSideEffectsMedicines:()=>openView("today");
+}
+$("#sideEffectsBackButton").onclick=()=>openView("today");
 $("#complianceBackButton")?.addEventListener("click",()=>openView("today"));
 $("#achievementsBackButton")?.addEventListener("click",()=>openView("today"));
 function cleanSideEffectPoint(text){
@@ -947,9 +956,10 @@ function cleanSideEffectPoint(text){
     .trim();
 }
 async function loadSideEffects(item){
+  setSideEffectsDetailMode(true);
   $("#effectsStatus").textContent=t("Cargando el prospecto oficial?â‚¬?");const detail=$("#effectsDetail");detail.hidden=true;let registration=item.cimaId||item.nregistro;
   if(item.officialSource==="MHRA"||item.country==="GB"){
-    $("#effectsStatus").textContent="";detail.innerHTML=`<h2>${safe(medicineShortName(item))}</h2><p class="eyebrow">INFORMACI?â€œN OFICIAL DE LA MHRA</p><p class="effects-summary-note">Consulta el prospecto brit?nico oficial para revisar efectos adversos y uso seguro.</p><div class="effects-source"><a class="primary" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(item.name||item.nombre)}">Buscar prospecto en MHRA ?â€ â€”</a><button class="secondary" type="button" data-back-effects>${t("Volver a mi medicaciÃ³n")}</button></div>`;detail.hidden=false;$("#effectsResults").innerHTML="";$("[data-back-effects]",detail).onclick=renderSideEffectsMedicines;return;
+    $("#effectsStatus").textContent="";detail.innerHTML=`<h2>${safe(medicineShortName(item))}</h2><p class="eyebrow">INFORMACI?â€œN OFICIAL DE LA MHRA</p><p class="effects-summary-note">Consulta el prospecto brit?nico oficial para revisar efectos adversos y uso seguro.</p><div class="effects-source"><a class="primary" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(item.name||item.nombre)}">Buscar prospecto en MHRA ?â€ â€”</a></div>`;detail.hidden=false;$("#effectsResults").innerHTML="";return;
   }
   try{
     if(!registration){const matchResponse=await fetch(`https://cima.aemps.es/cima/rest/medicamentos?nombre=${encodeURIComponent(item.name)}&autorizados=1&comerc=1`);if(matchResponse.ok){const matches=await matchResponse.json();registration=matches.resultados?.[0]?.nregistro}}
@@ -957,8 +967,7 @@ async function loadSideEffects(item){
     const response=await fetch(`https://cima.aemps.es/cima/rest/docSegmentado/contenido/2?nregistro=${encodeURIComponent(registration)}&seccion=4`);if(!response.ok)throw new Error("CIMA");const raw=await response.text();let data=raw;try{data=JSON.parse(raw)}catch(error){}const htmlParts=[];const visit=value=>{if(!value)return;if(typeof value==="string")htmlParts.push(value);else if(Array.isArray(value))value.forEach(visit);else if(typeof value==="object"){if(typeof value.contenido==="string")htmlParts.push(value.contenido);else Object.values(value).forEach(visit)}};visit(data);
     const parsed=new DOMParser().parseFromString(htmlParts.join("\n"),"text/html"),nodes=[...parsed.body.querySelectorAll("li")];if(!nodes.length)nodes.push(...parsed.body.querySelectorAll("p"));let points=[...new Set(nodes.map(node=>cleanSideEffectPoint(node.textContent)).filter(text=>text.length>15))];if(!points.length){const plain=parsed.body.textContent.replace(/\s+/g," ").trim();points=plain.split(/(?=(?:Muy frecuentes|Frecuentes|Poco frecuentes|Raros|Muy raros|Frecuencia no conocida|Los siguientes efectos|Otros efectos))/gi).map(cleanSideEffectPoint).filter(text=>text.length>20&&!/^Comunicaci?n de efectos/i.test(text))}points=points.slice(0,10);
     const openLeafletText=language==="en"?"Open full leaflet":"Abrir prospecto completo";
-    const backEffectsText=language==="en"?"Back to my medication":"Volver a mi medicación";
-    $("#effectsStatus").textContent="";detail.innerHTML=`<h2>${safe(medicineShortName(item))}</h2><p class="eyebrow">${t("RESUMEN DEL PROSPECTO OFICIAL")}</p><p class="effects-summary-note">${t("Este resumen no contiene necesariamente todos los efectos adversos. Consulta el prospecto completo.")}</p><ul class="effects-summary-list">${points.map(point=>`<li>${safe(point)}</li>`).join("")||`<li>${t("Consulta el prospecto completo para ver los efectos adversos.")}</li>`}</ul><div class="effects-source"><a class="primary" target="_blank" rel="noopener" href="${prospectUrl}">${openLeafletText}</a><button class="secondary" type="button" data-back-effects>${backEffectsText}</button></div>`;detail.hidden=false;$("#effectsResults").innerHTML="";$("[data-back-effects]",detail).onclick=renderSideEffectsMedicines;detail.scrollIntoView({behavior:"smooth",block:"start"});
+    $("#effectsStatus").textContent="";detail.innerHTML=`<h2>${safe(medicineShortName(item))}</h2><p class="eyebrow">${t("RESUMEN DEL PROSPECTO OFICIAL")}</p><p class="effects-summary-note">${t("Este resumen no contiene necesariamente todos los efectos adversos. Consulta el prospecto completo.")}</p><ul class="effects-summary-list">${points.map(point=>`<li>${safe(point)}</li>`).join("")||`<li>${t("Consulta el prospecto completo para ver los efectos adversos.")}</li>`}</ul><div class="effects-source"><a class="primary" target="_blank" rel="noopener" href="${prospectUrl}">${openLeafletText}</a></div>`;detail.hidden=false;$("#effectsResults").innerHTML="";detail.scrollIntoView({behavior:"smooth",block:"start"});
   }catch(error){$("#effectsStatus").textContent=t("No se pudo cargar esta secciÃ³n del prospecto.")}
 }
 $("#medicineForm").onsubmit=async e=>{e.preventDefault();const form=e.target,submit=$("button[type=submit]",form);submit.disabled=true;try{if(!await validateCimaName(form))return;const data=Object.fromEntries(new FormData(form));const med={name:data.name,dose:data.dose,time:data.time,instructions:data.instructions,startDate:data.startDate,endDate:data.endDate||null,cimaId:data.cimaId||null,officialSource:data.officialSource||officialMedicineSource(),country:patientCountry,imageUrl:data.medicineImageUrl||null,activeIngredient:data.activeIngredient||null,confirmed:true,createdAt:new Date().toISOString()};if(fb&&state.user){const ref=await fb.addDoc(fb.collection(fb.db,"users",state.user.uid,"medicines"),med);med.id=ref.id;state.medicines.push(med)}else{med.id=crypto.randomUUID();state.medicines.push(med);localStorage.setItem("mm_medicines",JSON.stringify(state.medicines))}renderAll();openView("medicines");form.reset();showCimaValidation("","");$("#reviewPanel").hidden=true;toast("MedicaciÃ³n confirmada y guardada.")}finally{submit.disabled=false}};
