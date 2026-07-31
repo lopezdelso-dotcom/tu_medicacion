@@ -1427,6 +1427,7 @@ function completedMonthStart(offset=0){const today=new Date();return new Date(to
 function achievementMonths(count=12){count=Math.min(count,12);return Array.from({length:count},(_,index)=>addMonths(completedMonthStart(count-1),index))}
 function monthStatsForMedicine(medicineId,month){return complianceStats(medicineId,monthStart(month),monthEnd(month))}
 function monthStatsTotal(month){return complianceStats(null,monthStart(month),monthEnd(month))}
+function dayStatsTotal(date){return complianceStats(null,date,date)}
 function isPerfect(stats){return stats.expected>0&&stats.taken===stats.expected}
 function currentPerfectMonthStreak(){
   let streak=0;
@@ -1434,6 +1435,18 @@ function currentPerfectMonthStreak(){
     const stats=monthStatsTotal(completedMonthStart(index));
     if(isPerfect(stats))streak++;
     else break;
+  }
+  return streak;
+}
+function currentPerfectDayStreak(){
+  let streak=0;
+  const date=yesterdayDate();
+  for(let index=0;index<730;index++){
+    const stats=dayStatsTotal(date);
+    if(!stats.expected){date.setDate(date.getDate()-1);continue}
+    if(isPerfect(stats))streak++;
+    else break;
+    date.setDate(date.getDate()-1);
   }
   return streak;
 }
@@ -1463,9 +1476,10 @@ function achievementMilestones(streak){
 }
 function renderAchievements(){
   const streak=currentPerfectMonthStreak();
-  const monthText=language==="en"?`${streak} active month${streak===1?"":"s"} streak`:`Racha activa de ${streak} ${streak===1?"mes":"meses"}`;
+  const dayStreak=currentPerfectDayStreak();
+  const streakText=language==="en"?`${dayStreak} active day${dayStreak===1?"":"s"} streak`:`Racha activa de ${dayStreak} ${dayStreak===1?"día":"días"}`;
   $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div>`;
-  $("#achievementStreak").innerHTML=`<h2>${safe(monthText)}</h2>`;
+  $("#achievementStreak").innerHTML=`<h2>${safe(streakText)}</h2>`;
 }
 function medicineDoseLine(medicine){
   const amount=medicine?.posology?.amount,unit=medicine?.posology?.unit;
