@@ -487,9 +487,13 @@ function renderSchedule(){
 async function recordIntake(medicineId,date,taken){
   if(!state.user)return;
   if(taken&&isFutureIntakeDate(date)){toast(uiText("No puedes marcar como tomada una medicaci\u00f3n futura.","You cannot mark a future dose as taken."));return}
-  const id=`${date}_${medicineId}`,medicine=state.medicines.find(item=>item.id===medicineId);
+  const id=intakeStorageId(medicineId,date),medicine=state.medicines.find(item=>item.id===medicineId);
   if(fb){const ref=fb.doc(fb.db,"users",state.user.uid,"intakes",id);if(taken){const intake={medicineId,medicineName:medicine?.name||"",dose:medicine?.dose||"",scheduledDate:date,scheduledTime:medicine?.time||"",status:"taken"};await fb.setDoc(ref,{...intake,takenAt:fb.serverTimestamp()});state.intakes[id]={id,...intake}}else{await fb.deleteDoc(ref);delete state.intakes[id]}}
   else{const intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");if(taken)intakes[id]={id,medicineId,medicineName:medicine?.name,date,scheduledDate:date,status:"taken"};else delete intakes[id];state.intakes=intakes;localStorage.setItem("mm_intakes",JSON.stringify(intakes))}
+}
+function intakeStorageId(medicineId,dateKey){
+  const key=String(dateKey||"");
+  return key.endsWith(`_${medicineId}`)?key:`${key}_${medicineId}`;
 }
 function intakeBaseIso(date){return String(date||"").slice(0,10)}
 function todayIso(){const today=new Date();today.setHours(12,0,0,0);return today.toISOString().slice(0,10)}
@@ -503,6 +507,11 @@ function setupTakeButton(button,compact=false){
     button.setAttribute("title",uiText("No puedes marcar tomas futuras","Future doses cannot be marked as taken"));
     return;
   }
+  const initialTaken=isIntakeTaken(button.dataset.medicine,button.dataset.date);
+  button.classList.toggle("taken",initialTaken);
+  button.textContent=compact?(initialTaken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(initialTaken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada"));
+  button.setAttribute("aria-label",initialTaken?t("Tomada"):t("Pendiente de tomar"));
+  button.setAttribute("aria-pressed",String(initialTaken));
   button.onclick=async()=>{
     button.classList.toggle("taken");
     const taken=button.classList.contains("taken");
@@ -771,7 +780,7 @@ function resetMedicationMethodScreen(){
   clearMedicationDraft();
   setDocumentsIntroVisible(true);
   $(".medication-methods").hidden=false;
-  $("#changeMethodButton").hidden=false;
+  $("#changeMethodButton").hidden=true;
   $("#changeMethodButton").textContent=(language==="en"?"Back":"Atrás");
   $("#medicineSearchPanel").hidden=true;
   $("#uploadChoice").hidden=true;
@@ -941,8 +950,10 @@ function setSideEffectsDetailMode(detailMode){
   $(".lead",section).hidden=detailMode;
   $(".effects-health-notice",section).hidden=detailMode;
   $("#effectsResults").hidden=detailMode;
+  $("#sideEffectsBackButton").hidden=!detailMode;
   $("#sideEffectsBackButton").onclick=detailMode?renderSideEffectsMedicines:()=>openView("today");
 }
+$("#sideEffectsBackButton").hidden=true;
 $("#sideEffectsBackButton").onclick=()=>openView("today");
 $("#complianceBackButton")?.addEventListener("click",()=>openView("today"));
 $("#achievementsBackButton")?.addEventListener("click",()=>openView("today"));
@@ -1368,13 +1379,15 @@ function scheduledItemsForMedicineDate(medicine,date){
 function expectedIntakeKey(item,iso){return `${iso}_${item.meal.key||item.meal.label}_${item.medicine.id}`}
 function isIntakeTaken(medicineId,dateKey){
   const iso=intakeBaseIso(dateKey);
+  const storageId=intakeStorageId(medicineId,dateKey);
+  const scheduledKey=String(dateKey||"").endsWith(`_${medicineId}`)?String(dateKey).slice(0,-String(medicineId).length-1):String(dateKey||"");
   return Object.values(state.intakes||{}).some(intake=>{
     if(intake?.status&&intake.status!=="taken")return false;
     if(intake?.medicineId!==medicineId)return false;
     const scheduled=String(intake.scheduledDate||intake.date||"");
     const intakeId=String(intake.id||"");
-    const isCustom=dateKey.endsWith("_custom");
-    return scheduled===dateKey||intakeId===`${dateKey}_${medicineId}`||(isCustom&&(scheduled===iso||intakeId===`${iso}_${medicineId}`));
+    const isCustom=String(dateKey||"").endsWith("_custom");
+    return scheduled===dateKey||scheduled===scheduledKey||intakeId===dateKey||intakeId===storageId||intakeId===`${scheduledKey}_${medicineId}`||(isCustom&&(scheduled===iso||intakeId===`${iso}_${medicineId}`));
   });
 }
 function complianceStatsForMedicine(medicine,startDate,endDate){
@@ -1399,7 +1412,7 @@ function complianceStats(medicineId=null,startDate=null,endDate=null){
 }
 function renderComplianceSummary(){
   complianceMonth=new Date();
-  $("#complianceBackButton").hidden=false;
+  $("#complianceBackButton").hidden=true;
   $("#complianceSummary").hidden=false;$("#complianceDetail").hidden=true;
   const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...state.medicines.filter(m=>m.confirmed).map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
   $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
@@ -1478,6 +1491,7 @@ function renderAchievements(){
   const streak=currentPerfectMonthStreak();
   const dayStreak=currentPerfectDayStreak();
   const streakText=language==="en"?`${dayStreak} active day${dayStreak===1?"":"s"} streak`:`Racha activa de ${dayStreak} ${dayStreak===1?"día":"días"}`;
+  $("#achievementsBackButton").hidden=true;
   $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div>`;
   $("#achievementStreak").innerHTML=`<h2>${safe(streakText)}</h2>`;
 }
