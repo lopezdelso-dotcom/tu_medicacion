@@ -1,6 +1,6 @@
 importScripts("https://www.gstatic.com/firebasejs/11.10.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/11.10.0/firebase-messaging-compat.js");
-importScripts("/firebase-config.js");
+importScripts("/firebase-config.js?v=20260731-2");
 
 const FIREBASE_CONFIG = self.__FIREBASE_CONFIG__;
 
@@ -20,7 +20,7 @@ try {
   }
 } catch (error) {}
 
-const CACHE_NAME = "tu-medicacion-pwa-v4";
+const CACHE_NAME = "tu-medicacion-pwa-v5";
 const APP_SHELL = [
   "/",
   "/index.html",

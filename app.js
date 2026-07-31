@@ -1038,7 +1038,7 @@ async function renderReminders(){
   }
   if(!firebaseVapidKey){
     enable.hidden=false;disable.hidden=true;enable.disabled=true;
-    status.textContent=uiText("Falta configurar la clave Web Push de Firebase para activar los recordatorios.","Firebase Web Push key is not configured yet, so reminders cannot be enabled.");
+    status.textContent=uiText("Falta cargar la clave Web Push. Cierra la app y vuelve a abrirla para actualizar la configuración.","The Web Push key has not loaded yet. Close and reopen the app to refresh the configuration.");
     return;
   }
   const permission=Notification.permission;
