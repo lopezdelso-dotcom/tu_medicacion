@@ -58,8 +58,8 @@ function shortMedicineName(name=""){
   return tokens.slice(0,firstDose>0?Math.min(firstDose+2,tokens.length):Math.min(4,tokens.length)).join(" ")||String(name).trim();
 }
 
-exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"every 10 minutes",timeZone:"Europe/Madrid"},async()=>{
-  const db=getFirestore(),messaging=getMessaging(),now=madridDateParts(),windowStart=Math.max(0,now.minutes-10);
+exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"every 5 minutes",timeZone:"Europe/Madrid"},async()=>{
+  const db=getFirestore(),messaging=getMessaging(),now=madridDateParts(),windowStart=now.minutes+5,windowEnd=now.minutes+10;
   const users=await db.collection("users").where("status","==","approved").get();
   for(const userDoc of users.docs){
     const profile=userDoc.data();
@@ -76,7 +76,7 @@ exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"ever
         const [hour,minute]=String(meal.time||"").split(":").map(Number);
         if(!Number.isFinite(hour)||!Number.isFinite(minute))continue;
         const mealMinutes=hour*60+minute;
-        if(mealMinutes<windowStart||mealMinutes>now.minutes)continue;
+        if(mealMinutes<windowStart||mealMinutes>windowEnd)continue;
         const logId=intakeDocId(now.iso,meal,medicine.id);
         const logRef=userDoc.ref.collection("reminderLogs").doc(logId);
         if((await logRef.get()).exists)continue;
@@ -97,8 +97,7 @@ exports.sendMedicationReminders=onSchedule({region:"europe-west1",schedule:"ever
         : (isEnglish?`It is time for ${uniqueNames.length} medicines: ${uniqueNames.join(", ")}.`:`Es la hora de ${uniqueNames.length} medicamentos: ${uniqueNames.join(", ")}.`);
       const response=await messaging.sendEachForMulticast({
         tokens:tokenRows.map(row=>row.token),
-        notification:{title,body},
-        data:{url:`${appUrl}/#today`,tag:`medication-reminder-${now.iso}-${time}`,scheduledDate:now.iso,scheduledTime:time,medicineCount:String(uniqueNames.length)}
+        data:{title,body,url:`${appUrl}/#today`,tag:`medication-reminder-${now.iso}-${time}`,scheduledDate:now.iso,scheduledTime:time,medicineCount:String(uniqueNames.length)}
       });
       await Promise.all(doses.map(item=>item.logRef.set({
         medicineId:item.medicine.id,mealKey:item.meal.key||"dose",scheduledDate:now.iso,scheduledTime:time,sentAt:new Date(),successCount:response.successCount,failureCount:response.failureCount,groupedCount:doses.length
