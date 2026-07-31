@@ -560,18 +560,21 @@ function medicineImageMarkup(medicine){
   if(imageUrl)return '<img class="medicine-photo" src="'+safe(imageUrl)+'" alt="'+safe(medicineShortName(medicine))+'">';
   return '<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>';
 }
+function isMedicineArchived(medicine){return Boolean(medicine?.deletedAt)}
+function activeMedicines(){return state.medicines.filter(m=>m.confirmed&&!isMedicineArchived(m))}
 function renderMedicines(){
   const list=$("#medicineList"),detail=$("#medicineDetail");
   const heading=$(".medicines-heading");
   if(heading)heading.hidden=false;
   if(detail){detail.hidden=true;detail.innerHTML=""}
   list.hidden=false;
-  list.innerHTML=state.medicines.map(m=>{
+  const medicines=activeMedicines();
+  list.innerHTML=medicines.map(m=>{
     const title=medicineShortName(m);
     const generic=m.activeIngredient?'<small class="medicine-generic-name">'+safe(m.activeIngredient)+'</small>':"";
     return '<button type="button" class="medicine-card medicine-summary-card" data-medicine-detail="'+safe(m.id)+'">'+medicineImageMarkup(m)+'<span><b>'+safe(title)+'</b>'+generic+'</span></button>';
   }).join("")||'<div class="panel">'+t("Todav?a no tienes medicamentos confirmados.")+'</div>';
-  state.medicines.forEach(hydrateMedicineImage);
+  medicines.forEach(hydrateMedicineImage);
   $$('img.medicine-photo',list).forEach(image=>image.onerror=()=>{image.outerHTML='<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>'});
   $$('[data-medicine-detail]',list).forEach(button=>button.onclick=()=>showMedicineDetail(button.dataset.medicineDetail));
 }
@@ -599,7 +602,22 @@ function showMedicineDetail(id){
   $("[data-delete-medicine]",detail).onclick=()=>deleteMedicine(medicine.id);
 }
 
-async function deleteMedicine(id){const medicine=state.medicines.find(item=>item.id===id);if(!medicine)return;if(!window.confirm(`${t("Â¿Eliminar este medicamento?")}\n${medicine.name} ${medicine.dose||""}`))return;try{if(fb&&state.user)await fb.deleteDoc(fb.doc(fb.db,"users",state.user.uid,"medicines",id));state.medicines=state.medicines.filter(item=>item.id!==id);localStorage.setItem("mm_medicines",JSON.stringify(state.medicines));renderAll();toast(t("Medicamento eliminado."))}catch(error){toast(t("No se pudo eliminar el medicamento."))}}
+async function deleteMedicine(id){
+  const medicine=state.medicines.find(item=>item.id===id);
+  if(!medicine)return;
+  if(!window.confirm(`${t("Â¿Eliminar este medicamento?")}\n${medicine.name} ${medicine.dose||""}`))return;
+  try{
+    const updates={deletedAt:new Date().toISOString(),endDate:todayIso()};
+    Object.assign(medicine,updates);
+    if(fb&&state.user)await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid,"medicines",id),updates);
+    else localStorage.setItem("mm_medicines",JSON.stringify(state.medicines));
+    renderAll();
+    openView("medicines",{replace:true});
+    toast(t("Medicamento eliminado."));
+  }catch(error){
+    toast(t("No se pudo eliminar el medicamento."));
+  }
+}
 async function renderRequests(){
   const list=$("#requestList");
   list.innerHTML="<div class='panel'>Cargando solicitudes?â‚¬?</div>";
@@ -940,7 +958,7 @@ function discardMedicineDraft(){
 $("#discardMedicineButton").onclick=discardMedicineDraft;
 function renderSideEffectsMedicines(){
   setSideEffectsDetailMode(false);
-  const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=state.medicines.filter(item=>item.confirmed);detail.hidden=true;$("#effectsStatus").textContent="";
+  const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=activeMedicines();detail.hidden=true;$("#effectsStatus").textContent="";
   results.innerHTML=medicines.map((item,index)=>`<button class="effects-medicine-button" data-own-medicine="${index}"><span class="effects-pill-icon" aria-hidden="true"></span><span><b>${safe(medicineShortName(item))}</b></span><span class="effects-arrow-icon" aria-hidden="true"></span></button>`).join("")||`<div class="panel">${t("Todavía no tienes medicamentos confirmados.")}</div>`;
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
 }
@@ -1414,7 +1432,7 @@ function renderComplianceSummary(){
   complianceMonth=new Date();
   $("#complianceBackButton").hidden=true;
   $("#complianceSummary").hidden=false;$("#complianceDetail").hidden=true;
-  const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...state.medicines.filter(m=>m.confirmed).map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
+  const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...activeMedicines().map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
   $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
   $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
 }
