@@ -355,6 +355,7 @@ body.user-mode .preferences-panel{
 .user-menu button[data-view="compliance"]{background:#e8f5ee!important;color:#1e654e!important}
 .user-menu button[data-view="achievements"]{background:#fff4d8!important;color:#76540e!important}
 .user-menu button[data-view="reminders"]{background:#eef5ff!important;color:#244f7b!important}
+.user-menu button[hidden]{display:none!important}
 .reminder-card{display:grid;grid-template-columns:58px minmax(0,1fr);gap:1rem;align-items:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.1rem;margin:1rem 0}
 .reminder-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:14px;background:#e5effb;color:#244f7b;font-size:1.7rem}
 .reminder-icon::before{content:"\1F514"}
