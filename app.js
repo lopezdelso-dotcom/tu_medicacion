@@ -1581,15 +1581,6 @@ function monthStatsForMedicine(medicineId,month){return complianceStats(medicine
 function monthStatsTotal(month){return complianceStats(null,monthStart(month),monthEnd(month))}
 function dayStatsTotal(date){return complianceStats(null,date,date)}
 function isPerfect(stats){return stats.expected>0&&stats.taken===stats.expected}
-function currentPerfectMonthStreak(){
-  let streak=0;
-  for(let index=0;index<36;index++){
-    const stats=monthStatsTotal(completedMonthStart(index));
-    if(isPerfect(stats))streak++;
-    else break;
-  }
-  return streak;
-}
 function currentPerfectDayStreak(){
   let streak=0;
   const date=yesterdayDate();
@@ -1602,36 +1593,35 @@ function currentPerfectDayStreak(){
   }
   return streak;
 }
-function streakBadge(streak){
-  if(streak>=4)return {icon:String.fromCodePoint(0x1F48E),label:language==="en"?"Four-month gem":"Gema de 4 meses"};
-  if(streak>=3)return {icon:String.fromCodePoint(0x1F947),label:language==="en"?"Three-month medal":"Medalla de 3 meses"};
-  if(streak>=2)return {icon:String.fromCodePoint(0x1F948),label:language==="en"?"Two-month badge":"Insignia de 2 meses"};
-  if(streak>=1)return {icon:String.fromCodePoint(0x1F949),label:language==="en"?"First perfect month":"Primer mes perfecto"};
-  return {icon:String.fromCodePoint(0x25CB),label:language==="en"?"No active streak":"Sin racha activa"};
-}
-function achievementMilestones(streak){
+function achievementMilestones(earnedWeeks){
   const items=[
-    {months:1,icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"1 month":"1 mes"},
-    {months:2,icon:String.fromCodePoint(0x1F947),label:language==="en"?"2 months":"2 meses"},
-    {months:3,icon:String.fromCodePoint(0x2B50),label:language==="en"?"3 months":"3 meses"},
-    {months:4,icon:String.fromCodePoint(0x1F48E),label:language==="en"?"4 months":"4 meses"},
-    {months:5,icon:String.fromCodePoint(0x1F31F),label:language==="en"?"5 months":"5 meses"},
-    {months:6,icon:String.fromCodePoint(0x1F451),label:language==="en"?"6 months":"6 meses"},
-    {months:7,icon:String.fromCodePoint(0x1F680),label:language==="en"?"7 months":"7 meses"},
-    {months:8,icon:String.fromCodePoint(0x1F3AF),label:language==="en"?"8 months":"8 meses"},
-    {months:9,icon:String.fromCodePoint(0x1F525),label:language==="en"?"9 months":"9 meses"},
-    {months:10,icon:String.fromCodePoint(0x1F3C5),label:language==="en"?"10 months":"10 meses"},
-    {months:11,icon:String.fromCodePoint(0x1F30D),label:language==="en"?"11 months":"11 meses"},
-    {months:12,icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"12 months":"12 meses"}
+    {weeks:1,icon:String.fromCodePoint(0x1F949),label:language==="en"?"1 week":"1 semana"},
+    {weeks:2,icon:String.fromCodePoint(0x1F948),label:language==="en"?"2 weeks":"2 semanas"},
+    {weeks:3,icon:String.fromCodePoint(0x1F947),label:language==="en"?"3 weeks":"3 semanas"},
+    {weeks:4,icon:String.fromCodePoint(0x1F3C6),label:language==="en"?"4 weeks":"4 semanas"},
+    {weeks:5,icon:String.fromCodePoint(0x2B50),label:language==="en"?"5 weeks":"5 semanas"},
+    {weeks:6,icon:String.fromCodePoint(0x1F31F),label:language==="en"?"6 weeks":"6 semanas"},
+    {weeks:7,icon:String.fromCodePoint(0x1F451),label:language==="en"?"7 weeks":"7 semanas"},
+    {weeks:8,icon:String.fromCodePoint(0x1F48E),label:language==="en"?"8 weeks":"8 semanas"},
+    {weeks:9,icon:String.fromCodePoint(0x1F680),label:language==="en"?"9 weeks":"9 semanas"},
+    {weeks:10,icon:String.fromCodePoint(0x1F3AF),label:language==="en"?"10 weeks":"10 semanas"},
+    {weeks:11,icon:String.fromCodePoint(0x1F525),label:language==="en"?"11 weeks":"11 semanas"},
+    {weeks:12,icon:String.fromCodePoint(0x1F308),label:language==="en"?"12 weeks":"12 semanas"}
   ];
-  return items.map(item=>`<div class="achievement-milestone ${streak>=item.months?"earned":"locked"}"><span>${safe(item.icon)}</span><b>${safe(item.label)}</b></div>`).join("");
+  return items.map(item=>`<div class="achievement-milestone ${earnedWeeks>=item.weeks?"earned":"locked"}"><span>${safe(item.icon)}</span><b>${safe(item.label)}</b></div>`).join("");
 }
 function renderAchievements(){
-  const streak=currentPerfectMonthStreak();
   const dayStreak=currentPerfectDayStreak();
+  const earnedWeeks=Math.floor(dayStreak/7);
   const streakText=language==="en"?`${dayStreak} active day${dayStreak===1?"":"s"} streak`:`Racha activa de ${dayStreak} ${dayStreak===1?"día":"días"}`;
+  const section=$("#achievements");
+  if(section){
+    const title=$("h1",section),lead=$(".lead",section);
+    if(title)title.textContent=language==="en"?"Achievements":"Logros";
+    if(lead)lead.textContent=language==="en"?"Badges for full weeks with every dose taken.":"Emblemas por semanas completas con todas las tomas realizadas.";
+  }
   $("#achievementsBackButton").hidden=true;
-  $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(streak)}</div>`;
+  $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(earnedWeeks)}</div>`;
   $("#achievementStreak").innerHTML=`<h2>${safe(streakText)}</h2>`;
 }
 function medicineDoseLine(medicine){
