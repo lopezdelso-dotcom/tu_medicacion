@@ -960,7 +960,7 @@ async function fetchMhraMedicines(query,limit=8,signal){
 }
 function mhraPackHtml(item,compact=false){
   if(item?.imageUrl)return `<img src="${safe(item.imageUrl)}" alt="${uiText("Caja del medicamento","Medicine box")}">`;
-  return `<div class="medicine-pack-placeholder ${compact?"compact-placeholder":""}"><span aria-hidden="true">💊</span><small>${compact?"MHRA":uiText("Foto no disponible en MHRA","Photo unavailable in MHRA")}</small></div>`;
+  return `<div class="generic-uk-pack ${compact?"compact-placeholder":""}" aria-label="${uiText("Imagen genérica del medicamento","Generic medicine image")}"><span class="generic-pack-pill" aria-hidden="true">💊</span><small>MHRA</small></div>`;
 }
 function selectMhraMedicine(item){
   const name=typeof item==="string"?item:item.name;
