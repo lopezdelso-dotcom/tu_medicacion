@@ -1404,8 +1404,8 @@ function cleanLandingCopy(){
   const accessLogin=$(".login-option .access-option-text");if(accessLogin)accessLogin.textContent=language==="en"?"Sign in":"Inicia sesión";
   const accessRegister=$(".register-option .access-option-text");if(accessRegister)accessRegister.textContent=language==="en"?"Register":"Regístrate";
   const skip=$(".skip");if(skip)skip.textContent=language==="en"?"Skip to content":"Saltar al contenido";
-  $$("[data-language='es']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>ES</span>"});
-  $$("[data-language='en']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>EN</span>"});
+  $$("[data-language='es']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>"+String.fromCodePoint(0x1F1EA,0x1F1F8)+"</span>"});
+  $$("[data-language='en']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>"+String.fromCodePoint(0x1F1EC,0x1F1E7)+"</span>"});
   $(".hero-card")?.remove();
   $(".trust")?.remove();
   $(".public-features")?.remove();
@@ -1897,6 +1897,5 @@ function setupInstallAppButton(){
 setupInstallAppButton();
 
 setTimeout(()=>{repairVisibleText();forceCriticalSymbols()},250);
-
 
 
