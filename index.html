@@ -20,12 +20,12 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260801-140">
+  <link rel="stylesheet" href="user-controls.css?v=20260801-141">
   <link rel="stylesheet" href="selection-flow.css?v=20260801-1">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
 </head>
-<body>
+<body class="booting">
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <header class="topbar">
     <a class="brand" href="#inicio" aria-label="Mi MedicaciÃƒÂ³n, inicio">
@@ -63,7 +63,7 @@
         </div>
         <div class="access-panel" aria-label="Acceso a Tu Medicación">
           <div class="access-option-buttons">
-            <button class="access-option login-option" type="button" data-open="loginDialog" onclick="document.body.classList.add('modal-open');document.getElementById('loginDialog').showModal()">
+            <button class="access-option login-option" type="button" data-open="loginDialog">
               <span class="access-option-icon" aria-hidden="true">👤</span>
               <span class="access-option-text">Inicia sesión</span>
               <span class="access-option-chevron" aria-hidden="true">⌄</span>
@@ -80,7 +80,7 @@
         <p>Guarda tus medicamentos, revisa cuÃƒÂ¡ndo tomar cada medicina y consulta informaciÃƒÂ³n oficial con tranquilidad.</p>
         <div class="actions">
           <button class="primary" data-open="registerDialog">Darse de alta</button>
-          <button class="secondary" type="button" data-open="loginDialog" onclick="document.body.classList.add('modal-open');document.getElementById('loginDialog').showModal()">Ya tengo cuenta</button>
+          <button class="secondary" type="button" data-open="loginDialog">Ya tengo cuenta</button>
         </div>
       </div>
     </section>
@@ -358,6 +358,6 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260801-140"></script>
+  <script type="module" src="app.js?v=20260801-141"></script>
 </body>
 </html>

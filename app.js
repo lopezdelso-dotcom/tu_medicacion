@@ -493,6 +493,7 @@ function showLanding(){
   if(adminView){adminView.hidden=true;adminView.style.display="none";}
   const diagnostic=sessionStorage.getItem("mm_login_diagnostic"),diagnosticAt=Number(sessionStorage.getItem("mm_login_diagnostic_at")||0);
   if(diagnostic&&Date.now()-diagnosticAt<12000)setTimeout(showLastLoginError,0);
+  document.body.classList.remove("booting");
 }
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
@@ -501,10 +502,11 @@ function showLastLoginError(){
   const message=sessionStorage.getItem("mm_last_login_error")||sessionStorage.getItem("mm_login_diagnostic");if(!message)return;
   const dialog=$("#loginDialog"),form=$("#loginForm"),status=form?$(".form-status",form):null;
   if(status)status.textContent=message;
-  if(dialog&&!dialog.open)openDialogById("loginDialog");
+  if(dialog&&!dialog.open)openDialogById("loginDialog",{keepForm:true});
 }
 function showApp(){
   document.body.classList.remove("admin-mode");document.body.classList.add("user-mode");
+  document.body.classList.remove("booting");
   document.body.classList.remove("font-large","font-xlarge");
   document.documentElement.style.fontSize="";
   setHighContrast(typeof state.user?.highContrast==="boolean"?state.user.highContrast:localStorage.getItem("mm_contrast")==="true",false);
@@ -1399,11 +1401,14 @@ $("#userMenuOverlay")?.addEventListener("click",closeUserMenu);
 $$(".user-menu [data-view]").forEach(button=>button.addEventListener("click",closeUserMenu));
 document.addEventListener("keydown",event=>{if(event.key==="Escape")closeUserMenu()});
 $("#profileCloseButton")?.addEventListener("click",()=>openView("today"));
-function openDialogById(id){
+function openDialogById(id,options={}){
   const dialog=$("#"+id);if(!dialog)return;
   if(id==="loginDialog"){
-    const input=$('#loginForm input[name="password"]'),button=$("#toggleLoginPassword");
-    if(input)input.type="password";
+    const form=$("#loginForm"),input=$('#loginForm input[name="password"]'),button=$("#toggleLoginPassword"),status=form?$(".form-status",form):null;
+    if(form&&!options.keepForm)form.reset();
+    if(status&&!options.keepForm)status.textContent="";
+    if(input){input.type="password";input.value="";}
+    const email=$('#loginForm input[name="email"]');if(email&&!options.keepForm)email.value="";
     if(button){button.classList.remove("showing");button.setAttribute("aria-label",language==="en"?"Show password":"Mostrar contraseña")}
   }
   document.body.classList.add("modal-open");
