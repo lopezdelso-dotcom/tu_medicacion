@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260801-122">
+  <link rel="stylesheet" href="user-controls.css?v=20260801-123">
   <link rel="stylesheet" href="selection-flow.css?v=20260801-1">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -335,12 +335,12 @@
   <dialog id="loginDialog" class="login-dialog"><form id="loginForm">
     <div class="login-dialog-header">
       <img src="app-icon.png?v=20260727-81" alt="Tu Medicacion" class="login-app-icon">
-      <button class="close icon-close" type="button" data-close aria-label="Cerrar">?</button>
+      <button class="close icon-close" type="button" data-close aria-label="Cerrar">&times;</button>
     </div>
     <label>Correo electrÃƒÂ³nico<input name="email" required type="email" autocomplete="email"></label>
     <label>Contrase&ntilde;a<input name="password" required type="password" autocomplete="current-password"></label>
     <button id="forgotPasswordButton" class="forgot-password-button" type="button">He olvidado mi contraseÃƒÂ±a</button>
-    <div class="dialog-actions"><button class="secondary" type="button" data-close>Cancelar</button><button class="primary" type="submit">Entrar</button></div>
+    <div class="dialog-actions login-actions"><button class="primary" type="submit">Entrar</button></div>
     <p class="form-status" role="status"></p>
   </form></dialog>
   <dialog id="resetPasswordDialog" class="login-dialog"><form id="resetPasswordForm">
@@ -359,4 +359,3 @@
   <script type="module" src="app.js?v=20260801-130"></script>
 </body>
 </html>
-
