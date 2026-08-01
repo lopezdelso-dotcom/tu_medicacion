@@ -403,6 +403,7 @@ async function initFirebase(){
     // transitorio de Firebase expulse al usuario mientras estÃ¡ trabajando.
     if(!user){pendingSignedOutCheck=setTimeout(()=>{if(!fb.auth.currentUser&&!userLoginInProgress&&!state.user){showLanding();showLastLoginError()}},900);return;}
     if(state.user?.uid===user.uid)return;
+    if(!state.user&&!userLoginInProgress){fb.signOut(fb.auth).finally(()=>showLanding());return;}
     enterAuthenticatedUser(user).then(result=>{if(!result.ok){rememberLoginError(result.message);showLanding();showLastLoginError()}});
   });
   handlePasswordActionLink();
