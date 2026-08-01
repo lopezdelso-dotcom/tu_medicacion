@@ -117,6 +117,7 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
 .password-eye-button::after{width:.38rem!important;height:.38rem!important}
 .password-eye-button span{width:1.55rem!important}
 .login-dialog .icon-close{font-size:3.15rem!important}
+.user-header-icon,.login-app-icon{border-radius:0!important;box-shadow:none!important;background:transparent!important;object-fit:contain!important}
 .register-dialog .icon-close{color:#111!important;border:0!important;background:transparent!important;font-weight:400!important;font-size:3.15rem!important;line-height:1!important}
 .register-dialog form{border-radius:30px!important}
 .register-dialog .register-welcome{margin:.1rem 0 .6rem!important;color:#07346f!important}
