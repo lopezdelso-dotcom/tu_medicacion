@@ -128,6 +128,62 @@ exports.checkPasswordResetEligibility=onCall({region:"europe-west1"},async reque
   return {eligible:false,status:profile.status||"pending"};
 });
 
+exports.searchMhraMedicines=onCall({region:"europe-west1",timeoutSeconds:30},async request=>{
+  if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesiÃ³n.");
+  const db=getFirestore(),profile=await db.doc(`users/${request.auth.uid}`).get();
+  if(!profile.exists||profile.data().status!=="approved")throw new HttpsError("permission-denied","La cuenta no estÃ¡ aprobada.");
+  const query=String(request.data?.query||"").trim();
+  const limit=Math.min(Math.max(Number(request.data?.limit)||8,1),12);
+  if(query.length<3)throw new HttpsError("invalid-argument","Escribe al menos 3 letras.");
+  const graphql=`query($searchTerm: String, $first: Int) {
+    products {
+      documents(search: $searchTerm, first: $first) {
+        count: totalCount
+        edges {
+          node {
+            product: productName
+            activeSubstances
+            title
+            url
+            docType
+          }
+        }
+      }
+    }
+  }`;
+  let response;
+  try{
+    response=await fetch("https://medicines.api.mhra.gov.uk/graphql",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","User-Agent":"TuMedicacion/1.0"},
+      body:JSON.stringify({query:graphql,variables:{searchTerm:query,first:Math.max(limit*3,12)}})
+    });
+  }catch(error){
+    console.error("MHRA request failed",{query,error:error.message});
+    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
+  }
+  if(!response.ok){
+    const body=await response.text().catch(()=>"");
+    console.error("MHRA response failed",{query,status:response.status,body:body.slice(0,500)});
+    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
+  }
+  const data=await response.json();
+  const rows=data?.data?.products?.documents?.edges||[];
+  const byProduct=new Map();
+  for(const edge of rows){
+    const node=edge.node||{};
+    const name=String(node.product||node.title||"").trim();
+    if(!name)continue;
+    const key=name.toUpperCase();
+    const existing=byProduct.get(key)||{name,activeIngredient:"",url:"",docTypes:[],officialSource:"MHRA",country:"GB",imageUrl:""};
+    if(Array.isArray(node.activeSubstances)&&node.activeSubstances.length)existing.activeIngredient=node.activeSubstances.join(", ");
+    if(node.url&&!existing.url)existing.url=String(node.url).startsWith("http")?node.url:`https://products.mhra.gov.uk${node.url}`;
+    if(node.docType&&!existing.docTypes.includes(node.docType))existing.docTypes.push(node.docType);
+    byProduct.set(key,existing);
+  }
+  return {items:[...byProduct.values()].slice(0,limit)};
+});
+
 exports.updateUserPreferences=onCall({region:"europe-west1"},async request=>{
   if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesiÃ³n.");
   const db=getFirestore(),ref=db.doc(`users/${request.auth.uid}`),snapshot=await ref.get();

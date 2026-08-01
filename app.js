@@ -897,6 +897,11 @@ async function searchMhra(query){
   }
 }
 async function fetchMhraMedicines(query,limit=8,signal){
+  if(fb&&state.user){
+    const callable=fb.httpsCallable(fb.functions,"searchMhraMedicines");
+    const result=await callable({query,limit});
+    return (result.data?.items||[]).slice(0,limit);
+  }
   const graphql=`query($searchTerm: String, $first: Int) {
     products {
       documents(search: $searchTerm, first: $first) {
