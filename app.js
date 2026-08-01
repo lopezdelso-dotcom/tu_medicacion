@@ -1378,7 +1378,7 @@ $("#toggleLoginPassword")?.addEventListener("click",()=>{
   if(!input||!button)return;
   const show=input.type==="password";
   input.type=show?"text":"password";
-  button.textContent=language==="en"?(show?"Hide":"Show"):(show?"Ocultar":"Ver");
+  button.classList.toggle("showing",show);
   button.setAttribute("aria-label",language==="en"?(show?"Hide password":"Show password"):(show?"Ocultar contraseña":"Mostrar contraseña"));
 });
 $$('[data-open="registerDialog"]').forEach(button=>button.addEventListener("click",event=>{event.preventDefault();openDialogById("registerDialog")}));
@@ -1413,7 +1413,7 @@ function cleanLandingCopy(){
   const loginButton=$('.actions [data-open="loginDialog"]');if(loginButton)loginButton.textContent=t("Ya tengo cuenta");
   const accessLogin=$(".login-option .access-option-text");if(accessLogin)accessLogin.textContent=language==="en"?"Sign in":"Inicia sesión";
   const accessRegister=$(".register-option .access-option-text");if(accessRegister)accessRegister.textContent=language==="en"?"Register":"Regístrate";
-  const passwordToggle=$("#toggleLoginPassword");if(passwordToggle){const showing=$('#loginForm input[name="password"]')?.type==="text";passwordToggle.textContent=language==="en"?(showing?"Hide":"Show"):(showing?"Ocultar":"Ver")}
+  const passwordToggle=$("#toggleLoginPassword");if(passwordToggle){const showing=$('#loginForm input[name="password"]')?.type==="text";passwordToggle.classList.toggle("showing",!!showing);passwordToggle.setAttribute("aria-label",language==="en"?(showing?"Hide password":"Show password"):(showing?"Ocultar contraseña":"Mostrar contraseña"))}
   const skip=$(".skip");if(skip)skip.textContent=language==="en"?"Skip to content":"Saltar al contenido";
   $$("[data-language='es']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>"+String.fromCodePoint(0x1F1EA,0x1F1F8)+"</span>"});
   $$("[data-language='en']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>"+String.fromCodePoint(0x1F1EC,0x1F1E7)+"</span>"});
