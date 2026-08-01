@@ -1369,6 +1369,11 @@ document.addEventListener("keydown",event=>{if(event.key==="Escape")closeUserMen
 $("#profileCloseButton")?.addEventListener("click",()=>openView("today"));
 function openDialogById(id){
   const dialog=$("#"+id);if(!dialog)return;
+  if(id==="loginDialog"){
+    const input=$('#loginForm input[name="password"]'),button=$("#toggleLoginPassword");
+    if(input)input.type="password";
+    if(button){button.classList.remove("showing");button.setAttribute("aria-label",language==="en"?"Show password":"Mostrar contraseña")}
+  }
   document.body.classList.add("modal-open");
   if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");
 }
