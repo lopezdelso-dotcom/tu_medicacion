@@ -491,12 +491,12 @@ function showLanding(){
   if($(".public-features"))$(".public-features").hidden=false;
   if(appView){appView.hidden=true;appView.style.display="none";}
   if(adminView){adminView.hidden=true;adminView.style.display="none";}
-  const diagnostic=sessionStorage.getItem("mm_login_diagnostic"),diagnosticAt=Number(sessionStorage.getItem("mm_login_diagnostic_at")||0);
-  if(diagnostic&&Date.now()-diagnosticAt<12000)setTimeout(showLastLoginError,0);
+  sessionStorage.removeItem("mm_login_diagnostic");
+  sessionStorage.removeItem("mm_login_diagnostic_at");
   document.body.classList.remove("booting");
 }
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
-function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
+function clearLoginError(){sessionStorage.removeItem("mm_last_login_error");sessionStorage.removeItem("mm_login_diagnostic");sessionStorage.removeItem("mm_login_diagnostic_at")}
 function rememberLoginDiagnostic(message){if(message){sessionStorage.setItem("mm_login_diagnostic",message);sessionStorage.setItem("mm_login_diagnostic_at",String(Date.now()))}}
 function showLastLoginError(){
   const message=sessionStorage.getItem("mm_last_login_error")||sessionStorage.getItem("mm_login_diagnostic");if(!message)return;
@@ -527,7 +527,6 @@ function showApp(){
 }
 function completeLoginSuccess(form,status){
   clearLoginError();
-  rememberLoginDiagnostic(uiText("Acceso correcto. Si la app vuelve al inicio, este mensaje confirma que el problema est\u00e1 en el cambio de pantalla.","Access accepted. If the app returns to the start screen, this confirms the issue is the screen transition."));
   sessionStorage.setItem("mm_login_success_at",String(Date.now()));
   const dialog=form?.closest("dialog"); if(dialog?.open)dialog.close();
   if(form)form.reset();
@@ -1455,6 +1454,11 @@ function cleanLandingCopy(){
   const loginButton=$('.actions [data-open="loginDialog"]');if(loginButton)loginButton.textContent=t("Ya tengo cuenta");
   const accessLogin=$(".login-option .access-option-text");if(accessLogin)accessLogin.textContent=language==="en"?"Sign in":"Inicia sesión";
   const accessRegister=$(".register-option .access-option-text");if(accessRegister)accessRegister.textContent=language==="en"?"Register":"Regístrate";
+  const loginWelcome=$("#loginDialog .login-welcome");if(loginWelcome)loginWelcome.textContent=language==="en"?"WELCOME":"BIENVENIDO";
+  const loginEmailLabel=$("#loginForm label:nth-of-type(1)");if(loginEmailLabel?.firstChild)loginEmailLabel.firstChild.nodeValue=language==="en"?"Email":"Correo electrónico";
+  const loginPasswordLabel=$("#loginForm label:nth-of-type(2)");if(loginPasswordLabel?.firstChild)loginPasswordLabel.firstChild.nodeValue=language==="en"?"Password":"Contraseña";
+  const forgotPassword=$("#forgotPasswordButton");if(forgotPassword)forgotPassword.textContent=language==="en"?"I forgot my password":"He olvidado mi contraseña";
+  const loginSubmit=$("#loginForm button[type='submit']");if(loginSubmit)loginSubmit.textContent=language==="en"?"Sign in":"Entrar";
   const passwordToggle=$("#toggleLoginPassword");if(passwordToggle){const showing=$('#loginForm input[name="password"]')?.type==="text";passwordToggle.classList.toggle("showing",!!showing);passwordToggle.setAttribute("aria-label",language==="en"?(showing?"Hide password":"Show password"):(showing?"Ocultar contraseña":"Mostrar contraseña"))}
   const skip=$(".skip");if(skip)skip.textContent=language==="en"?"Skip to content":"Saltar al contenido";
   $$("[data-language='es']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>"+String.fromCodePoint(0x1F1EA,0x1F1F8)+"</span>"});
