@@ -642,7 +642,7 @@ function showMedicineDetail(id){
   const heading=$(".medicines-heading");
   const british=medicine.officialSource==="MHRA"||medicine.country==="GB";
   const officialUrl=british
-    ? 'https://products.mhra.gov.uk/search?query='+encodeURIComponent(medicine.name)
+    ? 'https://products.mhra.gov.uk/search?search='+encodeURIComponent(medicine.name)+"&page=1"
     : medicine.cimaId
       ? 'https://cima.aemps.es/cima/publico/detalle.html?nregistro='+encodeURIComponent(medicine.cimaId)
       : 'https://cima.aemps.es/cima/publico/lista.html?nombre='+encodeURIComponent(medicine.name);
@@ -741,7 +741,7 @@ async function setPatientCountry(country,persist=true){
   if(persist&&fb&&state.user){try{await saveUserPreferences({country});toast(t("Preferencias guardadas."))}catch(error){toast(t("No se pudo guardar el paÃ­s."))}}
 }
 function officialMedicineSource(){return patientCountry==="GB"?"MHRA":"CIMA"}
-function officialMedicineSearchUrl(name=""){return patientCountry==="GB"?`https://products.mhra.gov.uk/search?query=${encodeURIComponent(name)}`:"https://cima.aemps.es/cima/publico/home.html"}
+function officialMedicineSearchUrl(name=""){return patientCountry==="GB"?`https://products.mhra.gov.uk/search?search=${encodeURIComponent(name)}&page=1`:"https://cima.aemps.es/cima/publico/home.html"}
 function updateOfficialMedicineSourceUi(){
   const gb=patientCountry==="GB",sourceNote=$("#officialMedicineSourceNote"),methodNote=$("#officialSearchMethodNote"),suggestions=$("#cimaNameSuggestions");
   if(sourceNote)sourceNote.textContent=t(gb?"Fuente oficial: MHRA Products (Reino Unido)":"Resultados oficiales de CIMA ? Agencia Espa?ola de Medicamentos y Productos Sanitarios");
@@ -884,21 +884,76 @@ $("#medicineSearch").oninput=event=>{
   medicineSearchTimer=setTimeout(()=>searchOfficialMedicine(query),350);
 };
 function searchOfficialMedicine(query){return patientCountry==="GB"?searchMhra(query):searchCima(query)}
-function searchMhra(query){
-  const status=$("#medicineSearchStatus"),results=$("#medicineSearchResults");
-  status.textContent=t("Comprueba el nombre en el registro oficial brit?nico.");
-  results.innerHTML=`<article class="search-result mhra-result"><div><b>${safe(query)}</b><small>MHRA Products Â· United Kingdom</small></div><div class="selected-actions"><a class="secondary" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(query)}">${t("Abrir MHRA ?â€ â€”")}</a><button class="primary" type="button" data-use-mhra-name>${t("Ya lo he comprobado")}</button></div></article>`;
-  $("[data-use-mhra-name]",results).onclick=()=>selectMhraMedicine(query);
+async function searchMhra(query){
+  const status=$("#medicineSearchStatus"),results=$("#medicineSearchResults");medicineSearchController=new AbortController();
+  try{
+    const items=await fetchMhraMedicines(query,8,medicineSearchController.signal);
+    status.textContent=items.length?uiText(`${items.length} resultados oficiales`,`${items.length} official results`):uiText("No se encontraron medicamentos.","No medicines found.");
+    results.innerHTML=items.map((item,index)=>`<button class="search-result mhra-result" data-mhra-result="${index}"><span class="search-result-photo">${mhraPackHtml(item,true)}</span><span><b>${safe(item.name)}</b><small>${safe(item.activeIngredient||"MHRA Products · United Kingdom")}</small></span></button>`).join("");
+    $$('[data-mhra-result]',results).forEach(button=>button.onclick=()=>selectMhraMedicine(items[Number(button.dataset.mhraResult)]));
+  }catch(error){
+    if(error.name==="AbortError")return;
+    status.innerHTML=`${uiText("No se pudo consultar MHRA en este momento.","MHRA could not be reached right now.")} <a target="_blank" rel="noopener" href="${officialMedicineSearchUrl(query)}">${uiText("Abrir buscador oficial","Open official search")}</a>`;
+  }
 }
-function selectMhraMedicine(name){
+async function fetchMhraMedicines(query,limit=8,signal){
+  const graphql=`query($searchTerm: String, $first: Int) {
+    products {
+      documents(search: $searchTerm, first: $first) {
+        count: totalCount
+        edges {
+          node {
+            product: productName
+            activeSubstances
+            title
+            url
+            docType
+          }
+        }
+      }
+    }
+  }`;
+  const response=await fetch("https://medicines.api.mhra.gov.uk/graphql",{
+    method:"POST",
+    mode:"cors",
+    signal,
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({query:graphql,variables:{searchTerm:query,first:Math.max(limit*3,12)}})
+  });
+  if(!response.ok)throw new Error("MHRA");
+  const data=await response.json();
+  const rows=data?.data?.products?.documents?.edges||[];
+  const byProduct=new Map();
+  for(const edge of rows){
+    const node=edge.node||{};
+    const name=(node.product||node.title||"").trim();
+    if(!name)continue;
+    const key=name.toUpperCase();
+    const existing=byProduct.get(key)||{name,activeIngredient:"",url:"",docTypes:new Set(),officialSource:"MHRA",country:"GB",imageUrl:""};
+    if(Array.isArray(node.activeSubstances)&&node.activeSubstances.length)existing.activeIngredient=node.activeSubstances.join(", ");
+    if(node.url&&!existing.url)existing.url=node.url.startsWith("http")?node.url:`https://products.mhra.gov.uk${node.url}`;
+    if(node.docType)existing.docTypes.add(node.docType);
+    byProduct.set(key,existing);
+  }
+  return [...byProduct.values()].slice(0,limit).map(item=>({...item,docTypes:[...item.docTypes]}));
+}
+function mhraPackHtml(item,compact=false){
+  if(item?.imageUrl)return `<img src="${safe(item.imageUrl)}" alt="${uiText("Caja del medicamento","Medicine box")}">`;
+  return `<div class="medicine-pack-placeholder ${compact?"compact-placeholder":""}"><span aria-hidden="true">💊</span><small>${compact?"MHRA":uiText("Foto no disponible en MHRA","Photo unavailable in MHRA")}</small></div>`;
+}
+function selectMhraMedicine(item){
+  const name=typeof item==="string"?item:item.name;
   const panel=$("#medicineSearchPanel"),selected=$("#selectedMedicine");
   $("#medicineSearchResults").innerHTML="";$("#medicineSearchStatus").textContent="";$(':scope > label',panel).hidden=true;selected.hidden=false;
-  selected.innerHTML=`<article class="selected-medicine-card"><div class="medicine-pack"><div class="medicine-pack-placeholder"><span aria-hidden="true">?Å¸â€™Å </span><small>MHRA Products</small></div></div><div class="selected-details"><span class="eyebrow">${t("MEDICAMENTO OFICIAL ? REINO UNIDO")}</span><h2>${safe(name)}</h2><div class="medicine-extra"><a class="official-link" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(name)}">${t("Ver informaciÃ³n oficial en MHRA ?â€ â€”")}</a></div><div class="selected-actions"><button class="secondary" type="button" data-change-medicine>${t("Elegir otro")}</button><button class="primary" type="button" data-confirm-mhra>${t("SÃ­, es mi medicamento")}</button></div></div></article>`;
+  const active=typeof item==="object"&&item.activeIngredient?`<p><b>${t("Principio activo")}:</b> ${safe(item.activeIngredient)}</p>`:"";
+  const link=typeof item==="object"&&item.url?item.url:officialMedicineSearchUrl(name);
+  selected.innerHTML=`<article class="selected-medicine-card"><div class="medicine-pack">${mhraPackHtml(item)}</div><div class="selected-details"><span class="eyebrow">${uiText("MEDICAMENTO OFICIAL · REINO UNIDO","OFFICIAL MEDICINE · UNITED KINGDOM")}</span><h2>${safe(name)}</h2><div class="medicine-extra">${active}<a class="official-link" target="_blank" rel="noopener" href="${safe(link)}">${uiText("Ver información oficial en MHRA","View official MHRA information")}</a></div><div class="selected-actions"><button class="secondary" type="button" data-change-medicine>${t("Elegir otro")}</button><button class="primary" type="button" data-confirm-mhra>${language==="en"?"Yes, this is my medicine":"Sí, es mi medicamento"}</button></div></div></article>`;
   $("[data-change-medicine]",selected).onclick=resetMedicineSelection;
-  $("[data-confirm-mhra]",selected).onclick=()=>confirmMhraMedicine(name);
+  $("[data-confirm-mhra]",selected).onclick=()=>confirmMhraMedicine(item);
 }
-function confirmMhraMedicine(name){
-  const form=$("#medicineForm");form.hidden=false;form.name.value=name;form.cimaId.value="";form.officialSource.value="MHRA";form.time.value="09:00";form.startDate.value=new Date().toISOString().slice(0,10);
+function confirmMhraMedicine(item){
+  const name=typeof item==="string"?item:item.name;
+  const form=$("#medicineForm");form.hidden=false;form.name.value=name;form.cimaId.value="";form.officialSource.value="MHRA";form.medicineImageUrl.value=typeof item==="object"?(item.imageUrl||""):"";form.activeIngredient.value=typeof item==="object"?(item.activeIngredient||""):"";form.time.value="09:00";form.startDate.value=new Date().toISOString().slice(0,10);
   showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${name}`);$(".selected-medicine-card").classList.add("confirmed");$("#reviewPanel").classList.add("schedule-only");$(".notice",$("#reviewPanel")).innerHTML=`<b>${uiText("Ahora indica el tratamiento","Now enter the treatment")}</b><br>${t("Puedes corregir cualquier campo antes de guardar.")}`;$("#reviewPanel").hidden=false;$("#reviewPanel").scrollIntoView({behavior:"smooth",block:"start"});form.time.focus();
 }
 async function searchCima(query){
@@ -983,7 +1038,7 @@ async function validateCimaName(form,focusOnError=true){
   if(patientCountry==="GB"){
     const name=form.name.value.trim();
     if(name.length>=3&&form.officialSource.value==="MHRA"){showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${name}`);return true}
-    showCimaValidation("invalid",uiText("Comprueba el medicamento en MHRA y pulsa \u00abUsar este nombre\u00bb.","Check the medicine in MHRA and tap \u201cUse this name\u201d."));if(focusOnError)form.name.focus();return false;
+    showCimaValidation("invalid",uiText("Elige un medicamento de la lista oficial de MHRA.","Choose a medicine from the official MHRA list."));if(focusOnError)form.name.focus();return false;
   }
   const name=form.name.value.trim();if(name.length<3){form.cimaId.value="";showCimaValidation("invalid",uiText("No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre.","No reliable match was found in CIMA. Check the name."));if(focusOnError)form.name.focus();return false}
   if(form.cimaId.value){showCimaValidation("valid",t("Medicamento verificado en CIMA"));return true}
@@ -995,9 +1050,19 @@ function clearCimaNameSuggestions(){clearTimeout(cimaNameTimer);cimaNameControll
 async function loadCimaNameSuggestions(query,form){
   const suggestions=$("#cimaNameSuggestions");cimaNameController=new AbortController();showCimaValidation("checking",uiText("Comprobando el nombre en CIMA\u2026","Checking the name in CIMA\u2026"));
   if(patientCountry==="GB"){
-    showCimaValidation("checking",t("Comprueba el nombre en el registro oficial brit?nico."));
-    suggestions.innerHTML=`<div class="cima-no-results"><a class="secondary" target="_blank" rel="noopener" href="${officialMedicineSearchUrl(query)}">${language==="en"?`Search ?â‚¬Å“${safe(query)}?â‚¬? in MHRA ?â€ â€”`:`Buscar ?${safe(query)}? en MHRA ?â€ â€”`}</a><button class="primary" type="button" data-confirm-mhra-name>${t("Usar este nombre")}</button></div>`;
-    $("[data-confirm-mhra-name]",suggestions).onclick=()=>{form.officialSource.value="MHRA";clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${query}`);form.dose.focus()};return;
+    showCimaValidation("checking",uiText("Buscando en MHRA…","Searching MHRA…"));
+    try{
+      const items=await fetchMhraMedicines(query,6,cimaNameController.signal);
+      if(form.name.value.trim()!==query)return;
+      showCimaValidation("","");
+      suggestions.innerHTML=items.map((item,index)=>`<button type="button" role="option" data-mhra-name-result="${index}"><span class="search-result-photo">${mhraPackHtml(item,true)}</span><span><b>${safe(item.name)}</b><small>${safe(item.activeIngredient||"MHRA Products · United Kingdom")}</small></span></button>`).join("")||`<div class="cima-no-results">${uiText("No se encontraron medicamentos.","No medicines found.")}</div>`;
+      $$('[data-mhra-name-result]',suggestions).forEach(button=>button.onclick=()=>{const item=items[Number(button.dataset.mhraNameResult)];form.name.value=item.name||"";form.cimaId.value="";form.officialSource.value="MHRA";form.activeIngredient.value=item.activeIngredient||"";form.medicineImageUrl.value=item.imageUrl||"";clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${item.name}`);form.dose.focus()});
+    }catch(error){
+      if(error.name==="AbortError")return;
+      showCimaValidation("invalid",uiText("No se pudo consultar MHRA. Inténtalo de nuevo.","MHRA could not be reached. Try again."));
+      suggestions.innerHTML="";
+    }
+    return;
   }
   try{const response=await fetch(`https://cima.aemps.es/cima/rest/medicamentos?nombre=${encodeURIComponent(query)}&autorizados=1&comerc=1`,{signal:cimaNameController.signal});if(!response.ok)throw new Error("CIMA");const data=await response.json();if(form.name.value.trim()!==query)return;const items=(data.resultados||[]).slice(0,6);showCimaValidation("","");suggestions.innerHTML=items.map((item,index)=>`<button type="button" role="option" data-cima-name-result="${index}"><b>${safe(item.nombre)}</b><small>${safe(item.pactivos||"")}${item.labtitular?` ? ${safe(item.labtitular)}`:""}</small></button>`).join("")||`<div class="cima-no-results">${uiText("No se encontraron medicamentos.","No medicines found.")}</div>`;$$('[data-cima-name-result]',suggestions).forEach(button=>button.onclick=async()=>{const item=items[Number(button.dataset.cimaNameResult)];form.name.value=item.nombre||"";form.cimaId.value=item.nregistro||"";form.officialSource.value="CIMA";form.activeIngredient.value=item.pactivos||"";form.medicineImageUrl.value="";try{const detailResponse=await fetch(`https://cima.aemps.es/cima/rest/medicamento?nregistro=${encodeURIComponent(item.nregistro)}`);if(detailResponse.ok){const detail=await detailResponse.json();form.medicineImageUrl.value=findCimaPhoto(detail)||"";form.activeIngredient.value=detail.pactivos||form.activeIngredient.value}}catch(error){}clearCimaNameSuggestions();showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${item.nombre}`);form.dose.focus()})}catch(error){if(error.name==="AbortError")return;showCimaValidation("invalid",uiText("No se pudo consultar CIMA. Int\u00e9ntalo de nuevo.","CIMA could not be reached. Try again."));suggestions.innerHTML=""}
 }
