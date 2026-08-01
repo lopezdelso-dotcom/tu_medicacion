@@ -92,6 +92,7 @@ function forceCriticalSymbols(){
   setText("#calendarButton",cp(0x1F4C5)+" "+t("Ver semana completa"));
   setText("#closeWeekCalendarButton",cp(0x1F4C5)+" "+(language==="en"?"View daily view":"Ver vista diaria"));
   setText("#installAppButton",language==="en"?"Install app":"Instalar app");
+  setText("#savePreferencesButton",language==="en"?"Save changes":"Guardar cambios");
   setText("#changeMethodButton",(language==="en"?"Back":"Atrás"));
   setText("#scheduleBackButton",(language==="en"?"Back":"Atrás"));
   const menuLabels={
@@ -153,6 +154,7 @@ Object.assign(translations,{
   "?â€ + AtrÃ¡s":"?â€ ? Back",
   "+ AÃ±adir nuevo medicamento":"+ Add new medicine",
   "AÃ±adir nuevo medicamento":"Add new medicine",
+  "Guardar cambios":"Save changes",
   "Resumen de todos los tratamientos que tomas.":"Summary of all your treatments.",
   "Resumen de todos tus tratamientos.":"Summary of all your treatments.",
   "Configurar tomas":"Configure treatment",
@@ -724,6 +726,19 @@ async function saveUserPreferences(updates){
   await callable(updates);
   Object.assign(state.user,updates);
 }
+function preferencesPayload(){return {preferredLanguage:language,country:patientCountry,highContrast:localStorage.getItem("mm_contrast")==="true"}}
+async function savePreferencesFromPanel(){
+  const button=$("#savePreferencesButton");if(button)button.disabled=true;
+  try{
+    if(fb&&state.user)await saveUserPreferences(preferencesPayload());
+    toast(t("Preferencias guardadas."));
+    closePreferences();
+  }catch(error){
+    toast(t("No se pudieron guardar las preferencias."));
+  }finally{
+    if(button)button.disabled=false;
+  }
+}
 
 function closePreferences(){const p=$("#preferencesPanel"),backdrop=$("#preferencesBackdrop");p.hidden=true;backdrop.hidden=true;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","false"))}
 function toggleAccessibility(button){const p=$("#preferencesPanel"),willOpen=p.hidden;if(willOpen){$("#preferencesBackdrop").hidden=false;p.hidden=false;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","true"));p.querySelector("button")?.focus()}else closePreferences()}
@@ -734,7 +749,7 @@ $("#closePreferencesButton")?.addEventListener("click",closePreferences);
 document.addEventListener("pointerdown",event=>{const panel=$("#preferencesPanel");if(panel.hidden||panel.contains(event.target)||event.target.closest('[aria-controls="preferencesPanel"]'))return;closePreferences()});
 document.addEventListener("keydown",event=>{if(event.key==="Escape")closePreferences()});
 async function setHighContrast(enabled,persist=true){enabled=Boolean(enabled);document.body.classList.toggle("high-contrast",enabled);$("#contrastToggle").checked=enabled;localStorage.setItem("mm_contrast",String(enabled));if(persist&&fb&&state.user){try{await saveUserPreferences({highContrast:enabled})}catch(error){toast(t("No se pudieron guardar las preferencias."))}}}
-$("#contrastToggle").onchange=e=>setHighContrast(e.target.checked);
+$("#contrastToggle").onchange=e=>setHighContrast(e.target.checked,false);
 async function setPatientCountry(country,persist=true){
   if(!["ES","GB"].includes(country))return;patientCountry=country;localStorage.setItem("mm_country",country);$$('[data-country]').forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.country===country)));
   updateOfficialMedicineSourceUi();
@@ -748,7 +763,8 @@ function updateOfficialMedicineSourceUi(){
   if(methodNote)methodNote.textContent=t(gb?"Consulta el registro oficial de la MHRA":"Consulta la base oficial de la AEMPS");
   if(suggestions)suggestions.setAttribute("aria-label",gb?"Comprobaci?n oficial en MHRA":"Sugerencias oficiales de CIMA");
 }
-$$('[data-country]').forEach(button=>button.onclick=()=>setPatientCountry(button.dataset.country));
+$$('[data-country]').forEach(button=>button.onclick=()=>setPatientCountry(button.dataset.country,false));
+$("#savePreferencesButton")?.addEventListener("click",savePreferencesFromPanel);
 $$('[data-open]').forEach(b=>b.onclick=()=>{document.body.classList.add("modal-open");$("#"+b.dataset.open).showModal()});
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest("dialog").close());
 $$('dialog').forEach(dialog=>dialog.addEventListener("close",()=>{if(!$("dialog[open]"))document.body.classList.remove("modal-open")}));
@@ -1341,7 +1357,7 @@ async function setPreferredLanguage(nextLanguage,persist=true){
   if(!["es","en"].includes(nextLanguage))return;language=nextLanguage;localStorage.setItem("mm_language",language);renderAll();applyLanguage();
   if(persist&&fb&&state.user){try{await saveUserPreferences({preferredLanguage:language})}catch(error){toast(t("No se pudo guardar el idioma preferido."))}}
 }
-$$('[data-language]').forEach(button=>button.onclick=()=>setPreferredLanguage(button.dataset.language));
+$$('[data-language]').forEach(button=>button.onclick=()=>setPreferredLanguage(button.dataset.language,false));
 applyLanguage();
 function openUserMenu(){forceCriticalSymbols();document.body.classList.add("user-menu-visible");$("#userMenuOverlay").hidden=false;$("#openUserMenu")?.setAttribute("aria-expanded","true")}
 function closeUserMenu(){document.body.classList.remove("user-menu-visible");const overlay=$("#userMenuOverlay");if(overlay)overlay.hidden=true;$("#openUserMenu")?.setAttribute("aria-expanded","false")}

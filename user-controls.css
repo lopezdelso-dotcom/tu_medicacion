@@ -272,6 +272,11 @@ body.user-mode .preferences-panel{
   line-height:1!important;
   font-weight:800!important;
 }
+.preferences-save{
+  margin-top:.85rem!important;
+  min-height:54px!important;
+  font-size:1rem!important;
+}
 .country-picker button[data-country] span[aria-hidden="true"]{
   font-size:0!important;
   line-height:1!important;
