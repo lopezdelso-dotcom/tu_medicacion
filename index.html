@@ -85,7 +85,7 @@
             </div>
           </div>
           <button data-view="medicines"><span aria-hidden="true">??</span>Medicaci?n</button>
-          <button class="active" data-view="today"><span aria-hidden="true">?</span>Tomas</button>
+          <button class="active" data-view="today"><span aria-hidden="true">?</span>Tratamiento</button>
           <button data-view="sideEffects"><span aria-hidden="true">&#9432;</span>Consultar efectos secundarios</button>
           <button data-view="compliance"><span aria-hidden="true">%</span>Cumplimiento</button>
           <button data-view="achievements"><span aria-hidden="true">*</span>Logros</button>
@@ -98,13 +98,13 @@
           <div id="today" class="view active-view">
             <div class="today-toolbar">
               <button id="previousDayButton" class="secondary day-nav-button" type="button" aria-label="D?a anterior">?</button>
-              <div class="today-heading"><p class="eyebrow" id="todayDate"></p><h1 id="todayTitle">Tomas de hoy</h1></div>
+              <div class="today-heading"><p class="eyebrow" id="todayDate"></p><h1 id="todayTitle">Tratamiento</h1></div>
               <button id="nextDayButton" class="secondary day-nav-button" type="button" aria-label="D?a siguiente">?</button>
             </div>
             <button id="calendarButton" class="secondary wide calendar-button" type="button">?? Ver semana completa</button>
             <input id="calendarDateInput" class="calendar-date-input" type="date" aria-label="Elegir fecha">
             <div id="schedule" class="today-schedule"></div>
-            <section id="weekCalendarPanel" class="week-calendar-panel" hidden aria-label="Calendario semanal de tomas">
+            <section id="weekCalendarPanel" class="week-calendar-panel" hidden aria-label="Calendario semanal de tratamiento">
               <div class="week-calendar-toolbar">
                 <button id="previousWeekButton" class="secondary week-nav-button week-nav-prev" type="button" aria-label="Semana anterior"></button>
                 <div class="week-calendar-heading">
@@ -119,7 +119,7 @@
             </section>
           </div>
           <div id="medicines" class="view" hidden>
-            <div class="medicines-heading"><button class="primary add-medicine-button" data-view-button="documents">+ AÃƒÂ±adir nuevo medicamento</button><p class="lead">Resumen de todos los tratamientos que tomas.</p></div>
+            <div class="medicines-heading"><button class="primary add-medicine-button" data-view-button="documents">+ AÃƒÂ±adir nuevo medicamento</button><p class="lead">Resumen de todos tus tratamientos.</p></div>
             <div id="medicineList" class="card-list"></div>
             <article id="medicineDetail" class="medicine-detail" hidden></article>
           </div>
@@ -169,7 +169,7 @@
                 <button id="goFrequencyNextStep" class="primary wide" type="button" disabled>Continuar</button>
               </section>
               <section class="schedule-step" data-schedule-step="days" hidden>
-                <h2>&iquest;Qu&eacute; d&iacute;as lo tomas?</h2>
+                <h2>&iquest;Qu&eacute; d&iacute;as sigues el tratamiento?</h2>
                 <div id="weekdayPicker" class="weekday-picker" hidden>
                   <label><input type="checkbox" name="days" value="mon">Lunes</label>
                   <label><input type="checkbox" name="days" value="tue">Martes</label>
@@ -182,12 +182,12 @@
                 <button id="goMealsStep" class="primary wide" type="button" disabled>Continuar</button>
               </section>
               <section class="schedule-step" data-schedule-step="meals" hidden>
-                <h2>&iquest;Cu&aacute;ndo lo tomas?</h2>
+                <h2>&iquest;Cu&aacute;ndo sigues el tratamiento?</h2>
                 <div class="meal-picker compact-meal-picker">
                   <label class="meal-time-row" data-meal-row="breakfast"><span class="meal-choice"><input type="checkbox" name="meals" value="breakfast">Desayuno</span><span class="time-stepper" data-time-stepper="breakfast" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>08</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
                   <label class="meal-time-row" data-meal-row="lunch"><span class="meal-choice"><input type="checkbox" name="meals" value="lunch">Comida</span><span class="time-stepper" data-time-stepper="lunch" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>14</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
                   <label class="meal-time-row" data-meal-row="dinner"><span class="meal-choice"><input type="checkbox" name="meals" value="dinner">Cena</span><span class="time-stepper" data-time-stepper="dinner" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>21</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
-                  <label class="meal-time-row" data-meal-row="extra"><span class="meal-choice"><input type="checkbox" name="meals" value="extra">Toma adicional</span><span class="time-stepper" data-time-stepper="extra" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>12</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
+                  <label class="meal-time-row" data-meal-row="extra"><span class="meal-choice"><input type="checkbox" name="meals" value="extra">Tratamiento adicional</span><span class="time-stepper" data-time-stepper="extra" hidden><span class="time-column"><button type="button" data-time-part="hour" data-time-delta="1">Ã¢â€“Â²</button><b data-time-hour>12</b><button type="button" data-time-part="hour" data-time-delta="-1">Ã¢â€“Â¼</button></span><span class="time-separator">:</span><span class="time-column"><button type="button" data-time-part="minute" data-time-delta="10">Ã¢â€“Â²</button><b data-time-minute>00</b><button type="button" data-time-part="minute" data-time-delta="-10">Ã¢â€“Â¼</button></span></span></label>
                 </div>
                 <button id="goPosologyStep" class="primary wide" type="button" disabled>Continuar</button>
               </section>
@@ -248,11 +248,11 @@
           <div id="sideEffects" class="view" hidden><button id="sideEffectsBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button><h1>Consultar efectos secundarios</h1><p class="lead">Selecciona uno de tus medicamentos confirmados.</p><div class="notice warning effects-health-notice"><b>Informaci&oacute;n sanitaria oficial</b><br>Si tienes s&iacute;ntomas graves o inesperados, contacta con un profesional sanitario. En urgencias, llama al 112.</div><div id="effectsStatus" role="status" aria-live="polite"></div><div id="effectsResults" class="effects-medicine-list"></div><article id="effectsDetail" class="effects-detail" hidden></article></div>
           <div id="reminders" class="view" hidden>
             <h1>Recordatorios</h1>
-            <p class="lead">Recibe avisos en este dispositivo cuando llegue la hora de una toma.</p>
+            <p class="lead">Recibe avisos en este dispositivo cuando llegue la hora del tratamiento.</p>
             <div class="reminder-card">
               <span class="reminder-icon" aria-hidden="true"></span>
               <div>
-                <h2>Notificaciones de tomas</h2>
+                <h2>Notificaciones de tratamiento</h2>
                 <p>Activa los recordatorios en tu móvil o tablet. Puedes desactivarlos cuando quieras.</p>
                 <button id="enableRemindersButton" class="primary" type="button">Activar recordatorios</button>
                 <button id="disableRemindersButton" class="secondary" type="button" hidden>Desactivar recordatorios</button>
@@ -265,7 +265,7 @@
             <button id="complianceBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
             <section id="complianceSummary">
               <h1>Cumplimiento</h1>
-              <p class="lead">Porcentaje calculado con las tomas realizadas desde el inicio hasta ayer.</p>
+              <p class="lead">Porcentaje calculado con el tratamiento realizado desde el inicio hasta ayer.</p>
               <div id="complianceStatus" role="status" aria-live="polite"></div>
               <div id="complianceResults" class="compliance-list"></div>
             </section>
@@ -274,7 +274,7 @@
           <div id="achievements" class="view" hidden>
             <button id="achievementsBackButton" class="secondary medicine-back-button" type="button">Atr&aacute;s</button>
             <h1>Logros</h1>
-            <p class="lead">Emblemas por semanas completas con todas las tomas realizadas.</p>
+            <p class="lead">Emblemas por semanas completas con todo el tratamiento realizado.</p>
             <div id="achievementGrid" class="achievements-scroll"></div>
             <div id="achievementStreak" class="achievement-streak-card"></div>
           </div>
@@ -337,7 +337,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260801-121"></script>
+  <script type="module" src="app.js?v=20260801-122"></script>
 </body>
 </html>
 

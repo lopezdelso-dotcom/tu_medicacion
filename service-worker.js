@@ -11,7 +11,7 @@ try {
       const notification = payload.notification || {};
       const data = payload.data || {};
       self.registration.showNotification(notification.title || data.title || "Tu Medicación", {
-        body: notification.body || data.body || "Tienes una toma pendiente.",
+        body: notification.body || data.body || "Tienes un tratamiento pendiente.",
         icon: "/pwa-icons/icon-192.png",
         badge: "/pwa-icons/maskable-192.png",
         vibrate: [350, 120, 350, 120, 450],
@@ -25,7 +25,7 @@ try {
   }
 } catch (error) {}
 
-const CACHE_NAME = "tu-medicacion-pwa-v7";
+const CACHE_NAME = "tu-medicacion-pwa-v9";
 const APP_SHELL = [
   "/",
   "/index.html",

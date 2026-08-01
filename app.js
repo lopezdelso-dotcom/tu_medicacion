@@ -17,19 +17,19 @@ const translations = {
   "Tu salud, mÃ¡s sencilla":"Your health, made simpler","Opciones de accesibilidad":"Accessibility options","Preferencias":"Preferences","Idioma":"Language","PaÃ­s del paciente":"Patient's country","EspaÃ±a":"Spain","Reino Unido":"United Kingdom","Selecciona tu paÃ­s":"Select your country","Alto contraste":"High contrast",
   "HECHO PARA TI":"MADE FOR YOU","Tu medicaciÃ³n,":"Your medication,","clara y a mano.":"clear and close at hand.","Guarda tus recetas, revisa cuÃ¡ndo tomar cada medicina y consulta informaciÃ³n oficial con tranquilidad.":"Save your prescriptions, review when to take each medicine and consult official information with confidence.","Guarda tus medicamentos, revisa cuÃ¡ndo tomar cada medicina y consulta informaciÃ³n oficial con tranquilidad.":"Save your medicines, review when to take each medicine and consult official information with confidence.",
   "Darse de alta":"Sign up","Darme de alta":"Sign me up","Ya tengo cuenta":"I have an account","Tus datos son privados y solo tÃº puedes verlos":"Your data is private and only you can see it","PR?â€œXIMA TOMA":"NEXT DOSE","1 comprimido Â· Desayuno":"1 tablet Â· Breakfast","?Å“â€œ Marcar como tomada":"?Å“â€œ Mark as taken",
-  "TODO EN UN MISMO LUGAR":"EVERYTHING IN ONE PLACE","Cuidar tu salud puede ser mÃ¡s sencillo":"Looking after your health can be simpler","Herramientas claras, privadas y pensadas para utilizar desde el mÃ³vil.":"Clear, private tools designed for use on your phone.","Fotograf?a tus recetas":"Photograph your prescriptions","Incorpora una receta o informe haciendo una foto y revisa los datos antes de guardarlos.":"Add a prescription or report by taking a photo and review the details before saving.","Planifica tus tomas":"Plan your doses","Consulta de forma sencilla quÃ© medicamento debes tomar durante los prÃ³ximos siete dÃ­as.":"Easily check which medicine to take over the next seven days.","TÃº confirmas los datos":"You confirm the details","Ninguna pauta extra?da de una fotograf?a se acepta sin que tÃº la compruebes.":"No schedule extracted from a photo is accepted until you check it.","InformaciÃ³n oficial":"Official information","Accede a prospectos e informaciÃ³n sobre efectos secundarios publicados por la AEMPS.":"Access leaflets and side-effect information published by AEMPS.","F?cil de leer":"Easy to read","Cambia el tama?o del texto y activa el alto contraste cuando lo necesites.":"Change the text size and turn on high contrast whenever you need it.","Tu informaciÃ³n es privada":"Your information is private","Cada usuario solo puede consultar sus propios datos y documentos.":"Each user can only access their own information and documents.","Empieza a organizar tu medicaciÃ³n":"Start organising your medication","Solicita el alta y revisaremos tu cuenta antes de activarla.":"Sign up and we will review your account before activating it.",
+  "TODO EN UN MISMO LUGAR":"EVERYTHING IN ONE PLACE","Cuidar tu salud puede ser mÃ¡s sencillo":"Looking after your health can be simpler","Herramientas claras, privadas y pensadas para utilizar desde el mÃ³vil.":"Clear, private tools designed for use on your phone.","Fotograf?a tus recetas":"Photograph your prescriptions","Incorpora una receta o informe haciendo una foto y revisa los datos antes de guardarlos.":"Add a prescription or report by taking a photo and review the details before saving.","Planifica tus tomas":"Plan your treatment","Consulta de forma sencilla quÃ© medicamento debes tomar durante los prÃ³ximos siete dÃ­as.":"Easily check which medicine to take over the next seven days.","TÃº confirmas los datos":"You confirm the details","Ninguna pauta extra?da de una fotograf?a se acepta sin que tÃº la compruebes.":"No schedule extracted from a photo is accepted until you check it.","InformaciÃ³n oficial":"Official information","Accede a prospectos e informaciÃ³n sobre efectos secundarios publicados por la AEMPS.":"Access leaflets and side-effect information published by AEMPS.","F?cil de leer":"Easy to read","Cambia el tama?o del texto y activa el alto contraste cuando lo necesites.":"Change the text size and turn on high contrast whenever you need it.","Tu informaciÃ³n es privada":"Your information is private","Cada usuario solo puede consultar sus propios datos y documentos.":"Each user can only access their own information and documents.","Empieza a organizar tu medicaciÃ³n":"Start organising your medication","Solicita el alta y revisaremos tu cuenta antes de activarla.":"Sign up and we will review your account before activating it.",
   "Cancelar":"Cancel","Nombre no reconocido":"Name not recognised","Sugerencias oficiales de CIMA":"Official CIMA suggestions",
-  "Hoy":"Today","Mis medicinas":"My medicines","Documentos":"Documents","Mi perfil":"My profile","Solicitudes":"Requests","Buenos dÃ­as,":"Good morning,","Estas son tus tomas de hoy.":"These are your doses for today.","?â€¹ AÃ±adir desde una receta":"?â€¹ Add from a prescription","Solo se muestran pautas que tÃº hayas confirmado.":"Only schedules you have confirmed are shown.",
-  "AquÃ© tienes tu medicaciÃ³n para los prÃ³ximos 7 dÃ­as.":"Here is your medication for the next 7 days.","Resumen de mi perfil":"My profile summary","Ver mi perfil":"View my profile","InformaciÃ³n privada":"Private information","Solo tÃº puedes ver estos datos.":"Only you can see this information.","MI PLAN SEMANAL":"MY WEEKLY PLAN","Pr?ximos 7 dÃ­as":"Next 7 days","?â€¹ AÃ±adir receta":"?â€¹ Add prescription","Hoy":"Today","Sin tomas programadas":"No scheduled doses",
+  "Hoy":"Today","Mis medicinas":"My medicines","Documentos":"Documents","Mi perfil":"My profile","Solicitudes":"Requests","Buenos dÃ­as,":"Good morning,","Estas son tus tomas de hoy.":"Today treatment.","?â€¹ AÃ±adir desde una receta":"?â€¹ Add from a prescription","Solo se muestran pautas que tÃº hayas confirmado.":"Only schedules you have confirmed are shown.",
+  "AquÃ© tienes tu medicaciÃ³n para los prÃ³ximos 7 dÃ­as.":"Here is your medication for the next 7 days.","Resumen de mi perfil":"My profile summary","Ver mi perfil":"View my profile","InformaciÃ³n privada":"Private information","Solo tÃº puedes ver estos datos.":"Only you can see this information.","MI PLAN SEMANAL":"MY WEEKLY PLAN","Pr?ximos 7 dÃ­as":"Next 7 days","?â€¹ AÃ±adir receta":"?â€¹ Add prescription","Hoy":"Today","Sin tomas programadas":"No scheduled treatment",
   "AÃ±adir receta o informe":"Add prescription or report","Haz una foto nÃ­tida. DespuÃ©s revisa cada dato antes de guardarlo.":"Take a clear photo. Then review every detail before saving.","Hacer foto o elegir archivo":"Take a photo or choose a file","JPG, PNG o PDF Â· mÃ¡ximo 10 MB":"JPG, PNG or PDF Â· 10 MB maximum","Revisa esta propuesta":"Review this suggestion","La lectura automÃ¡tica puede equivocarse. Compara los datos con tu receta.":"Automatic reading can make mistakes. Compare the details with your prescription.",
   "Nombre del medicamento":"Medicine name","Dosis":"Dose","Hora de la toma":"Dose time","Indicaciones":"Instructions","Fecha de inicio":"Start date","Fecha de fin (opcional)":"End date (optional)","He comprobado estos datos con mi receta.":"I have checked these details against my prescription.","Confirmar y guardar":"Confirm and save","Cerrar sesiÃ³n":"Sign out","Solicitudes de acceso":"Access requests","Aprueba ?nicamente identidades que hayas verificado.":"Only approve identities you have verified.",
   "Mi MedicaciÃ³n no sustituye el consejo de un mÃ©dico o farmacÃ©utico. Ante una urgencia, llama al 112.":"My Medication does not replace advice from a doctor or pharmacist. In an emergency, call 112.","CREAR UNA CUENTA":"CREATE AN ACCOUNT","Completa tus datos. Un administrador revisarÃ¡ el alta antes de activar tu cuenta.":"Enter your details. An administrator will review your registration before activating your account.","Nombre":"First name","Apellidos":"Last name","Fecha de nacimiento":"Date of birth","TelÃ©fono mÃ³vil":"Mobile phone","Correo electrÃ³nico":"Email address","ContraseÃ±a":"Password","MÃ­nimo 8 caracteres.":"At least 8 characters.","He leÃ­do y acepto la polÃ­tica de privacidad.":"I have read and accept the privacy policy.","Consiento el tratamiento de mis datos de salud para prestar el servicio.":"I consent to the processing of my health data to provide the service.","Entrar":"Sign in",
   "ADMINISTRACI?â€œN":"ADMINISTRATION","Panel de control":"Control panel","Solicitudes de alta":"Registration requests","Esta Ã¡rea estÃ¡ reservada exclusivamente para administradores.":"This area is reserved exclusively for administrators.","GESTI?â€œN DE USUARIOS":"USER MANAGEMENT","Altas pendientes":"Pending registrations","Comprueba los datos antes de aprobar una cuenta.":"Check the details before approving an account.","Pendientes":"Pending",
-  "MI ESPACIO PERSONAL":"MY PERSONAL AREA","Texto":"Text","Modificar perfil":"Edit profile","MedicaciÃ³n y tomas":"Medication and doses","MedicaciÃ³n":"Medication","Tomas":"Doses","Cargar nueva medicaciÃ³n":"Add new medication","Tomas de hoy":"Today's doses","Marca cada toma cuando la realices.":"Mark each dose when you take it.","Ver todas mis medicinas":"View all my medicines","Estas son las pautas que has confirmado.":"These are the schedules you have confirmed.","RESUMEN DEL TRATAMIENTO":"TREATMENT SUMMARY","Mi medicaciÃ³n":"My medication","Resumen de todos los medicamentos que tomas.":"Summary of all the medicines you take.","?â€¹ Cargar nuevo medicamento":"?â€¹ Add new medicine","Descartar":"Discard",
+  "MI ESPACIO PERSONAL":"MY PERSONAL AREA","Texto":"Text","Modificar perfil":"Edit profile","MedicaciÃ³n y tomas":"Medication and treatment","MedicaciÃ³n":"Medication","Tomas":"Treatment","Cargar nueva medicaciÃ³n":"Add new medication","Tomas de hoy":"Treatment","Marca cada toma cuando la realices.":"Mark each treatment when completed.","Ver todas mis medicinas":"View all my medicines","Estas son las pautas que has confirmado.":"These are the schedules you have confirmed.","RESUMEN DEL TRATAMIENTO":"TREATMENT SUMMARY","Mi medicaciÃ³n":"My medication","Resumen de todos los medicamentos que tomas.":"Summary of all the medicines you take.","?â€¹ Cargar nuevo medicamento":"?â€¹ Add new medicine","Descartar":"Discard",
   "Consultar efectos secundarios":"View side effects","Selecciona uno de tus medicamentos confirmados.":"Select one of your confirmed medicines.","Mi medicaciÃ³n":"My medication","Todav?a no tienes medicamentos confirmados.":"You do not have any confirmed medicines yet.","RESUMEN DEL PROSPECTO OFICIAL":"OFFICIAL LEAFLET SUMMARY","Este resumen no contiene necesariamente todos los efectos adversos. Consulta el prospecto completo.":"This summary may not include every side effect. Read the full leaflet.","Volver a mi medicaciÃ³n":"Back to my medication","No se pudo cargar esta secciÃ³n del prospecto.":"This section of the leaflet could not be loaded.","Leyendo la receta?â‚¬?":"Reading the prescription?â‚¬?","Leyendo el medicamento?â‚¬?":"Reading the medicine?â‚¬?","Interpretando medicamentos y tomas?â‚¬?":"Interpreting medicines and doses?â‚¬?","Buscando coincidencias oficiales?â‚¬?":"Searching official matches?â‚¬?","No se pudo leer automÃ¡ticamente. Introduce los datos manualmente.":"Automatic reading failed. Enter the details manually.","La lectura automÃ¡tica se activarÃ¡ al conectar Firebase.":"Automatic reading will be enabled when Firebase is connected.","No se han identificado medicamentos con suficiente claridad. Introduce los datos manualmente.":"No medicines were identified clearly enough. Enter the details manually.","No se ha encontrado ning?n medicamento oficial en la imagen.":"No official medicine was found in the image.","Lectura terminada. Selecciona y revisa cada medicamento.":"Reading complete. Select and review each medicine.","Medicamentos encontrados":"Medicines found","Datos encontrados en la receta":"Details found in the prescription","Texto leÃ­do por Document AI":"Text read by Document AI","Mostrar texto completo":"Show full text","Comprobando el nombre en CIMA?â‚¬?":"Checking the name in CIMA?â‚¬?","Medicamento verificado en CIMA":"Medicine verified in CIMA","No se ha encontrado una coincidencia segura en CIMA. Revisa el nombre.":"No reliable match was found in CIMA. Check the name.","No se pudo consultar CIMA. IntÃ©ntalo de nuevo.":"CIMA could not be reached. Try again.","Medicamento encontrado":"Medicine found","Confirma si coincide con el medicamento fotografiado.":"Confirm whether this matches the photographed medicine.","Datos encontrados":"Details found","Puedes corregir cualquier campo antes de confirmar.":"You can correct any field before confirming.","Puedes corregir cualquier campo antes de guardar.":"You can correct any field before saving.","Confirmo que estos datos son correctos.":"I confirm these details are correct.","Dosis (si aparece)":"Dose (if shown)","Guardar medicamento":"Save medicine","Medicamento descartado.":"Medicine discarded.","?â€ ? Cambiar forma de carga":"?â€ ? Change upload method","Eliminar medicamento":"Delete medicine","Â¿Eliminar este medicamento?":"Delete this medicine?","Medicamento eliminado.":"Medicine deleted.","No se pudo eliminar el medicamento.":"The medicine could not be deleted.",
-  "Elige cÃ³mo quieres aÃ±adir la medicaciÃ³n.":"Choose how you want to add medication","Forma de aÃ±adir medicaciÃ³n":"How to add medication","Desde una receta o informe":"From a prescription or report","Fotografiar medicamento":"Photograph medicine","Haz una foto o sube un archivo":"Take a photo or upload a file","Haz una foto de la caja o el envase":"Take a photo of the box or package","Buscar un medicamento":"Search for a medicine","Consulta la base oficial de la AEMPS":"Search the official AEMPS database","Escribe al menos 3 letras":"Enter at least 3 letters","Escribe al menos 3 letras.":"Enter at least 3 letters.","Resultados oficiales de CIMA ? Agencia Espa?ola de Medicamentos y Productos Sanitarios":"Official CIMA results Â· Spanish Agency of Medicines and Medical Devices","Buscando en la AEMPS?â‚¬?":"Searching AEMPS?â‚¬?","No se encontraron medicamentos.":"No medicines found.","No se pudo consultar CIMA en este momento.":"CIMA could not be reached right now.","Abrir buscador oficial":"Open official search","Seleccionado desde la fuente oficial CIMA":"Selected from the official CIMA source","Cargando informaciÃ³n oficial?â‚¬?":"Loading official information?â‚¬?","Caja del medicamento":"Medicine box","CIMA no dispone de foto para este medicamento":"CIMA has no photo for this medicine","Foto no disponible":"Photo unavailable","MEDICAMENTO OFICIAL":"OFFICIAL MEDICINE","Principio activo":"Active ingredient","Laboratorio":"Manufacturer","Ver ficha oficial en CIMA ?â€ â€”":"View official CIMA record ?â€ â€”","Elegir otro":"Choose another","SÃ­, es mi medicamento":"Yes, this is my medicine","Ahora indica las tomas":"Now enter the doses","Revisa el horario en tu receta o consulta a un profesional sanitario.":"Check the schedule on your prescription or ask a healthcare professional.","He comprobado esta pauta y el horario.":"I have checked this schedule and timing.",
-  "Con el desayuno":"With breakfast","DespuÃ©s de cenar":"After dinner","Seg?n indicaci?n m?dica":"As medically directed","Marcar tomada":"Mark as taken","Tomada":"Taken","?Å“â€œ Tomada":"?Å“â€œ Taken","No tienes tomas confirmadas.":"You have no confirmed doses.","InformaciÃ³n oficial y prospecto en AEMPS ?â€ â€”":"Official information and leaflet from AEMPS ?â€ â€”","Aprobar":"Approve","Rechazar":"Reject","No hay solicitudes pendientes.":"There are no pending requests.","Modo demostraci?n":"Demo mode",
-  "El archivo supera los 10 MB.":"The file exceeds 10 MB.","Documento protegido y cargado. Completa los datos extra?dos.":"Document securely uploaded. Complete the extracted details.","Foto preparada. En producci?n, el servidor realizar? la lectura automÃ¡tica.":"Photo ready. In production, the server will read it automatically.","MedicaciÃ³n confirmada y guardada.":"Medication confirmed and saved.","Alta enviada. El administrador debe aprobarla antes de que puedas entrar.":"Registration submitted. The administrator must approve it before you can sign in.","La foto se podrÃ¡ aÃ±adir mÃ¡s adelante.":"The photo can be added later.","Tu solicitud todavÃ­a no ha sido aprobada.":"Your request has not yet been approved.","Ej.: 10 mg":"E.g. 10 mg","Ej.: con el desayuno":"E.g. with breakfast"," + AÃ±adir nuevo medicamento":" + Add new medicine","Resumen de todos los tratamientos que tomas.":"Summary of all the treatments you take.","AtrÃ¡s":"Back","Nombre completo":"Full name"
+  "Elige cÃ³mo quieres aÃ±adir la medicaciÃ³n.":"Choose how you want to add medication","Forma de aÃ±adir medicaciÃ³n":"How to add medication","Desde una receta o informe":"From a prescription or report","Fotografiar medicamento":"Photograph medicine","Haz una foto o sube un archivo":"Take a photo or upload a file","Haz una foto de la caja o el envase":"Take a photo of the box or package","Buscar un medicamento":"Search for a medicine","Consulta la base oficial de la AEMPS":"Search the official AEMPS database","Escribe al menos 3 letras":"Enter at least 3 letters","Escribe al menos 3 letras.":"Enter at least 3 letters.","Resultados oficiales de CIMA ? Agencia Espa?ola de Medicamentos y Productos Sanitarios":"Official CIMA results Â· Spanish Agency of Medicines and Medical Devices","Buscando en la AEMPS?â‚¬?":"Searching AEMPS?â‚¬?","No se encontraron medicamentos.":"No medicines found.","No se pudo consultar CIMA en este momento.":"CIMA could not be reached right now.","Abrir buscador oficial":"Open official search","Seleccionado desde la fuente oficial CIMA":"Selected from the official CIMA source","Cargando informaciÃ³n oficial?â‚¬?":"Loading official information?â‚¬?","Caja del medicamento":"Medicine box","CIMA no dispone de foto para este medicamento":"CIMA has no photo for this medicine","Foto no disponible":"Photo unavailable","MEDICAMENTO OFICIAL":"OFFICIAL MEDICINE","Principio activo":"Active ingredient","Laboratorio":"Manufacturer","Ver ficha oficial en CIMA ?â€ â€”":"View official CIMA record ?â€ â€”","Elegir otro":"Choose another","SÃ­, es mi medicamento":"Yes, this is my medicine","Ahora indica las tomas":"Now enter the treatment","Revisa el horario en tu receta o consulta a un profesional sanitario.":"Check the schedule on your prescription or ask a healthcare professional.","He comprobado esta pauta y el horario.":"I have checked this schedule and timing.",
+  "Con el desayuno":"With breakfast","DespuÃ©s de cenar":"After dinner","Seg?n indicaci?n m?dica":"As medically directed","Marcar tomada":"Mark as completed","Tomada":"Completed","?Å“â€œ Tomada":"?Å“â€œ Taken","No tienes tomas confirmadas.":"You have no confirmed treatment yet.","InformaciÃ³n oficial y prospecto en AEMPS ?â€ â€”":"Official information and leaflet from AEMPS ?â€ â€”","Aprobar":"Approve","Rechazar":"Reject","No hay solicitudes pendientes.":"There are no pending requests.","Modo demostraci?n":"Demo mode",
+  "El archivo supera los 10 MB.":"The file exceeds 10 MB.","Documento protegido y cargado. Completa los datos extra?dos.":"Document securely uploaded. Complete the extracted details.","Foto preparada. En producci?n, el servidor realizar? la lectura automÃ¡tica.":"Photo ready. In production, the server will read it automatically.","MedicaciÃ³n confirmada y guardada.":"Medication confirmed and saved.","Alta enviada. El administrador debe aprobarla antes de que puedas entrar.":"Registration submitted. The administrator must approve it before you can sign in.","La foto se podrÃ¡ aÃ±adir mÃ¡s adelante.":"The photo can be added later.","Tu solicitud todavÃ­a no ha sido aprobada.":"Your request has not yet been approved.","Ej.: 10 mg":"E.g. 10 mg","Ej.: con el desayuno":"E.g. with breakfast"," + AÃ±adir nuevo medicamento":" + Add new medicine","Resumen de todos los tratamientos que tomas.":"Summary of all your treatments.","AtrÃ¡s":"Back","Nombre completo":"Full name"
   ,"Cargando solicitudes?â‚¬?":"Loading requests?â‚¬?","No se pudieron cargar las solicitudes.":"Requests could not be loaded.","Cuenta aprobada correctamente.":"Account approved successfully.","Solicitud rechazada.":"Request rejected.","No se pudo guardar la decisiÃ³n.":"The decision could not be saved.","Lectura no disponible":"Reading unavailable","Introduce los datos manualmente o prueba con otra foto.":"Enter the details manually or try another photo.","El OCR todavÃ­a no estÃ¡ conectado. Introduce los datos manualmente.":"OCR is not connected yet. Enter the details manually.","No se ha detectado texto legible. Prueba con una foto mÃ¡s nÃ­tida.":"No readable text was detected. Try a clearer photo.","Utiliza una imagen JPG o PNG para la lectura automÃ¡tica.":"Use a JPG or PNG image for automatic reading.","No se pudo verificar tu acceso. Cierra la sesiÃ³n y vuelve a entrar.":"Your access could not be verified. Sign out and sign in again.","Preferencias guardadas.":"Preferences saved.","No se pudo guardar el paÃ­s.":"The country could not be saved.","No se pudo guardar el idioma preferido.":"The preferred language could not be saved.","No se pudieron guardar las preferencias.":"Preferences could not be saved.","Fuente oficial: MHRA Products (Reino Unido)":"Official source: MHRA Products (United Kingdom)","Consulta el registro oficial de la MHRA":"Search the official MHRA register","Comprobando en la MHRA?â‚¬?":"Checking MHRA?â‚¬?","Comprueba el nombre en el registro oficial brit?nico.":"Check the name in the official UK register.","Abrir MHRA ?â€ â€”":"Open MHRA ?â€ â€”","Ya lo he comprobado":"I have checked it","MEDICAMENTO OFICIAL ? REINO UNIDO":"OFFICIAL MEDICINE ? UNITED KINGDOM","Ver informaciÃ³n oficial en MHRA ?â€ â€”":"View official MHRA information ?â€ â€”","Medicamento comprobado en MHRA":"Medicine checked in MHRA","Usar este nombre":"Use this name"
 };
 let language = localStorage.getItem("mm_language") || "es";
@@ -96,7 +96,7 @@ function forceCriticalSymbols(){
   setText("#scheduleBackButton",(language==="en"?"Back":"Atrás"));
   const menuLabels={
     medicines:language==="en"?"Medication":"Medicación",
-    today:language==="en"?"Doses":"Tomas",
+    today:language==="en"?"Treatment":"Tratamiento",
     sideEffects:language==="en"?"Side effects":"Consultar efectos secundarios",
     reminders:language==="en"?"Reminders":"Recordatorios",
     compliance:language==="en"?"Adherence":"Cumplimiento",
@@ -139,17 +139,33 @@ function repairMojibake(value=""){
     .replaceAll("?Å¸?â‚¬?Å¸?â‚¬?","?Å¸â€¡?Å¸â€¡?").replaceAll("?â‚¬?","?â€¹").replaceAll("?â‚¬Å“?Å“","?â€œËœ").replaceAll("?â€š?","?â‚¬?");
 }
 Object.assign(translations,{
-  "Pendiente de tomar":"Pending dose",
+  "Tomas":"Treatment",
+  "Tomas de hoy":"Treatment",
+  "MedicaciÃ³n y tomas":"Medication and treatment",
+  "Sin tomas programadas":"No scheduled treatment",
+  "Marca cada toma cuando la realices.":"Mark each treatment when completed.",
+  "No tienes tomas confirmadas.":"You have no confirmed treatment yet.",
+  "Interpretando medicamentos y tomas?â‚¬?":"Interpreting medicines and treatment?â‚¬?",
+  "Ahora indica las tomas":"Now enter the treatment",
+  "Sin tratamiento programado":"No scheduled treatment",
+  "Pendiente de tomar":"Pending treatment",
+  "Pendiente de tratamiento":"Pending treatment",
   "?â€ + AtrÃ¡s":"?â€ ? Back",
   "+ AÃ±adir nuevo medicamento":"+ Add new medicine",
   "AÃ±adir nuevo medicamento":"Add new medicine",
-  "Resumen de todos los tratamientos que tomas.":"Summary of all the treatments you take.",
-  "Configurar tomas":"Configure doses",
-  "Tomas configuradas.":"Doses configured.",
-  "Â¿Lo tomas todos los dÃ­as?":"Do you take it every day?",
+  "Resumen de todos los tratamientos que tomas.":"Summary of all your treatments.",
+  "Resumen de todos tus tratamientos.":"Summary of all your treatments.",
+  "Configurar tomas":"Configure treatment",
+  "Configurar tratamiento":"Configure treatment",
+  "Tomas configuradas.":"Treatment configured.",
+  "Tratamiento configurado.":"Treatment configured.",
+  "Â¿Lo tomas todos los dÃ­as?":"Daily treatment?",
+  "Â¿Tratamiento diario?":"Daily treatment?",
   "Frecuencia de administraci?n":"Administration frequency",
-  "Â¿QuÃ© dÃ­as lo tomas?":"Which days do you take it?",
-  "Â¿Cu?ndo lo tomas?":"When do you take it?",
+  "Â¿QuÃ© dÃ­as lo tomas?":"Which days do you follow the treatment?",
+  "Â¿QuÃ© dÃ­as sigues el tratamiento?":"Which days do you follow the treatment?",
+  "Â¿Cu?ndo lo tomas?":"When do you follow the treatment?",
+  "Â¿Cu?ndo sigues el tratamiento?":"When do you follow the treatment?",
   "Todos los dÃ­as":"Every day",
   "Algunos dÃ­as":"Some days",
   "Elegir dÃ­as concretos":"Choose specific days",
@@ -176,12 +192,16 @@ Object.assign(translations,{
   "Elegir dÃ­as concretos":"Choose specific days",
   "Elige los dÃ­as":"Choose the days",
   "Continuar":"Continue",
-  "Elige las tomas del dÃ­a":"Choose daily doses",
+  "Elige las tomas del dÃ­a":"Choose daily treatment",
+  "Elige el tratamiento del dÃ­a":"Choose daily treatment",
+  "Toma adicional":"Additional treatment",
+  "Tratamiento adicional":"Additional treatment",
   "Selecciona desayuno, comida y cena.":"Select breakfast, lunch and dinner.",
   "Desayuno":"Breakfast",
   "Comida":"Lunch",
   "Cena":"Dinner",
-  "Selecciona los dÃ­as de la toma.":"Select the dose days.",
+  "Selecciona los dÃ­as de la toma.":"Select the treatment days.",
+  "Selecciona los dÃ­as del tratamiento.":"Select the treatment days.",
   "Selecciona desayuno, comida o cena.":"Select breakfast, lunch or dinner.",
   "MenÃº":"Menu",
   "C?mara":"Camera",
@@ -244,7 +264,8 @@ Object.assign(translations,{
   "Calendario semanal":"Weekly calendar",
   "Semana":"Week",
   "Semana del":"Week of",
-  "Sin tomas":"No doses",
+  "Sin tomas":"No treatment",
+  "Sin tratamiento":"No treatment",
   "Leyenda":"Legend"
 });
 Object.assign(translations,{
@@ -515,14 +536,14 @@ function renderSchedule(){
     const medicines=confirmed.filter(m=>(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso));
     const label=index===0?t("Hoy"):new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{weekday:"long"}).format(date);
     const fullDate=new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{day:"numeric",month:"short"}).format(date);
-    const doses=medicines.map(m=>`<div class="day-dose"><div class="dose-top"><b>${safe(m.time)}</b><button class="status-button" data-take data-medicine="${safe(m.id)}" data-date="${iso}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(m))}</strong><p>${safe(t(m.instructions||"Seg?n indicaci?n m?dica"))}</p></div></div>`).join("");
-    return `<article class="day-group"><header class="day-heading ${index===0?"today":""}"><h3>${safe(label)}</h3><span>${safe(fullDate)}</span></header>${doses||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
+    const doses=medicines.map(m=>`<div class="day-dose"><div class="dose-top"><b>${safe(m.time)}</b><button class="status-button" data-take data-medicine="${safe(m.id)}" data-date="${iso}">${uiText("Realizado","Completed")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(m))}</strong><p>${safe(t(m.instructions||"Seg?n indicaci?n m?dica"))}</p></div></div>`).join("");
+    return `<article class="day-group"><header class="day-heading ${index===0?"today":""}"><h3>${safe(label)}</h3><span>${safe(fullDate)}</span></header>${doses||`<p class="empty-day">${uiText("Sin tratamiento programado","No scheduled treatment")}</p>`}</article>`;
   }).join("");
   $$('[data-take]').forEach(b=>setupTakeButton(b));
 }
 async function recordIntake(medicineId,date,taken){
   if(!state.user)return;
-  if(taken&&isFutureIntakeDate(date)){toast(uiText("No puedes marcar como tomada una medicaci\u00f3n futura.","You cannot mark a future dose as taken."));return}
+  if(taken&&isFutureIntakeDate(date)){toast(uiText("No puedes marcar como realizado un tratamiento futuro.","You cannot mark future treatment as completed."));return}
   const id=intakeStorageId(medicineId,date),medicine=state.medicines.find(item=>item.id===medicineId);
   if(fb){const ref=fb.doc(fb.db,"users",state.user.uid,"intakes",id);if(taken){const intake={medicineId,medicineName:medicine?.name||"",dose:medicine?.dose||"",scheduledDate:date,scheduledTime:medicine?.time||"",status:"taken"};await fb.setDoc(ref,{...intake,takenAt:fb.serverTimestamp()});state.intakes[id]={id,...intake}}else{await fb.deleteDoc(ref);delete state.intakes[id]}}
   else{const intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");if(taken)intakes[id]={id,medicineId,medicineName:medicine?.name,date,scheduledDate:date,status:"taken"};else delete intakes[id];state.intakes=intakes;localStorage.setItem("mm_intakes",JSON.stringify(intakes))}
@@ -541,19 +562,19 @@ function setupTakeButton(button,compact=false){
   button.classList.toggle("future-disabled",future);
   if(future){
     button.setAttribute("aria-label",uiText("No disponible para fechas futuras","Not available for future dates"));
-    button.setAttribute("title",uiText("No puedes marcar tomas futuras","Future doses cannot be marked as taken"));
+    button.setAttribute("title",uiText("No puedes marcar tratamientos futuros","Future treatments cannot be marked as completed"));
     return;
   }
   const initialTaken=isIntakeTaken(button.dataset.medicine,button.dataset.date);
   button.classList.toggle("taken",initialTaken);
-  button.textContent=compact?(initialTaken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(initialTaken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada"));
-  button.setAttribute("aria-label",initialTaken?t("Tomada"):t("Pendiente de tomar"));
+  button.textContent=compact?(initialTaken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(initialTaken?`${String.fromCodePoint(0x2713)} ${uiText("Realizado","Completed")}`:uiText("Realizado","Completed"));
+  button.setAttribute("aria-label",initialTaken?uiText("Tratamiento realizado","Treatment completed"):t("Pendiente de tratamiento"));
   button.setAttribute("aria-pressed",String(initialTaken));
   button.onclick=async()=>{
     button.classList.toggle("taken");
     const taken=button.classList.contains("taken");
-    button.textContent=compact?(taken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(taken?`${String.fromCodePoint(0x2713)} ${t("Tomada")}`:t("Tomada"));
-    button.setAttribute("aria-label",taken?t("Tomada"):t("Pendiente de tomar"));
+    button.textContent=compact?(taken?String.fromCodePoint(0x2713):String.fromCodePoint(0x25CB)):(taken?`${String.fromCodePoint(0x2713)} ${uiText("Realizado","Completed")}`:uiText("Realizado","Completed"));
+    button.setAttribute("aria-label",taken?uiText("Tratamiento realizado","Treatment completed"):t("Pendiente de tratamiento"));
     button.setAttribute("aria-pressed",String(taken));
     await recordIntake(button.dataset.medicine,button.dataset.date,taken);
   };
@@ -632,7 +653,7 @@ function showMedicineDetail(id){
   const activeMarkup=medicine.activeIngredient?'<div><dt>'+t("Principio activo")+'</dt><dd>'+safe(medicine.activeIngredient)+'</dd></div>':"";
   const posologyMarkup=medicineDoseLine(medicine)?'<div><dt>'+(language==="en"?"Posology":"Posología")+'</dt><dd>'+safe(medicineDoseLine(medicine))+'</dd></div>':"";
   const commentsMarkup=medicine.comments?'<div><dt>'+t("Comentarios")+'</dt><dd>'+safe(medicine.comments)+'</dd></div>':"";
-  detail.innerHTML='<button class="secondary medicine-back-button" type="button" data-back-medicines>'+(language==="en"?"Back":"Atrás")+'</button><div class="medicine-detail-card"><div class="medicine-detail-title">'+medicineImageMarkup(medicine)+'<h2>'+safe(medicineShortName(medicine))+'</h2></div><dl><div><dt>'+t("Nombre completo")+'</dt><dd>'+safe(medicine.name||"")+'</dd></div>'+activeMarkup+'<div><dt>'+t("Dosis")+'</dt><dd>'+safe(medicine.dose||"-")+'</dd></div>'+posologyMarkup+commentsMarkup+'</dl><div class="medicine-actions"><a class="official-link" target="_blank" rel="noopener" href="'+officialUrl+'">'+officialLabel+'</a><button class="primary" type="button" data-configure-schedule="'+safe(medicine.id)+'">'+t("Configurar tomas")+'</button><button class="delete-medicine" type="button" data-delete-medicine="'+safe(medicine.id)+'">'+t("Eliminar medicamento")+'</button></div></div>';
+  detail.innerHTML='<button class="secondary medicine-back-button" type="button" data-back-medicines>'+(language==="en"?"Back":"Atrás")+'</button><div class="medicine-detail-card"><div class="medicine-detail-title">'+medicineImageMarkup(medicine)+'<h2>'+safe(medicineShortName(medicine))+'</h2></div><dl><div><dt>'+t("Nombre completo")+'</dt><dd>'+safe(medicine.name||"")+'</dd></div>'+activeMarkup+'<div><dt>'+t("Dosis")+'</dt><dd>'+safe(medicine.dose||"-")+'</dd></div>'+posologyMarkup+commentsMarkup+'</dl><div class="medicine-actions"><a class="official-link" target="_blank" rel="noopener" href="'+officialUrl+'">'+officialLabel+'</a><button class="primary" type="button" data-configure-schedule="'+safe(medicine.id)+'">'+t("Configurar tratamiento")+'</button><button class="delete-medicine" type="button" data-delete-medicine="'+safe(medicine.id)+'">'+t("Eliminar medicamento")+'</button></div></div>';
   $$('img.medicine-photo',detail).forEach(image=>image.onerror=()=>{image.outerHTML='<span class="medicine-photo-placeholder" aria-hidden="true"></span>'});
   $("[data-back-medicines]",detail).onclick=()=>{detail.hidden=true;detail.innerHTML="";list.hidden=false;if(heading)heading.hidden=false};
   $("[data-configure-schedule]",detail).onclick=()=>configureMedicineSchedule(medicine.id);
@@ -878,7 +899,7 @@ function selectMhraMedicine(name){
 }
 function confirmMhraMedicine(name){
   const form=$("#medicineForm");form.hidden=false;form.name.value=name;form.cimaId.value="";form.officialSource.value="MHRA";form.time.value="09:00";form.startDate.value=new Date().toISOString().slice(0,10);
-  showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${name}`);$(".selected-medicine-card").classList.add("confirmed");$("#reviewPanel").classList.add("schedule-only");$(".notice",$("#reviewPanel")).innerHTML=`<b>${t("Ahora indica las tomas")}</b><br>${t("Puedes corregir cualquier campo antes de guardar.")}`;$("#reviewPanel").hidden=false;$("#reviewPanel").scrollIntoView({behavior:"smooth",block:"start"});form.time.focus();
+  showCimaValidation("valid",`${t("Medicamento comprobado en MHRA")}: ${name}`);$(".selected-medicine-card").classList.add("confirmed");$("#reviewPanel").classList.add("schedule-only");$(".notice",$("#reviewPanel")).innerHTML=`<b>${uiText("Ahora indica el tratamiento","Now enter the treatment")}</b><br>${t("Puedes corregir cualquier campo antes de guardar.")}`;$("#reviewPanel").hidden=false;$("#reviewPanel").scrollIntoView({behavior:"smooth",block:"start"});form.time.focus();
 }
 async function searchCima(query){
   const status=$("#medicineSearchStatus"),results=$("#medicineSearchResults");medicineSearchController=new AbortController();
@@ -913,7 +934,7 @@ function resetMedicineSelection(){const panel=$("#medicineSearchPanel");$(":scop
 function confirmCimaMedicine(item){
   const form=$("#medicineForm");form.hidden=false;form.name.value=item.nombre||"";form.dose.value=item.dosis||"";form.cimaId.value=item.nregistro||"";form.officialSource.value="CIMA";form.medicineImageUrl.value=item.imageUrl||findCimaPhoto(item)||"";form.activeIngredient.value=item.pactivos||"";form.time.value="09:00";form.startDate.value=new Date().toISOString().slice(0,10);
   showCimaValidation("valid",`${t("Medicamento verificado en CIMA")}: ${item.nombre||""}`);
-  $(".selected-medicine-card").classList.add("confirmed");$("#reviewPanel").classList.add("schedule-only");$(".notice",$("#reviewPanel")).innerHTML=`<b>${t("Ahora indica las tomas")}</b><br>${t("Puedes corregir cualquier campo antes de guardar.")}`;$("#reviewPanel").hidden=false;$("#reviewPanel").scrollIntoView({behavior:"smooth",block:"start"});form.time.focus();
+  $(".selected-medicine-card").classList.add("confirmed");$("#reviewPanel").classList.add("schedule-only");$(".notice",$("#reviewPanel")).innerHTML=`<b>${uiText("Ahora indica el tratamiento","Now enter the treatment")}</b><br>${t("Puedes corregir cualquier campo antes de guardar.")}`;$("#reviewPanel").hidden=false;$("#reviewPanel").scrollIntoView({behavior:"smooth",block:"start"});form.time.focus();
 }
 function normalizeCimaName(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\b(comprimidos?|capsulas?|sobres?|jarabe|solucion|suspension|gotas?|parches?|pomada|crema|inyectable)\b/g," ").replace(/[^a-z0-9]+/g," ").trim()}
 function normalizeMedicineText(value){return String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[,;]/g,".").replace(/[^a-z0-9.%]+/g," ").trim()}
@@ -1031,8 +1052,8 @@ function reminderTokenDocId(token){
 function setReminderScreenText(){
   const title=$("#reminders h1"),lead=$("#reminders .lead"),heading=$(".reminder-card h2"),copy=$(".reminder-card p"),notice=$(".reminder-notice");
   if(title)title.textContent=uiText("Recordatorios","Reminders");
-  if(lead)lead.textContent=uiText("Recibe avisos en este dispositivo cuando llegue la hora de una toma.","Receive alerts on this device when a dose is due.");
-  if(heading)heading.textContent=uiText("Notificaciones de tomas","Dose notifications");
+  if(lead)lead.textContent=uiText("Recibe avisos en este dispositivo cuando llegue la hora del tratamiento.","Receive alerts on this device when treatment is due.");
+  if(heading)heading.textContent=uiText("Notificaciones de tratamiento","Treatment notifications");
   if(copy)copy.textContent=uiText("Activa los recordatorios en tu móvil o tablet. Puedes desactivarlos cuando quieras.","Enable reminders on your phone or tablet. You can turn them off whenever you want.");
   if(notice)notice.innerHTML=`<b>${uiText("Importante","Important")}</b><br>${uiText("Los recordatorios son una ayuda. No sustituyen la pauta indicada por un profesional sanitario.","Reminders are only a support. They do not replace the schedule given by a healthcare professional.")}`;
 }
@@ -1061,7 +1082,7 @@ async function renderReminders(){
     ? uiText("Recordatorios activados en este dispositivo.","Reminders enabled on this device.")
     : permission==="denied"
       ? uiText("El navegador tiene bloqueadas las notificaciones. Actívalas en los ajustes de Chrome.","Notifications are blocked in the browser. Enable them in Chrome settings.")
-      : uiText("Pulsa el botón para recibir avisos cuando llegue una toma.","Press the button to receive an alert when a dose is due.");
+      : uiText("Pulsa el botón para recibir avisos cuando llegue el tratamiento.","Press the button to receive an alert when treatment is due.");
 }
 async function enableReminders(){
   const status=$("#reminderStatus"),enable=$("#enableRemindersButton");
@@ -1281,7 +1302,7 @@ function updateMedicationCopy(){
   const addMedicineButton=$(".add-medicine-button");
   if(addMedicineButton)addMedicineButton.textContent=language==="en"?"+ Add new medicine":"+ Añadir nuevo medicamento";
   const medicinesLead=$(".medicines-heading .lead");
-  if(medicinesLead)medicinesLead.textContent=language==="en"?"Summary of all the treatments you take.":"Resumen de todos los tratamientos que tomas.";
+  if(medicinesLead)medicinesLead.textContent=language==="en"?"Summary of all your treatments.":"Resumen de todos tus tratamientos.";
   if(upload){$("b",upload).textContent=t("Fotografiar medicamento");$("small",upload).textContent=t("Haz una foto de la caja o el envase")}
   const uploadLabel=$("#uploadChoice");if(uploadLabel){$("b",uploadLabel).textContent=t("Hacer foto o elegir imagen");$("small",uploadLabel).textContent=t("JPG o PNG Â· mÃ¡ximo 10 MB")}
   const menuButton=$("#openUserMenu");if(menuButton)menuButton.innerHTML=`<span aria-hidden="true">\u2630</span><span>${t("MenÃº")}</span>`;
@@ -1291,7 +1312,7 @@ function cleanLandingCopy(){
   const brand=$(".brand b");if(brand)brand.textContent=language==="en"?"My Medication":"Tu medicación";
   document.title=language==="en"?"My Medication":"Tu medicación";
   const heroTitle=$(".hero-copy h1");if(heroTitle)heroTitle.innerHTML=language==="en"?"Your medication,<br><em>clear and close.</em>":"Tu medicación,<br><em>clara y a mano.</em>";
-  const heroText=$(".hero-copy p:not(.trust)");if(heroText)heroText.textContent=language==="en"?"Save your medicines and check your doses in a simple, readable app.":"Guarda tus medicinas y consulta tus tomas en una app sencilla y fácil de leer.";
+  const heroText=$(".hero-copy p:not(.trust)");if(heroText)heroText.textContent=language==="en"?"Save your medicines and check your treatment in a simple, readable app.":"Guarda tus medicinas y consulta tu tratamiento en una app sencilla y fácil de leer.";
   const registerButton=$('[data-open="registerDialog"]');if(registerButton)registerButton.textContent=t("Darse de alta");
   const loginButton=$('[data-open="loginDialog"]');if(loginButton)loginButton.textContent=t("Ya tengo cuenta");
   const skip=$(".skip");if(skip)skip.textContent=language==="en"?"Skip to content":"Saltar al contenido";
@@ -1307,7 +1328,7 @@ const originalShowAppForMenu=showApp;
 showApp=function(){originalShowAppForMenu();hydrateUserMenu();updateMedicationCopy()};
 const defaultMealTimes={breakfast:"08:00",lunch:"14:00",dinner:"21:00",extra:"12:00"};
 const mealTimes={...defaultMealTimes};
-const mealLabels={breakfast:"Desayuno",lunch:"Comida",dinner:"Cena",extra:"Toma adicional"};
+const mealLabels={breakfast:"Desayuno",lunch:"Comida",dinner:"Cena",extra:"Tratamiento adicional"};
 const doseUnitOptions=["comprimido","cÃ¡psula","ml","gota","sobre","vial","inyecciÃ³n","parche","aplicaciÃ³n","unidad"];
 const dayLabels={mon:"Lunes",tue:"Martes",wed:"Mi?Æ’?rcoles",thu:"Jueves",fri:"Viernes",sat:"S?Æ’?bado",sun:"Domingo"};
 let editingScheduleMedicineId=null;
@@ -1400,7 +1421,7 @@ function configureMedicineSchedule(id){
   openView("documents",{keepDocumentState:true});
   enterScheduleOnlyMode();
   $("#selectedMedicine").innerHTML="";
-  $(".notice",$("#reviewPanel")).innerHTML=`<b>${t("Configurar tomas")}</b><br>${safe(medicineShortName(medicine))}`;
+  $(".notice",$("#reviewPanel")).innerHTML=`<b>${t("Configurar tratamiento")}</b><br>${safe(medicineShortName(medicine))}`;
   form.hidden=false;
   form.name.value=medicine.name||"";
   form.dose.value=medicine.dose||"";
@@ -1489,7 +1510,7 @@ renderSchedule=function(){
     const meals=m.schedule?.meals||[{key:"custom",label:m.instructions||"Toma",time:m.time||""}];
     return meals.map(meal=>({medicine:m,meal}));
   }).sort((a,b)=>(a.meal.time||"").localeCompare(b.meal.time||""));
-  $("#schedule").innerHTML=`<article class="day-group">${doses.map(item=>`<div class="day-dose"><div class="dose-top"><b>${safe(item.meal.label||item.meal.time||"")}</b><button class="status-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}">${t("Tomada")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong><p>${safe(item.meal.time||"")}</p></div></div>`).join("")||`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
+  $("#schedule").innerHTML=`<article class="day-group">${doses.map(item=>`<div class="day-dose"><div class="dose-top"><b>${safe(item.meal.label||item.meal.time||"")}</b><button class="status-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}">${uiText("Realizado","Completed")}</button></div><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong><p>${safe(item.meal.time||"")}</p></div></div>`).join("")||`<p class="empty-day">${t("Sin tratamiento programado")}</p>`}</article>`;
   $$('[data-take]').forEach(b=>setupTakeButton(b));
 };
 function normaliseSelectedScheduleDate(){selectedScheduleDate=new Date(selectedScheduleDate);selectedScheduleDate.setHours(12,0,0,0)}
@@ -1573,10 +1594,10 @@ function renderComplianceSummary(){
   if(summary){
     const title=$("h1",summary),lead=$(".lead",summary);
     if(title)title.textContent=language==="en"?"Adherence":"Cumplimiento";
-    if(lead)lead.textContent=language==="en"?"Percentage calculated from the doses taken from the start date up to yesterday.":"Porcentaje calculado con las tomas realizadas desde el inicio hasta ayer.";
+    if(lead)lead.textContent=language==="en"?"Percentage calculated from completed treatment from the start date up to yesterday.":"Porcentaje calculado con el tratamiento realizado desde el inicio hasta ayer.";
   }
   const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...activeMedicines().map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
-  $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
+  $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"treatments completed":"tratamientos realizados"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
   $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
 }
 function showComplianceDetail(id){
@@ -1590,7 +1611,7 @@ function showComplianceDetail(id){
   const monthLabel=new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{month:"long",year:"numeric"}).format(monthStart);
   const daysMap={};stats.medicines.forEach(medStats=>medStats.days.forEach(day=>{const row=daysMap[day.iso]||{expected:0,taken:0};row.expected+=day.expected;row.taken+=day.taken;daysMap[day.iso]=row}));
   const rows=Object.entries(daysMap).sort(([a],[b])=>a.localeCompare(b)).map(([iso,row])=>`<tr><td>${safe(new Intl.DateTimeFormat(language==="en"?"en-GB":"es-ES",{day:"numeric",weekday:"short"}).format(dateFromIso(iso)))}</td><td>${row.taken}/${row.expected}</td><td>${row.expected?Math.round(row.taken/row.expected*100):0}%</td></tr>`).join("");
-  detail.innerHTML=`<button class="secondary medicine-back-button" type="button" data-back-compliance>${language==="en"?"Back":"Atrás"}</button><div class="compliance-detail-card"><h1>${safe(title)}</h1><div class="compliance-month-nav"><button type="button" data-compliance-month="-1" aria-label="${language==="en"?"Previous month":"Mes anterior"}">${String.fromCodePoint(0x2190)}</button><b>${safe(monthLabel)}</b><button type="button" data-compliance-month="1" aria-label="${language==="en"?"Next month":"Mes siguiente"}">${String.fromCodePoint(0x2192)}</button></div><div class="compliance-big-percent"><strong>${stats.percent}%</strong><span>${stats.taken}/${stats.expected} ${language==="en"?"doses":"tomas"}</span></div><table class="compliance-table"><thead><tr><th>${language==="en"?"Day":"Día"}</th><th>${language==="en"?"Taken":"Tomadas"}</th><th>%</th></tr></thead><tbody>${rows||`<tr><td colspan="3">${language==="en"?"No scheduled doses this month.":"Sin tomas programadas este mes."}</td></tr>`}</tbody></table></div>`;
+  detail.innerHTML=`<button class="secondary medicine-back-button" type="button" data-back-compliance>${language==="en"?"Back":"Atrás"}</button><div class="compliance-detail-card"><h1>${safe(title)}</h1><div class="compliance-month-nav"><button type="button" data-compliance-month="-1" aria-label="${language==="en"?"Previous month":"Mes anterior"}">${String.fromCodePoint(0x2190)}</button><b>${safe(monthLabel)}</b><button type="button" data-compliance-month="1" aria-label="${language==="en"?"Next month":"Mes siguiente"}">${String.fromCodePoint(0x2192)}</button></div><div class="compliance-big-percent"><strong>${stats.percent}%</strong><span>${stats.taken}/${stats.expected} ${language==="en"?"treatments":"tratamientos"}</span></div><table class="compliance-table"><thead><tr><th>${language==="en"?"Day":"Día"}</th><th>${language==="en"?"Completed":"Realizados"}</th><th>%</th></tr></thead><tbody>${rows||`<tr><td colspan="3">${language==="en"?"No scheduled treatment this month.":"Sin tratamiento programado este mes."}</td></tr>`}</tbody></table></div>`;
   $("[data-back-compliance]",detail).onclick=renderComplianceSummary;
   $$("[data-compliance-month]",detail).forEach(button=>button.onclick=()=>{complianceMonth.setMonth(complianceMonth.getMonth()+Number(button.dataset.complianceMonth));showComplianceDetail(id)});
 }
@@ -1640,7 +1661,7 @@ function renderAchievements(){
   if(section){
     const title=$("h1",section),lead=$(".lead",section);
     if(title)title.textContent=language==="en"?"Achievements":"Logros";
-    if(lead)lead.textContent=language==="en"?"Badges for full weeks with every dose taken.":"Emblemas por semanas completas con todas las tomas realizadas.";
+    if(lead)lead.textContent=language==="en"?"Badges for full weeks with all treatment completed.":"Emblemas por semanas completas con todo el tratamiento realizado.";
   }
   $("#achievementsBackButton").hidden=true;
   $("#achievementGrid").innerHTML=`<div class="achievement-milestones">${achievementMilestones(earnedWeeks)}</div>`;
@@ -1661,7 +1682,7 @@ function renderWeekCalendar(){
     const dayLabel=new Intl.DateTimeFormat(locale,{weekday:"short",day:"numeric"}).format(date);
     const doses=dosesForDate(date);
     const iso=date.toISOString().slice(0,10);
-    return `<button type="button" class="week-day-card" data-week-day="${safe(iso)}"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${t("Sin tomas")}</p>`}</button>`;
+    return `<button type="button" class="week-day-card" data-week-day="${safe(iso)}"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${uiText("Sin tratamiento","No treatment")}</p>`}</button>`;
   }).join("");
   $$("[data-week-day]",$("#weekCalendarDays")).forEach(button=>button.onclick=()=>{const next=new Date(`${button.dataset.weekDay}T12:00:00`);if(Number.isNaN(next.getTime()))return;selectedScheduleDate=next;hideWeekCalendar()});
   const used=state.medicines.filter(m=>m.confirmed&&days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
@@ -1689,13 +1710,13 @@ function formatSelectedDate(){
   const label=diff===0?t("Hoy"):diff===1?t("MaÃ±ana"):diff===-1?t("Ayer"):new Intl.DateTimeFormat(locale,{weekday:"long"}).format(selectedScheduleDate);
   const date=new Intl.DateTimeFormat(locale,{day:"numeric",month:"long",year:"numeric"}).format(selectedScheduleDate);
   if($("#todayDate"))$("#todayDate").textContent=date.toUpperCase();
-  if($("#todayTitle"))$("#todayTitle").textContent=label.charAt(0).toUpperCase()+label.slice(1);
+  if($("#todayTitle"))$("#todayTitle").textContent=language==="en"?"Treatment":"Tratamiento";
 }
 renderSchedule=function(){
   normaliseSelectedScheduleDate();formatSelectedDate();
   const iso=selectedDateIso(),doses=dosesForDate(selectedScheduleDate);
   const grouped=doses.reduce((acc,item)=>{const key=item.meal.label||item.meal.time||t("Toma");(acc[key]||=[]).push(item);return acc},{});
-  $("#schedule").innerHTML=`<article class="day-group compact-dose-list">${doses.length?Object.entries(grouped).map(([label,items])=>`<section class="dose-meal-group"><h2>${safe(label)}</h2>${items.map(item=>`<div class="day-dose compact-dose"><span class="dose-time">${safe(item.meal.time||"")}</span><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong>${medicineDoseLine(item.medicine)?`<p>${safe(medicineDoseLine(item.medicine))}</p>`:""}</div><button class="status-button compact-check-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}" aria-label="${t("Pendiente de tomar")}" aria-pressed="false">${String.fromCodePoint(0x25CB)}</button></div>`).join("")}</section>`).join(""):`<p class="empty-day">${t("Sin tomas programadas")}</p>`}</article>`;
+  $("#schedule").innerHTML=`<article class="day-group compact-dose-list">${doses.length?Object.entries(grouped).map(([label,items])=>`<section class="dose-meal-group"><h2>${safe(label)}</h2>${items.map(item=>`<div class="day-dose compact-dose"><span class="dose-time">${safe(item.meal.time||"")}</span><div class="dose-medicine"><strong>${safe(medicineShortName(item.medicine))}</strong>${medicineDoseLine(item.medicine)?`<p>${safe(medicineDoseLine(item.medicine))}</p>`:""}</div><button class="status-button compact-check-button" data-take data-medicine="${safe(item.medicine.id)}" data-date="${iso}_${safe(item.meal.key||item.meal.label)}" aria-label="${t("Pendiente de tratamiento")}" aria-pressed="false">${String.fromCodePoint(0x25CB)}</button></div>`).join("")}</section>`).join(""):`<p class="empty-day">${uiText("Sin tratamiento programado","No scheduled treatment")}</p>`}</article>`;
   $$("[data-take]").forEach(b=>setupTakeButton(b,true));
 };
 $("#previousDayButton")?.addEventListener("click",()=>{normaliseSelectedScheduleDate();selectedScheduleDate.setDate(selectedScheduleDate.getDate()-1);renderSchedule()});
@@ -1712,7 +1733,7 @@ $("#medicineForm").onsubmit=async e=>{
   try{
     if(!editingScheduleMedicineId&&!await validateCimaName(form))return;
     const days=selectedScheduleDays(),mealKeys=selectedScheduleMeals();
-    if(!days.length){toast("Selecciona los dÃ­as de la toma.");showScheduleStep("frequency");return}
+    if(!days.length){toast(uiText("Selecciona los días del tratamiento.","Select the treatment days."));showScheduleStep("frequency");return}
     if(!mealKeys.length){toast("Selecciona desayuno, comida o cena.");showScheduleStep("meals");return}
     const data=Object.fromEntries(new FormData(form));
     const meals=mealKeys.map(key=>({key,label:mealLabels[key],time:mealTimes[key]||defaultMealTimes[key]}));
@@ -1742,7 +1763,7 @@ $("#medicineForm").onsubmit=async e=>{
       }
     }else if(fb&&state.user){const ref=await fb.addDoc(fb.collection(fb.db,"users",state.user.uid,"medicines"),{...med,createdAt:med.updatedAt});med.id=ref.id;state.medicines.push({...med,id:ref.id,createdAt:med.updatedAt})}else{med.id=crypto.randomUUID();med.createdAt=med.updatedAt;state.medicines.push(med);localStorage.setItem("mm_medicines",JSON.stringify(state.medicines))}
     editingScheduleMedicineId=null;
-    renderAll();openView("medicines");form.reset();resetScheduleWizard();showCimaValidation("","");$("#reviewPanel").hidden=true;toast(editingId?t("Tomas configuradas."):t("MedicaciÃ³n confirmada y guardada."));
+    renderAll();openView("medicines");form.reset();resetScheduleWizard();showCimaValidation("","");$("#reviewPanel").hidden=true;toast(editingId?t("Tratamiento configurado."):t("MedicaciÃ³n confirmada y guardada."));
   }finally{submit.disabled=false}
 };
 initFirebase();
@@ -1788,5 +1809,6 @@ function setupInstallAppButton(){
 setupInstallAppButton();
 
 setTimeout(()=>{repairVisibleText();forceCriticalSymbols()},250);
+
 
 
