@@ -482,7 +482,10 @@ function remindersAvailable(){
   return isInstalledAppMode()&&/Android/i.test(navigator.userAgent);
 }
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
-function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
+function showLanding(){
+  if(state.user&&fb?.auth?.currentUser)return;
+  suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true;
+}
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
 function showLastLoginError(){
@@ -1312,7 +1315,7 @@ $("#loginForm").onsubmit=async e=>{
       const credential=await fb.signInWithEmailAndPassword(fb.auth,data.email,data.password);
       status.textContent=uiText("Cuenta encontrada. Comprobando aprobaci\u00f3n\u2026","Account found. Checking approval\u2026");
       const result=await enterAuthenticatedUser(credential.user);
-      if(result.ok){clearLoginError();form.closest("dialog").close();form.reset();status.textContent="";openView("today");setTimeout(()=>{if(state.user)openView("today")},300);}
+      if(result.ok){clearLoginError();form.closest("dialog").close();form.reset();status.textContent="";openView("today");setTimeout(()=>{if(state.user){showApp();openView("today")}},300);}
       else{const message=result.message||"No se pudo completar el acceso.";rememberLoginError(message);status.textContent=message;if(!form.closest("dialog").open)openDialogById("loginDialog");}
       return;
     }
