@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260801-138">
+  <link rel="stylesheet" href="user-controls.css?v=20260801-139">
   <link rel="stylesheet" href="selection-flow.css?v=20260801-1">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -313,8 +313,9 @@
     <form id="registerForm" method="dialog">
       <div class="login-dialog-header register-dialog-header">
         <img src="app-icon.png?v=20260727-81" alt="Tu Medicacion" class="login-app-icon">
-        <button class="close icon-close" type="button" data-close aria-label="Cerrar">?</button>
+        <button class="close icon-close" type="button" data-close aria-label="Cerrar">&times;</button>
       </div>
+      <h2 class="login-welcome register-welcome">REGÍSTRATE</h2>
       <div class="profile-photo-field compact-profile-photo">
         <div id="profilePhotoPreview" class="profile-photo-preview add-photo-preview" aria-hidden="true">+</div>
         <div class="add-photo-copy">
@@ -329,7 +330,7 @@
       </div>
       <div class="form-grid"><label>Nombre<input name="name" required autocomplete="given-name"></label><label>Apellidos<input name="lastName" required autocomplete="family-name"></label><label>Fecha de nacimiento<input name="birthDate" required type="date" autocomplete="bday"></label><label>TelÃƒÂ©fono mÃƒÂ³vil<input name="phone" required type="tel" autocomplete="tel" inputmode="tel"></label><label class="full-field">PaÃƒÂ­s del paciente<select name="country" required><option value="">Selecciona tu paÃƒÂ­s</option><option value="ES">EspaÃƒÂ±a</option><option value="GB">Reino Unido</option></select></label><label class="full-field">Correo electrÃƒÂ³nico<input name="email" required type="email" autocomplete="email"></label><label class="full-field">ContraseÃƒÂ±a<input name="password" required type="password" minlength="8" autocomplete="new-password"><small>MÃƒÂ­nimo 8 caracteres.</small></label></div>
       <label class="confirm"><input name="privacy" required type="checkbox"> He leÃƒÂ­do y acepto la polÃƒÂ­tica de privacidad.</label><label class="confirm"><input name="healthConsent" required type="checkbox"> Consiento el tratamiento de mis datos de salud para prestar el servicio.</label>
-      <div class="dialog-actions"><button class="secondary" type="button" data-close>Cancelar</button><button class="primary" type="submit">Darme de alta</button></div><p class="form-status" role="status"></p>
+      <div class="dialog-actions register-actions"><button class="primary" type="submit">Darme de alta</button></div><p class="form-status" role="status"></p>
     </form>
   </dialog>
   <dialog id="loginDialog" class="login-dialog"><form id="loginForm">
@@ -357,6 +358,6 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260801-138"></script>
+  <script type="module" src="app.js?v=20260801-139"></script>
 </body>
 </html>

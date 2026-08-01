@@ -485,12 +485,20 @@ function currentHashView(){const value=window.location.hash.replace(/^#/,"");ret
 function showLanding(){
   const recentLogin=Number(sessionStorage.getItem("mm_login_success_at")||0);
   if(state.user&&Date.now()-recentLogin<8000)return;
-  suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true;
+  suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode");
+  const landing=$("#landing"),appView=$("#appView"),adminView=$("#adminView");
+  if(landing){landing.hidden=false;landing.style.display="";}
+  if($(".public-features"))$(".public-features").hidden=false;
+  if(appView){appView.hidden=true;appView.style.display="none";}
+  if(adminView){adminView.hidden=true;adminView.style.display="none";}
+  const diagnostic=sessionStorage.getItem("mm_login_diagnostic"),diagnosticAt=Number(sessionStorage.getItem("mm_login_diagnostic_at")||0);
+  if(diagnostic&&Date.now()-diagnosticAt<12000)setTimeout(showLastLoginError,0);
 }
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
+function rememberLoginDiagnostic(message){if(message){sessionStorage.setItem("mm_login_diagnostic",message);sessionStorage.setItem("mm_login_diagnostic_at",String(Date.now()))}}
 function showLastLoginError(){
-  const message=sessionStorage.getItem("mm_last_login_error");if(!message)return;
+  const message=sessionStorage.getItem("mm_last_login_error")||sessionStorage.getItem("mm_login_diagnostic");if(!message)return;
   const dialog=$("#loginDialog"),form=$("#loginForm"),status=form?$(".form-status",form):null;
   if(status)status.textContent=message;
   if(dialog&&!dialog.open)openDialogById("loginDialog");
@@ -500,8 +508,11 @@ function showApp(){
   document.body.classList.remove("font-large","font-xlarge");
   document.documentElement.style.fontSize="";
   setHighContrast(typeof state.user?.highContrast==="boolean"?state.user.highContrast:localStorage.getItem("mm_contrast")==="true",false);
-  $("#landing").hidden=true; $("#appView").hidden=false;
-  if($(".public-features"))$(".public-features").hidden=true; $("#adminView").hidden=true;
+  const landing=$("#landing"),appView=$("#appView"),adminView=$("#adminView");
+  if(landing){landing.hidden=true;landing.style.display="none";}
+  if(appView){appView.hidden=false;appView.style.display="";}
+  if($(".public-features"))$(".public-features").hidden=true;
+  if(adminView){adminView.hidden=true;adminView.style.display="none";}
   if($("#profileEmailInput"))$("#profileEmailInput").value=state.user?.email || "Modo demostraci?n";
   if($("#summaryName"))$("#summaryName").textContent=state.user?.name || "Usuario";
   if($("#summaryEmail"))$("#summaryEmail").textContent=state.user?.email || "Modo demostraci?n";
@@ -514,6 +525,7 @@ function showApp(){
 }
 function completeLoginSuccess(form,status){
   clearLoginError();
+  rememberLoginDiagnostic(uiText("Acceso correcto. Si la app vuelve al inicio, este mensaje confirma que el problema est\u00e1 en el cambio de pantalla.","Access accepted. If the app returns to the start screen, this confirms the issue is the screen transition."));
   sessionStorage.setItem("mm_login_success_at",String(Date.now()));
   const dialog=form?.closest("dialog"); if(dialog?.open)dialog.close();
   if(form)form.reset();
@@ -522,9 +534,10 @@ function completeLoginSuccess(form,status){
   openView("today",{replace:true});
   document.body.classList.add("user-mode");
   document.body.classList.remove("admin-mode");
-  $("#landing").hidden=true;
-  $("#appView").hidden=false;
-  $("#adminView").hidden=true;
+  const landing=$("#landing"),appView=$("#appView"),adminView=$("#adminView");
+  if(landing){landing.hidden=true;landing.style.display="none";}
+  if(appView){appView.hidden=false;appView.style.display="";}
+  if(adminView){adminView.hidden=true;adminView.style.display="none";}
 }
 function openView(id,options={}){
   if(id==="reminders"&&!remindersAvailable())id="today";
