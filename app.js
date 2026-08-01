@@ -1569,6 +1569,12 @@ function renderComplianceSummary(){
   complianceMonth=new Date();
   $("#complianceBackButton").hidden=true;
   $("#complianceSummary").hidden=false;$("#complianceDetail").hidden=true;
+  const summary=$("#complianceSummary");
+  if(summary){
+    const title=$("h1",summary),lead=$(".lead",summary);
+    if(title)title.textContent=language==="en"?"Adherence":"Cumplimiento";
+    if(lead)lead.textContent=language==="en"?"Percentage calculated from the doses taken from the start date up to yesterday.":"Porcentaje calculado con las tomas realizadas desde el inicio hasta ayer.";
+  }
   const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...activeMedicines().map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
   $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"doses taken":"tomas realizadas"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
   $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
