@@ -119,6 +119,10 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-view="profile"] span[aria-hidden="true"]').forEach(el=>el.textContent="+");
   document.querySelectorAll('#userAccessibilityButton span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2699));
   document.querySelectorAll('[data-user-logout] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2190));
+  document.querySelectorAll('[data-user-logout]').forEach(button=>{
+    const icon=button.querySelector("span[aria-hidden='true']");
+    button.innerHTML=(icon?icon.outerHTML:"")+safe(language==="en"?"Sign out":"Cerrar sesión");
+  });
   document.querySelectorAll('[data-medication-mode="upload"] span[aria-hidden="true"], #uploadChoice > span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F4F7));
   document.querySelectorAll('[data-medication-mode="search"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F50E));
   updateReminderMenuVisibility();
@@ -991,6 +995,13 @@ function discardMedicineDraft(){
 $("#discardMedicineButton").onclick=discardMedicineDraft;
 function renderSideEffectsMedicines(){
   setSideEffectsDetailMode(false);
+  const section=$("#sideEffects");
+  if(section){
+    const title=$("h1",section),lead=$(".lead",section),notice=$(".effects-health-notice",section);
+    if(title)title.textContent=language==="en"?"Side effects":"Consultar efectos secundarios";
+    if(lead)lead.textContent=language==="en"?"Select one of your confirmed medicines.":"Selecciona uno de tus medicamentos confirmados.";
+    if(notice)notice.innerHTML=`<b>${language==="en"?"Official health information":"Información sanitaria oficial"}</b><br>${language==="en"?"If you have severe or unexpected symptoms, contact a healthcare professional. In an emergency, call 112.":"Si tienes síntomas graves o inesperados, contacta con un profesional sanitario. En urgencias, llama al 112."}`;
+  }
   const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=activeMedicines();detail.hidden=true;$("#effectsStatus").textContent="";
   results.innerHTML=medicines.map((item,index)=>`<button class="effects-medicine-button" data-own-medicine="${index}"><span class="effects-pill-icon" aria-hidden="true"></span><span><b>${safe(medicineShortName(item))}</b></span><span class="effects-arrow-icon" aria-hidden="true"></span></button>`).join("")||`<div class="panel">${t("Todavía no tienes medicamentos confirmados.")}</div>`;
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
@@ -1002,6 +1013,7 @@ function setSideEffectsDetailMode(detailMode){
   $(".effects-health-notice",section).hidden=detailMode;
   $("#effectsResults").hidden=detailMode;
   $("#sideEffectsBackButton").hidden=!detailMode;
+  $("#sideEffectsBackButton").textContent=language==="en"?"Back":"Atrás";
   $("#sideEffectsBackButton").onclick=detailMode?renderSideEffectsMedicines:()=>openView("today");
 }
 $("#sideEffectsBackButton").hidden=true;
@@ -1266,6 +1278,10 @@ function hydrateUserMenu(){
 function updateMedicationCopy(){
   const title=$("#documents h1"),upload=$('[data-medication-mode="upload"]');
   if(title)title.textContent=t("AÃ±adir medicamento");
+  const addMedicineButton=$(".add-medicine-button");
+  if(addMedicineButton)addMedicineButton.textContent=language==="en"?"+ Add new medicine":"+ Añadir nuevo medicamento";
+  const medicinesLead=$(".medicines-heading .lead");
+  if(medicinesLead)medicinesLead.textContent=language==="en"?"Summary of all the treatments you take.":"Resumen de todos los tratamientos que tomas.";
   if(upload){$("b",upload).textContent=t("Fotografiar medicamento");$("small",upload).textContent=t("Haz una foto de la caja o el envase")}
   const uploadLabel=$("#uploadChoice");if(uploadLabel){$("b",uploadLabel).textContent=t("Hacer foto o elegir imagen");$("small",uploadLabel).textContent=t("JPG o PNG Â· mÃ¡ximo 10 MB")}
   const menuButton=$("#openUserMenu");if(menuButton)menuButton.innerHTML=`<span aria-hidden="true">\u2630</span><span>${t("MenÃº")}</span>`;
