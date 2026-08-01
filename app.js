@@ -482,10 +482,7 @@ function remindersAvailable(){
   return isInstalledAppMode()&&/Android/i.test(navigator.userAgent);
 }
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
-function showLanding(){
-  if(state.user&&fb?.auth?.currentUser)return;
-  suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true;
-}
+function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
 function showLastLoginError(){
@@ -510,6 +507,19 @@ function showApp(){
   $("#todayDate").textContent=new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",month:"long"}).format(new Date()).toUpperCase();
   const initialView=currentHashView();
   renderAll(); openView(initialView||"today",{replace:!!initialView});
+}
+function completeLoginSuccess(form,status){
+  clearLoginError();
+  const dialog=form?.closest("dialog"); if(dialog?.open)dialog.close();
+  if(form)form.reset();
+  if(status)status.textContent="";
+  showApp();
+  openView("today",{replace:true});
+  document.body.classList.add("user-mode");
+  document.body.classList.remove("admin-mode");
+  $("#landing").hidden=true;
+  $("#appView").hidden=false;
+  $("#adminView").hidden=true;
 }
 function openView(id,options={}){
   if(id==="reminders"&&!remindersAvailable())id="today";
@@ -1315,7 +1325,7 @@ $("#loginForm").onsubmit=async e=>{
       const credential=await fb.signInWithEmailAndPassword(fb.auth,data.email,data.password);
       status.textContent=uiText("Cuenta encontrada. Comprobando aprobaci\u00f3n\u2026","Account found. Checking approval\u2026");
       const result=await enterAuthenticatedUser(credential.user);
-      if(result.ok){clearLoginError();form.closest("dialog").close();form.reset();status.textContent="";openView("today");setTimeout(()=>{if(state.user){showApp();openView("today")}},300);}
+      if(result.ok){completeLoginSuccess(form,status);}
       else{const message=result.message||"No se pudo completar el acceso.";rememberLoginError(message);status.textContent=message;if(!form.closest("dialog").open)openDialogById("loginDialog");}
       return;
     }
