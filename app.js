@@ -1399,8 +1399,10 @@ function cleanLandingCopy(){
   document.title=language==="en"?"My Medication":"Tu medicación";
   const heroTitle=$(".hero-copy h1");if(heroTitle)heroTitle.innerHTML=language==="en"?"Your medication,<br><em>clear and close.</em>":"Tu medicación,<br><em>clara y a mano.</em>";
   const heroText=$(".hero-copy p:not(.trust)");if(heroText)heroText.textContent=language==="en"?"Save your medicines and check your treatment in a simple, readable app.":"Guarda tus medicinas y consulta tu tratamiento en una app sencilla y fácil de leer.";
-  const registerButton=$('[data-open="registerDialog"]');if(registerButton)registerButton.textContent=t("Darse de alta");
-  const loginButton=$('[data-open="loginDialog"]');if(loginButton)loginButton.textContent=t("Ya tengo cuenta");
+  const registerButton=$('.actions [data-open="registerDialog"]');if(registerButton)registerButton.textContent=t("Darse de alta");
+  const loginButton=$('.actions [data-open="loginDialog"]');if(loginButton)loginButton.textContent=t("Ya tengo cuenta");
+  const accessLogin=$(".login-option .access-option-text");if(accessLogin)accessLogin.textContent=language==="en"?"Sign in":"Inicia sesión";
+  const accessRegister=$(".register-option .access-option-text");if(accessRegister)accessRegister.textContent=language==="en"?"Register":"Regístrate";
   const skip=$(".skip");if(skip)skip.textContent=language==="en"?"Skip to content":"Saltar al contenido";
   $$("[data-language='es']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>ES</span>"});
   $$("[data-language='en']").forEach(button=>{if(button.classList.contains("direct-language"))button.innerHTML="<span>EN</span>"});
@@ -1408,7 +1410,7 @@ function cleanLandingCopy(){
   $(".trust")?.remove();
   $(".public-features")?.remove();
   document.querySelector("footer")?.remove();
-  const landing=$("#landing");if(landing){landing.style.minHeight="auto";landing.style.paddingBottom="1rem"}
+  const landing=$("#landing");if(landing&&!landing.classList.contains("landing-access")){landing.style.minHeight="auto";landing.style.paddingBottom="1rem"}
 }
 const originalShowAppForMenu=showApp;
 showApp=function(){originalShowAppForMenu();hydrateUserMenu();updateMedicationCopy()};
