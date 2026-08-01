@@ -482,7 +482,11 @@ function remindersAvailable(){
   return isInstalledAppMode()&&/Android/i.test(navigator.userAgent);
 }
 function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
-function showLanding(){ suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true; }
+function showLanding(){
+  const recentLogin=Number(sessionStorage.getItem("mm_login_success_at")||0);
+  if(state.user&&Date.now()-recentLogin<8000)return;
+  suppressHashNavigation=true; if(window.location.hash)window.history.replaceState({},document.title,window.location.pathname+window.location.search); suppressHashNavigation=false; document.body.classList.remove("admin-mode","user-mode"); $("#landing").hidden=false; if($(".public-features"))$(".public-features").hidden=false; $("#appView").hidden=true; $("#adminView").hidden=true;
+}
 function rememberLoginError(message){if(message)sessionStorage.setItem("mm_last_login_error",message)}
 function clearLoginError(){sessionStorage.removeItem("mm_last_login_error")}
 function showLastLoginError(){
@@ -510,6 +514,7 @@ function showApp(){
 }
 function completeLoginSuccess(form,status){
   clearLoginError();
+  sessionStorage.setItem("mm_login_success_at",String(Date.now()));
   const dialog=form?.closest("dialog"); if(dialog?.open)dialog.close();
   if(form)form.reset();
   if(status)status.textContent="";
