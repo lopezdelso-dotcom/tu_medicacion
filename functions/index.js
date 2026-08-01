@@ -151,6 +151,7 @@ exports.searchMhraMedicines=onCall({region:"europe-west1",timeoutSeconds:30},asy
       }
     }
   }`;
+  let rows=[];
   let response;
   try{
     response=await fetch("https://medicines.api.mhra.gov.uk/graphql",{
@@ -158,24 +159,27 @@ exports.searchMhraMedicines=onCall({region:"europe-west1",timeoutSeconds:30},asy
       headers:{"Content-Type":"application/json","User-Agent":"TuMedicacion/1.0"},
       body:JSON.stringify({query:graphql,variables:{searchTerm:query,first:Math.max(limit*3,12)}})
     });
+    if(response.ok){
+      const data=await response.json();
+      rows=(data?.data?.products?.documents?.edges||[]).map(edge=>{
+        const node=edge.node||{};
+        return {name:String(node.product||node.title||"").trim(),activeIngredient:Array.isArray(node.activeSubstances)?node.activeSubstances.join(", "):"",url:node.url||"",docType:node.docType||""};
+      });
+    }else{
+      const body=await response.text().catch(()=>"");
+      console.error("MHRA GraphQL response failed; trying Azure fallback",{query,status:response.status,body:body.slice(0,500)});
+    }
   }catch(error){
-    console.error("MHRA request failed",{query,error:error.message});
-    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
+    console.error("MHRA GraphQL request failed; trying Azure fallback",{query,error:error.message});
   }
-  if(!response.ok){
-    const body=await response.text().catch(()=>"");
-    console.error("MHRA response failed",{query,status:response.status,body:body.slice(0,500)});
-    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
-  }
-  const data=await response.json();
-  const rows=data?.data?.products?.documents?.edges||[];
+  if(!rows.length)rows=await searchMhraAzure(query,Math.max(limit*3,12));
   const byProduct=new Map();
-  for(const edge of rows){
-    const node=edge.node||{};
-    const name=String(node.product||node.title||"").trim();
+  for(const node of rows){
+    const name=String(node.name||node.product||node.title||"").trim();
     if(!name)continue;
     const key=name.toUpperCase();
     const existing=byProduct.get(key)||{name,activeIngredient:"",url:"",docTypes:[],officialSource:"MHRA",country:"GB",imageUrl:""};
+    if(node.activeIngredient)existing.activeIngredient=node.activeIngredient;
     if(Array.isArray(node.activeSubstances)&&node.activeSubstances.length)existing.activeIngredient=node.activeSubstances.join(", ");
     if(node.url&&!existing.url)existing.url=String(node.url).startsWith("http")?node.url:`https://products.mhra.gov.uk${node.url}`;
     if(node.docType&&!existing.docTypes.includes(node.docType))existing.docTypes.push(node.docType);
@@ -183,6 +187,42 @@ exports.searchMhraMedicines=onCall({region:"europe-west1",timeoutSeconds:30},asy
   }
   return {items:[...byProduct.values()].slice(0,limit)};
 });
+
+function mhraAzureSearchExpression(value){
+  return String(value||"").replace(/(?:[,+\-!(){}\[\]^~*?:%\/]|\s+)/g," ").trim().split(/\s+/).filter(Boolean).map(term=>`(${term}~1 || ${term}^4)`).join(" ");
+}
+async function searchMhraAzure(query,limit){
+  const url=new URL("https://mhraproducts4853.search.windows.net/indexes/products-index/docs");
+  url.searchParams.set("api-key","17CCFC430C1A78A169B392A35A99C49D");
+  url.searchParams.set("api-version","2017-11-11");
+  url.searchParams.set("highlight","content");
+  url.searchParams.set("queryType","full");
+  url.searchParams.set("$count","true");
+  url.searchParams.set("$top",String(limit));
+  url.searchParams.set("$skip","0");
+  url.searchParams.set("search",mhraAzureSearchExpression(query)||query);
+  url.searchParams.set("scoringProfile","preferKeywords");
+  url.searchParams.set("searchMode","all");
+  let response;
+  try{
+    response=await fetch(url,{method:"GET",headers:{"Content-Type":"application/json","User-Agent":"TuMedicacion/1.0"}});
+  }catch(error){
+    console.error("MHRA Azure request failed",{query,error:error.message});
+    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
+  }
+  if(!response.ok){
+    const body=await response.text().catch(()=>"");
+    console.error("MHRA Azure response failed",{query,status:response.status,body:body.slice(0,500)});
+    throw new HttpsError("unavailable","No se pudo consultar MHRA.");
+  }
+  const data=await response.json();
+  return (data.value||[]).map(row=>({
+    name:String(row.product_name||decodeURIComponent(String(row.title||""))||"").trim(),
+    activeIngredient:Array.isArray(row.substance_name)?row.substance_name.join(", "):String(row.substance_name||""),
+    url:row.metadata_storage_path||"",
+    docType:String(row.doc_type||"").slice(0,3)
+  })).filter(item=>item.name);
+}
 
 exports.updateUserPreferences=onCall({region:"europe-west1"},async request=>{
   if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesiÃ³n.");
