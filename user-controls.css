@@ -122,6 +122,9 @@ body:not(.user-mode):not(.admin-mode) .topbar{display:flex!important;position:fi
 body:not(.user-mode):not(.admin-mode) .topbar .brand{display:none!important}
 body:not(.user-mode):not(.admin-mode) .topbar .header-tools{display:flex!important;gap:.35rem!important;pointer-events:auto!important}
 body:not(.user-mode):not(.admin-mode) .header-tools{position:fixed!important;top:.75rem!important;right:clamp(1rem,4vw,2rem)!important;z-index:9999!important;display:flex!important;visibility:visible!important;opacity:1!important}
+body:has(#landing:not([hidden])) .topbar{display:flex!important;position:fixed!important;top:0!important;left:0!important;right:0!important;height:70px!important;min-height:70px!important;z-index:9999!important;background:transparent!important;border:0!important;padding:.75rem clamp(1rem,4vw,2rem)!important;justify-content:flex-end!important;pointer-events:none!important}
+body:has(#landing:not([hidden])) .topbar .brand{display:none!important}
+body:has(#landing:not([hidden])) .header-tools{position:fixed!important;top:.75rem!important;right:clamp(1rem,4vw,2rem)!important;z-index:10000!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 body:not(.user-mode):not(.admin-mode) .direct-language{display:grid!important;place-items:center!important;min-width:46px!important;min-height:42px!important;padding:.15rem!important;border:0!important;background:transparent!important;box-shadow:none!important}
 body:not(.user-mode):not(.admin-mode) .direct-language.active{background:transparent!important;box-shadow:none!important;transform:scale(1.08)}
 body:not(.user-mode):not(.admin-mode) .direct-language span{font-size:1.85rem!important;line-height:1!important}
@@ -149,6 +152,7 @@ body:not(.user-mode):not(.admin-mode){background:#eef7fb!important}
 .access-option-chevron{align-self:center!important;justify-self:end!important;font-size:0!important;width:34px!important;height:34px!important;position:relative!important}
 .access-option-chevron::before{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;border-right:4px solid #07346f;border-top:4px solid #07346f;transform:translate(-60%,-50%) rotate(45deg);border-radius:2px}
 .login-option .access-option-icon,.login-option .access-option-text,.login-option .access-option-chevron{transform:translateY(-5px)!important}
+.login-option .access-option-text,.login-option .access-option-chevron{transform:translateY(-7px)!important}
 .register-option .access-option-icon,.register-option .access-option-chevron{transform:translateY(5px)!important}
 .register-option .access-option-text{transform:translateY(3px)!important}
 @media(max-width:760px){.landing-access{background-size:100vw auto!important;background-position:center top!important}.landing-access::after{width:64vw;height:68svh}.landing-access .hero-copy{padding:4.6rem 0 0!important}.landing-message{padding:0 1.35rem!important;max-width:58vw!important}.landing-message h1{font-size:clamp(2rem,10.6vw,3.05rem)!important}.landing-message p{font-size:clamp(.95rem,4.4vw,1.12rem)!important}.access-panel{border-radius:28px!important;padding:1rem 1.15rem .7rem!important;margin-bottom:0!important;transform:translateY(-9vh)!important}.access-option{min-height:68px!important;grid-template-columns:56px minmax(0,1fr) 36px!important;padding:.58rem .65rem!important}.access-option-icon{width:48px!important;height:48px!important}.access-option-text{min-height:48px!important;font-size:1.2rem!important}.register-option{width:100%!important;margin:0!important}}
