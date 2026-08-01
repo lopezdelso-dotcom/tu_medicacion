@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260801-114">
+  <link rel="stylesheet" href="user-controls.css?v=20260801-115">
   <link rel="stylesheet" href="selection-flow.css?v=20260801-1">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -32,8 +32,8 @@
       <span><b>Mi MedicaciÃƒÂ³n</b></span>
     </a>
     <div class="header-tools">
-      <button class="language direct-language active" data-language="es" aria-label="Castellano" aria-pressed="true" type="button"><span>ES</span></button>
-      <button class="language direct-language" data-language="en" aria-label="English" aria-pressed="false" type="button"><span>EN</span></button>
+      <button class="language direct-language active" data-language="es" aria-label="Castellano" aria-pressed="true" type="button"><span>🇪🇸</span></button>
+      <button class="language direct-language" data-language="en" aria-label="English" aria-pressed="false" type="button"><span>🇬🇧</span></button>
     </div>
   </header>
 
@@ -57,6 +57,10 @@
   <main id="contenido">
     <section id="landing" class="landing landing-access">
       <div class="hero-copy">
+        <div class="landing-message">
+          <h1>Tu medicación,<br>siempre<br>a tiempo.</h1>
+          <p>Recordatorios sencillos, seguimiento de tu tratamiento y tranquilidad para ti.</p>
+        </div>
         <div class="access-panel" aria-label="Acceso a Tu Medicación">
           <div class="access-option-buttons">
             <button class="access-option login-option" type="button" data-open="loginDialog" onclick="document.body.classList.add('modal-open');document.getElementById('loginDialog').showModal()">
@@ -352,7 +356,7 @@
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260801-127"></script>
+  <script type="module" src="app.js?v=20260801-128"></script>
 </body>
 </html>
 
