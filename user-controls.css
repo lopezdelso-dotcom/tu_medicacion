@@ -426,6 +426,12 @@ body.user-mode .preferences-panel{
 .reminder-card p{margin:.35rem 0;color:#60746e}
 .reminder-card .primary,.reminder-card .secondary{margin:1rem .45rem .75rem 0}
 .reminder-card #reminderStatus{margin-top:.35rem}
+.preferences-reminders{display:grid;gap:.55rem;margin-top:.35rem;padding:.8rem;border-radius:16px;background:#f7fbff}
+.preferences-reminders[hidden]{display:none!important}
+.preferences-reminders p{margin:0;color:#4f6f91;font-size:.9rem;line-height:1.35}
+.preference-reminder-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.preference-reminder-actions button{min-height:46px!important;padding:.55rem!important;border-radius:14px!important;box-shadow:none!important}
+@media(max-width:420px){.preference-reminder-actions{grid-template-columns:1fr}}
 .reminder-notice{font-size:.92rem}
 .compliance-list{display:grid;gap:.75rem;margin-top:1rem}
 .compliance-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.85rem;width:100%;text-align:left;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);padding:1rem}

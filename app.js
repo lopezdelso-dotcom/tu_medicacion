@@ -80,7 +80,6 @@ function repairVisibleText(root=document.body){
 }
 function repairAppText(){repairVisibleText();forceCriticalSymbols()}
 function updateReminderMenuVisibility(){
-  document.querySelectorAll('.user-menu [data-view="reminders"]').forEach(button=>{button.hidden=!remindersAvailable()});
 }
 function forceCriticalSymbols(){
   const cp=(...codes)=>String.fromCodePoint(...codes);
@@ -99,7 +98,6 @@ function forceCriticalSymbols(){
     medicines:language==="en"?"Medication":"Medicación",
     today:language==="en"?"Treatment":"Tratamiento",
     sideEffects:language==="en"?"Side effects":"Consultar efectos secundarios",
-    reminders:language==="en"?"Reminders":"Recordatorios",
     compliance:language==="en"?"Adherence":"Cumplimiento",
     achievements:language==="en"?"Achievements":"Logros",
     profile:language==="en"?"Edit profile":"Editar perfil"
@@ -114,7 +112,6 @@ function forceCriticalSymbols(){
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
   document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x23F0));
   document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x26A0));
-  document.querySelectorAll('[data-view="reminders"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F514));
   document.querySelectorAll('[data-view="compliance"] span[aria-hidden="true"]').forEach(el=>el.textContent="%");
   document.querySelectorAll('[data-view="achievements"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F3C5));
   document.querySelectorAll('[data-view="profile"] span[aria-hidden="true"]').forEach(el=>el.textContent="+");
@@ -473,7 +470,7 @@ async function enterAuthenticatedUser(user){
   catch(error){state.medicines=[];try{renderAll()}catch(renderError){}toast("Has accedido, pero no se pudo cargar la medicaciÃ³n.");}
   return {ok:true};
 }
-const userViewIds=["today","medicines","documents","sideEffects","reminders","compliance","achievements","profile"];
+const userViewIds=["today","medicines","documents","sideEffects","compliance","achievements","profile"];
 let suppressHashNavigation=false;
 function isInstalledAppMode(){
   return Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches||window.matchMedia?.("(display-mode: fullscreen)")?.matches||navigator.standalone);
@@ -481,7 +478,7 @@ function isInstalledAppMode(){
 function remindersAvailable(){
   return isInstalledAppMode()&&/Android/i.test(navigator.userAgent);
 }
-function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)&&!(value==="reminders"&&!remindersAvailable())?value:""}
+function currentHashView(){const value=window.location.hash.replace(/^#/,"");return userViewIds.includes(value)?value:""}
 function showLanding(){
   const recentLogin=Number(sessionStorage.getItem("mm_login_success_at")||0);
   if(state.user&&Date.now()-recentLogin<8000)return;
@@ -541,14 +538,12 @@ function completeLoginSuccess(form,status){
   if(adminView){adminView.hidden=true;adminView.style.display="none";}
 }
 function openView(id,options={}){
-  if(id==="reminders"&&!remindersAvailable())id="today";
   if(!userViewIds.includes(id)&&id!=="admin")id="today";
   $$(".view").forEach(v=>{v.hidden=v.id!==id;v.classList.toggle("active-view",v.id===id)});
   $$(".user-menu [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
   updateBottomNav(id);
   if(id==="admin") renderRequests();
   if(id==="sideEffects") renderSideEffectsMedicines();
-  if(id==="reminders") renderReminders();
   if(id==="compliance") renderComplianceSummary();
   if(id==="achievements") renderAchievements();
   if(id==="profile") hydrateProfileForm();
@@ -784,7 +779,7 @@ async function savePreferencesFromPanel(){
 }
 
 function closePreferences(){const p=$("#preferencesPanel"),backdrop=$("#preferencesBackdrop");p.hidden=true;backdrop.hidden=true;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","false"))}
-function toggleAccessibility(button){const p=$("#preferencesPanel"),willOpen=p.hidden;if(willOpen){$("#preferencesBackdrop").hidden=false;p.hidden=false;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","true"));p.querySelector("button")?.focus()}else closePreferences()}
+function toggleAccessibility(button){const p=$("#preferencesPanel"),willOpen=p.hidden;if(willOpen){$("#preferencesBackdrop").hidden=false;p.hidden=false;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","true"));renderReminders();p.querySelector("button")?.focus()}else closePreferences()}
 if($("#accessibilityButton"))$("#accessibilityButton").onclick=event=>toggleAccessibility(event.currentTarget);
 $("#userAccessibilityButton")?.addEventListener("click",event=>toggleAccessibility(event.currentTarget));
 $("#headerPreferencesButton")?.addEventListener("click",event=>toggleAccessibility(event.currentTarget));
@@ -1181,15 +1176,14 @@ function reminderTokenDocId(token){
   return String(token||"").replace(/[^\w-]/g,"_").slice(0,180)||"device";
 }
 function setReminderScreenText(){
-  const title=$("#reminders h1"),lead=$("#reminders .lead"),heading=$(".reminder-card h2"),copy=$(".reminder-card p"),notice=$(".reminder-notice");
+  const section=$("#preferencesReminderSection"),title=$("strong",section),copy=$("p",section);
   if(title)title.textContent=uiText("Recordatorios","Reminders");
-  if(lead)lead.textContent=uiText("Recibe avisos en este dispositivo cuando llegue la hora del tratamiento.","Receive alerts on this device when treatment is due.");
-  if(heading)heading.textContent=uiText("Notificaciones de tratamiento","Treatment notifications");
-  if(copy)copy.textContent=uiText("Activa los recordatorios en tu móvil o tablet. Puedes desactivarlos cuando quieras.","Enable reminders on your phone or tablet. You can turn them off whenever you want.");
-  if(notice)notice.innerHTML=`<b>${uiText("Importante","Important")}</b><br>${uiText("Los recordatorios son una ayuda. No sustituyen la pauta indicada por un profesional sanitario.","Reminders are only a support. They do not replace the schedule given by a healthcare professional.")}`;
+  if(copy)copy.textContent=uiText("Recibe avisos en este dispositivo cuando llegue la hora del tratamiento.","Receive alerts on this device when treatment is due.");
 }
 async function renderReminders(){
   setReminderScreenText();
+  const section=$("#preferencesReminderSection");
+  if(section)section.hidden=!remindersAvailable();
   const status=$("#reminderStatus"),enable=$("#enableRemindersButton"),disable=$("#disableRemindersButton");
   if(!status||!enable||!disable)return;
   enable.textContent=uiText("Activar recordatorios","Enable reminders");
