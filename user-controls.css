@@ -527,3 +527,15 @@ body.user-mode .preferences-panel{
 .user-menu button[data-view="profile"]>span[aria-hidden="true"]:first-child::before{content:"+"}
 .user-menu #userAccessibilityButton>span[aria-hidden="true"]:first-child::before{content:"\2699"}
 .user-menu [data-user-logout]>span[aria-hidden="true"]:first-child::before{content:"\2190"}
+
+/* Portada responsive: lámina centrada con franjas laterales cuando sobra pantalla. */
+body:not(.user-mode):not(.admin-mode){background:#eef7fb!important}
+body:not(.user-mode):not(.admin-mode) #contenido{display:flex!important;justify-content:center!important;align-items:flex-start!important;min-height:100svh!important;background:#eef7fb!important;overflow-x:hidden!important}
+.landing-access{width:min(100vw,941px)!important;max-width:941px!important;min-height:100svh!important;margin:0 auto!important;background-size:100% auto!important;background-position:center top!important;background-repeat:no-repeat!important;overflow:hidden!important}
+.landing-access .hero-copy{width:100%!important;max-width:none!important;min-height:100svh!important;padding:clamp(4.6rem,7svh,6.2rem) clamp(1.1rem,4vw,3rem) 1rem!important;justify-content:space-between!important}
+.landing-message{max-width:min(430px,48%)!important}
+.access-panel{width:min(760px,calc(100% - 2rem))!important;margin-left:auto!important;margin-right:auto!important;transform:none!important}
+@media(min-width:761px) and (max-width:1180px){.landing-access{width:min(100vw,820px)!important;background-size:100% auto!important}.landing-access .hero-copy{padding-top:clamp(3.6rem,6svh,5rem)!important;padding-bottom:clamp(1rem,3svh,2.2rem)!important}.landing-message{display:block!important;max-width:43%!important}.landing-message h1{font-size:clamp(2.15rem,4.7vw,3.55rem)!important}.landing-message p{font-size:clamp(1rem,2.1vw,1.25rem)!important}.access-panel{width:min(700px,calc(100% - 2rem))!important}}
+@media(min-width:761px) and (max-width:1180px) and (orientation:landscape){.landing-access{width:min(78vw,941px)!important}.landing-access .hero-copy{justify-content:flex-end!important;padding-bottom:clamp(2rem,5svh,4rem)!important}.landing-message{margin-bottom:auto!important}}
+@media(min-width:761px) and (max-width:1180px) and (orientation:portrait){.landing-access{width:min(100vw,760px)!important}.landing-message{max-width:52%!important}.access-panel{width:min(680px,calc(100% - 2rem))!important}}
+@media(min-width:1181px){.landing-access{width:min(72vw,941px)!important}}
