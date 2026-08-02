@@ -86,7 +86,7 @@ function forceCriticalSymbols(){
   const cp=(...codes)=>String.fromCodePoint(...codes);
   const setText=(selector,text)=>{const el=$(selector);if(el&&el.textContent!==text)el.textContent=text};
   const setHtml=(selector,html)=>{const el=$(selector);if(el&&el.innerHTML!==html)el.innerHTML=html};
-  setHtml("#openUserMenu",'<span aria-hidden="true">'+cp(0x2630)+'</span><span>'+t("MenÃº")+'</span>');
+  setHtml("#openUserMenu",'<span aria-hidden="true">'+cp(0x2630)+'</span>');
   setText("#previousDayButton",cp(0x2190));
   setText("#nextDayButton",cp(0x2192));
   setText("#calendarButton",cp(0x1F4C5)+" "+t("Ver semana completa"));
@@ -776,7 +776,8 @@ async function savePreferencesFromPanel(){
 function closePreferences(){const p=$("#preferencesPanel"),backdrop=$("#preferencesBackdrop");p.hidden=true;backdrop.hidden=true;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","false"))}
 function toggleAccessibility(button){const p=$("#preferencesPanel"),willOpen=p.hidden;if(willOpen){$("#preferencesBackdrop").hidden=false;p.hidden=false;$$('[aria-controls="preferencesPanel"]').forEach(item=>item.setAttribute("aria-expanded","true"));p.querySelector("button")?.focus()}else closePreferences()}
 if($("#accessibilityButton"))$("#accessibilityButton").onclick=event=>toggleAccessibility(event.currentTarget);
-$("#userAccessibilityButton").onclick=event=>toggleAccessibility(event.currentTarget);
+$("#userAccessibilityButton")?.addEventListener("click",event=>toggleAccessibility(event.currentTarget));
+$("#headerPreferencesButton")?.addEventListener("click",event=>toggleAccessibility(event.currentTarget));
 $("#preferencesBackdrop").onclick=closePreferences;
 $("#closePreferencesButton")?.addEventListener("click",closePreferences);
 document.addEventListener("pointerdown",event=>{const panel=$("#preferencesPanel");if(panel.hidden||panel.contains(event.target)||event.target.closest('[aria-controls="preferencesPanel"]'))return;closePreferences()});
@@ -1440,7 +1441,7 @@ function updateMedicationCopy(){
   if(medicinesLead)medicinesLead.textContent=language==="en"?"Summary of all your treatments.":"Resumen de todos tus tratamientos.";
   if(upload){$("b",upload).textContent=t("Fotografiar medicamento");$("small",upload).textContent=t("Haz una foto de la caja o el envase")}
   const uploadLabel=$("#uploadChoice");if(uploadLabel){$("b",uploadLabel).textContent=t("Hacer foto o elegir imagen");$("small",uploadLabel).textContent=t("JPG o PNG Â· mÃ¡ximo 10 MB")}
-  const menuButton=$("#openUserMenu");if(menuButton)menuButton.innerHTML=`<span aria-hidden="true">\u2630</span><span>${t("MenÃº")}</span>`;
+  const menuButton=$("#openUserMenu");if(menuButton)menuButton.innerHTML=`<span aria-hidden="true">\u2630</span>`;
   const calendarButton=$("#calendarButton");if(calendarButton)calendarButton.textContent=`\uD83D\uDCC5 ${t("Ver semana completa")}`;
 }
 function cleanLandingCopy(){

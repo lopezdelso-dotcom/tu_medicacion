@@ -590,3 +590,18 @@ body:not(.user-mode):not(.admin-mode) #contenido,
 .access-option{font-weight:500!important}
 .access-option-text{font-weight:500!important;font-size:clamp(1.08rem,2.4vw,1.38rem)!important;letter-spacing:0!important}
 @media(max-width:760px){.access-option-text{font-size:1.05rem!important;font-weight:500!important}}
+
+/* Cabecera interior azul, fija y simplificada. */
+body.user-mode{--green:#0a65d8;--mint:#d9eafb;--ink:#07346f;background:#eef7fb!important}
+body.user-mode .user-header{position:sticky!important;top:0!important;z-index:80!important;display:grid!important;grid-template-columns:56px minmax(0,1fr) 56px!important;align-items:center!important;min-height:74px!important;padding:.55rem .85rem!important;background:linear-gradient(90deg,#eef7fb,#f7fbff)!important;border-bottom:1px solid rgba(10,101,216,.16)!important;box-shadow:0 8px 24px rgba(7,52,111,.08)!important}
+body.user-mode .user-menu-open{grid-column:1!important;justify-self:start!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#07346f!important;padding:0!important;box-shadow:none!important;font-size:0!important;gap:0!important}
+body.user-mode .user-menu-open span:last-child{display:none!important}
+body.user-mode .user-menu-open span:first-child{display:grid!important;place-items:center!important;width:48px!important;height:48px!important;margin:0!important;font-size:0!important;color:#07346f!important}
+body.user-mode .user-menu-open span:first-child::before{content:"\2630"!important;font-size:2rem!important;line-height:1!important;color:#07346f!important}
+body.user-mode .user-header-actions{grid-column:2!important;justify-self:center!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:.4rem!important;min-width:0!important}
+body.user-mode .user-header-icon{width:54px!important;height:54px!important;border-radius:16px!important;object-fit:contain!important;box-shadow:none!important;background:transparent!important}
+body.user-mode .header-preferences-button{grid-column:3!important;justify-self:end!important;display:grid!important;place-items:center!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#07346f!important;padding:0!important;font-size:0!important;box-shadow:none!important}
+body.user-mode .header-preferences-button span{font-size:2rem!important;line-height:1!important}
+body.user-mode .install-app-button{position:absolute!important;right:64px!important;top:50%!important;transform:translateY(-50%)!important;min-height:38px!important;padding:.35rem .55rem!important;border-color:#0a65d8!important;background:#0a65d8!important;box-shadow:none!important;font-size:.75rem!important}
+body.user-mode .user-menu #userAccessibilityButton{display:none!important}
+@media(max-width:760px){body.user-mode .user-header{grid-template-columns:52px minmax(0,1fr) 52px!important;min-height:68px!important;padding:.45rem .65rem!important}body.user-mode .user-header-icon{width:50px!important;height:50px!important;border-radius:15px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}body.user-mode .user-menu-open span:first-child::before,body.user-mode .header-preferences-button span{font-size:1.85rem!important}}
