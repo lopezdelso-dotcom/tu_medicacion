@@ -112,8 +112,8 @@ function forceCriticalSymbols(){
     });
   });
   document.querySelectorAll('[data-view="medicines"] span[aria-hidden="true"], .medicine-photo-placeholder').forEach(el=>el.textContent=cp(0x1F48A));
-  document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x2713));
-  document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x24D8));
+  document.querySelectorAll('[data-view="today"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x23F0));
+  document.querySelectorAll('[data-view="sideEffects"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x26A0));
   document.querySelectorAll('[data-view="reminders"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F514));
   document.querySelectorAll('[data-view="compliance"] span[aria-hidden="true"]').forEach(el=>el.textContent="%");
   document.querySelectorAll('[data-view="achievements"] span[aria-hidden="true"]').forEach(el=>el.textContent=cp(0x1F3C5));
@@ -1456,6 +1456,8 @@ function updateMedicationCopy(){
   const calendarButton=$("#calendarButton");if(calendarButton)calendarButton.textContent=`\uD83D\uDCC5 ${t("Ver semana completa")}`;
   const bottomLabels={medicines:language==="en"?"Medication":"Medicación",today:language==="en"?"Treatment":"Tratamiento",achievements:language==="en"?"Progress":"Logros",sideEffects:language==="en"?"Effects":"Efectos"};
   $$("[data-bottom-view]").forEach(button=>{const label=$("small",button);if(label)label.textContent=bottomLabels[button.dataset.bottomView]||label.textContent});
+  const bottomIcons={today:cp(0x23F0),sideEffects:cp(0x26A0)};
+  Object.entries(bottomIcons).forEach(([view,icon])=>{const el=$(`[data-bottom-view="${view}"] span`);if(el)el.textContent=icon});
 }
 function cleanLandingCopy(){
   const brand=$(".brand b");if(brand)brand.textContent=language==="en"?"My Medication":"Tu medicación";
