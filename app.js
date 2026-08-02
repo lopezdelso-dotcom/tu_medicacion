@@ -753,8 +753,8 @@ async function decideRequest(id,status){
 }
 async function loadMedicines(){
   if(demo||!state.user) return;
-  const snap=await fb.getDocs(fb.query(fb.collection(fb.db,"users",state.user.uid,"medicines"),fb.where("confirmed","==",true)));
-  state.medicines=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"medicines"));
+  state.medicines=snap.docs.map(d=>({id:d.id,...d.data()})).filter(medicine=>medicine.confirmed!==false);
 }
 async function loadIntakes(){
   if(demo||!state.user){state.intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");return}
