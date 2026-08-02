@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Tu Medicaci&oacute;n">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="manifest" href="/manifest.webmanifest?v=20260802-6">
   <link rel="icon" type="image/png" sizes="192x192" href="/pwa-icons/icon-192.png">
   <link rel="apple-touch-icon" href="/pwa-icons/icon-192.png">
   <meta name="description" content="Mi MedicaciÃƒÂ³n: organiza y confirma tus tratamientos de forma sencilla.">
@@ -357,7 +357,15 @@
     <p class="form-status" role="status"></p>
   </form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="portraitOnlyNotice" class="portrait-only-notice" aria-hidden="true">
+    <div>
+      <span aria-hidden="true">↻</span>
+      <strong>Usa la app en vertical</strong>
+      <p>Gira tu dispositivo para ver Tu Medicación correctamente.</p>
+      <small>Please rotate your device to portrait mode.</small>
+    </div>
+  </div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260802-5"></script>
+  <script type="module" src="app.js?v=20260802-6"></script>
 </body>
 </html>

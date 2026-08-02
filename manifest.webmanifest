@@ -6,7 +6,7 @@
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "background_color": "#fbfaf5",
   "theme_color": "#fbfaf5",
   "categories": ["health", "medical", "productivity"],
