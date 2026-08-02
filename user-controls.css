@@ -28,11 +28,7 @@ body.user-menu-visible .user-menu{transform:translateX(0)}
 .user-header .avatar,.user-header .user-identity,.user-header .user-tools{display:none!important}
 .user-menu-open{min-height:58px!important;font-size:1.08rem!important;font-weight:900!important;padding:.75rem 1rem!important;max-width:145px;white-space:normal}
 .menu-avatar-row{grid-template-columns:76px minmax(0,1fr)!important;padding-right:3.2rem!important}.menu-avatar-row b{display:block;font-size:1.18rem;line-height:1.15;overflow-wrap:anywhere}.menu-avatar-row small{max-width:100%;overflow-wrap:anywhere;word-break:break-word}.user-menu button{font-size:1.03rem!important;line-height:1.18!important}
-.today-toolbar{display:grid;grid-template-columns:72px minmax(0,1fr) 72px;gap:.7rem;align-items:center;margin-bottom:.8rem}.today-heading{text-align:center;min-width:0}.today-heading .eyebrow{margin:0}.today-heading h1{margin:.2rem 0!important;font-size:clamp(1.65rem,7vw,2.35rem)!important;line-height:1.05}.day-nav-button{min-width:64px!important;min-height:64px!important;border-radius:18px!important;font-size:2rem!important;line-height:1!important;padding:.2rem!important}.calendar-button{margin:.25rem 0 1rem;min-height:60px!important;font-size:1.1rem!important}.user-content .view#today{padding-top:1.2rem!important}.today-schedule{margin-top:1rem!important}
-#previousDayButton,#nextDayButton{width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;display:grid!important;place-items:center!important;font-size:1.8rem!important;line-height:1!important;padding:0!important}
 .calendar-date-input{position:absolute;width:1px;height:1px;opacity:.01;pointer-events:none}
-@media(max-width:760px){.user-header{min-height:66px!important;padding:.55rem .65rem!important}.user-menu-open{min-height:54px!important;font-size:1rem!important;max-width:120px}.user-menu{width:min(92vw,360px)!important}.today-toolbar{grid-template-columns:60px minmax(0,1fr) 60px;gap:.45rem}.day-nav-button{min-width:56px!important;min-height:56px!important}.calendar-button{font-size:1rem!important}.user-content .view#today{padding:1rem .85rem!important}.today-schedule .day-dose{grid-template-columns:1fr!important;gap:.8rem;text-align:left}.today-schedule .day-dose>b{justify-self:start;min-width:120px}.today-schedule .status-button{width:100%;font-size:1.05rem}}
-@media(max-width:760px){#previousDayButton,#nextDayButton{width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;font-size:1.55rem!important}}
 
 /* Portada mÃ³vil: muy simple */
 .brand-mark,.hero-card,.trust,.public-features,.tabs,body:not(.user-mode):not(.admin-mode)>footer{display:none!important}
@@ -591,52 +587,29 @@ body:not(.user-mode):not(.admin-mode) #contenido,
 .access-option-text{font-weight:500!important;font-size:clamp(1.08rem,2.4vw,1.38rem)!important;letter-spacing:0!important}
 @media(max-width:760px){.access-option-text{font-size:1.05rem!important;font-weight:500!important}}
 
-/* Cabecera interior azul, fija y simplificada. */
+/* Cabecera interior, vista diaria y fondo de usuario consolidados. */
 body.user-mode{--green:#0a65d8;--mint:#d9eafb;--ink:#07346f;background:#eef7fb!important}
-body.user-mode .user-header{position:sticky!important;top:0!important;z-index:80!important;display:grid!important;grid-template-columns:56px minmax(0,1fr) 56px!important;align-items:center!important;min-height:74px!important;padding:.55rem .85rem!important;background:linear-gradient(90deg,#eef7fb,#f7fbff)!important;border-bottom:1px solid rgba(10,101,216,.16)!important;box-shadow:0 8px 24px rgba(7,52,111,.08)!important}
-body.user-mode .user-menu-open{grid-column:1!important;justify-self:start!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#07346f!important;padding:0!important;box-shadow:none!important;font-size:0!important;gap:0!important}
+body.user-mode .user-shell,body.user-mode .user-content,body.user-mode .user-content .view,body.user-mode #today,body.user-mode .today-toolbar,body.user-mode .today-heading,body.user-mode .today-schedule,body.user-mode .card-list,body.user-mode .day-group,body.user-mode .compact-dose-list{background:#eef7fb!important}
+body.user-mode .user-header{position:sticky!important;top:0!important;z-index:80!important;display:grid!important;grid-template-columns:50px minmax(0,1fr) 50px!important;align-items:center!important;min-height:62px!important;height:62px!important;padding:.35rem .75rem!important;background:#eef7fb!important;border-bottom:0!important;box-shadow:none!important}
+body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;align-self:center!important;display:grid!important;place-items:center!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:#07346f!important;padding:0!important;font-size:0!important;gap:0!important}
 body.user-mode .user-menu-open span:last-child{display:none!important}
-body.user-mode .user-menu-open span:first-child{display:grid!important;place-items:center!important;width:48px!important;height:48px!important;margin:0!important;font-size:0!important;color:#07346f!important}
-body.user-mode .user-menu-open span:first-child::before{content:"\2630"!important;font-size:2rem!important;line-height:1!important;color:#07346f!important}
+body.user-mode .user-menu-open span:first-child{width:48px!important;height:48px!important;display:grid!important;place-items:center!important;margin:0!important;font-size:0!important;color:#07346f!important}
+body.user-mode .user-menu-open span:first-child::before{content:"\2630"!important;font-size:1.6rem!important;line-height:1!important;color:#07346f!important;transform:translateY(2px)!important}
 body.user-mode .user-header-actions{grid-column:2!important;justify-self:center!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:.4rem!important;min-width:0!important}
-body.user-mode .user-header-icon{width:54px!important;height:54px!important;border-radius:16px!important;object-fit:contain!important;box-shadow:none!important;background:transparent!important}
-body.user-mode .header-preferences-button{grid-column:3!important;justify-self:end!important;display:grid!important;place-items:center!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;border:0!important;border-radius:0!important;background:transparent!important;color:#07346f!important;padding:0!important;font-size:0!important;box-shadow:none!important}
-body.user-mode .header-preferences-button span{font-size:2rem!important;line-height:1!important}
-body.user-mode .install-app-button{position:absolute!important;right:64px!important;top:50%!important;transform:translateY(-50%)!important;min-height:38px!important;padding:.35rem .55rem!important;border-color:#0a65d8!important;background:#0a65d8!important;box-shadow:none!important;font-size:.75rem!important}
+body.user-mode .user-header-icon{width:48px!important;height:48px!important;border-radius:14px!important;object-fit:contain!important;box-shadow:none!important;background:transparent!important}
+body.user-mode .header-preferences-button{grid-column:3!important;justify-self:end!important}
+body.user-mode .header-preferences-button span{font-size:1.75rem!important;line-height:1!important;display:grid!important;place-items:center!important}
+body.user-mode .install-app-button{position:absolute!important;right:52px!important;top:50%!important;transform:translateY(-50%)!important;min-height:32px!important;padding:.35rem .55rem!important;border-color:#0a65d8!important;background:#0a65d8!important;box-shadow:none!important;font-size:.68rem!important}
 body.user-mode .user-menu #userAccessibilityButton{display:none!important}
-@media(max-width:760px){body.user-mode .user-header{grid-template-columns:52px minmax(0,1fr) 52px!important;min-height:68px!important;padding:.45rem .65rem!important}body.user-mode .user-header-icon{width:50px!important;height:50px!important;border-radius:15px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}body.user-mode .user-menu-open span:first-child::before,body.user-mode .header-preferences-button span{font-size:1.85rem!important}}
-
-/* Barra inferior fija de navegación principal. */
 body.user-mode .user-content{padding-bottom:6.2rem!important}
-.bottom-user-nav{position:fixed;left:50%;bottom:.75rem;transform:translateX(-50%);z-index:85;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;width:min(520px,calc(100vw - 1rem));padding:.5rem;border:1px solid rgba(10,101,216,.18);border-radius:26px;background:rgba(247,251,255,.94);box-shadow:0 14px 34px rgba(7,52,111,.18);backdrop-filter:blur(12px)}
-.bottom-user-nav button{appearance:none;display:grid;place-items:center;gap:.18rem;min-width:0;min-height:58px;border:0;border-radius:20px;background:transparent;color:#0a65d8;padding:.35rem .2rem;font:inherit;font-weight:700;line-height:1;box-shadow:none}
-.bottom-user-nav button span{display:grid;place-items:center;width:30px;height:30px;border-radius:12px;background:#d9eafb;color:#0a65d8;font-size:1.18rem;line-height:1}
-.bottom-user-nav button small{max-width:100%;font-size:.66rem;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#07346f;font-weight:700}
-.bottom-user-nav button.active{background:#0a65d8;color:#fff;box-shadow:0 6px 18px rgba(10,101,216,.28)}
-.bottom-user-nav button.active span{background:#fff;color:#0a65d8}
-.bottom-user-nav button.active small{color:#fff}
-body:not(.user-mode) .bottom-user-nav{display:none!important}
-@media(max-width:420px){.bottom-user-nav{bottom:.45rem;width:calc(100vw - .7rem);padding:.42rem;border-radius:22px}.bottom-user-nav button{min-height:54px;border-radius:17px}.bottom-user-nav button span{width:28px;height:28px;font-size:1.08rem}.bottom-user-nav button small{font-size:.58rem}}
-
-/* Ajuste fino cabecera: integrada con el fondo, compacta y alineada. */
-body.user-mode .user-header{min-height:56px!important;height:56px!important;padding:.35rem .75rem!important;background:#eef7fb!important;border-bottom:0!important;box-shadow:none!important;grid-template-columns:44px minmax(0,1fr) 44px!important}
-body.user-mode .user-menu-open{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;align-self:center!important}
-body.user-mode .user-menu-open span:first-child{width:38px!important;height:38px!important}
-body.user-mode .user-menu-open span:first-child::before{font-size:1.38rem!important}
-body.user-mode .user-header-icon{width:38px!important;height:38px!important;border-radius:12px!important;align-self:center!important}
-body.user-mode .header-preferences-button{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;align-self:center!important;transform:translateY(-2px)!important}
-body.user-mode .header-preferences-button span{font-size:1.45rem!important}
-body.user-mode .install-app-button{right:52px!important;min-height:32px!important;font-size:.68rem!important}
-@media(max-width:760px){body.user-mode .user-header{min-height:52px!important;height:52px!important;padding:.3rem .6rem!important;grid-template-columns:40px minmax(0,1fr) 40px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important}body.user-mode .user-menu-open span:first-child{width:36px!important;height:36px!important}body.user-mode .user-menu-open span:first-child::before{font-size:1.25rem!important}body.user-mode .header-preferences-button span{font-size:1.35rem!important}body.user-mode .user-header-icon{width:36px!important;height:36px!important;border-radius:11px!important}}
-
-/* Vista diaria limpia: fecha protagonista, flechas sin recuadro y tarjetas suaves. */
+@media(max-width:760px){body.user-mode .user-header{grid-template-columns:48px minmax(0,1fr) 48px!important;min-height:60px!important;height:60px!important;padding:.3rem .6rem!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}body.user-mode .user-menu-open span:first-child{width:46px!important;height:46px!important}body.user-mode .user-menu-open span:first-child::before{font-size:1.55rem!important;transform:translateY(2px)!important}body.user-mode .header-preferences-button span{font-size:1.68rem!important}body.user-mode .user-header-icon{width:46px!important;height:46px!important;border-radius:13px!important}}
 body.user-mode #today .today-toolbar{grid-template-columns:44px minmax(0,1fr) 44px!important;gap:.25rem!important;align-items:center!important;margin:.1rem 0 .75rem!important}
 body.user-mode #todayTitle{display:none!important}
-body.user-mode #todayDate{display:block!important;margin:0!important;color:#07346f!important;font-size:clamp(1.55rem,6vw,2.35rem)!important;font-weight:900!important;line-height:1.05!important;letter-spacing:.01em!important;text-transform:none!important}
-body.user-mode .day-nav-button{display:grid!important;place-items:center!important;width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#07346f!important;font-size:0!important;line-height:1!important}
-body.user-mode .day-nav-button::before{content:""!important;display:block!important;width:14px!important;height:14px!important;border-top:4px solid currentColor!important;border-right:4px solid currentColor!important;border-radius:2px!important}
-body.user-mode #previousDayButton::before{transform:rotate(225deg)!important}
-body.user-mode #nextDayButton::before{transform:rotate(45deg)!important}
+body.user-mode #todayDate{display:block!important;margin:0!important;color:#07346f!important;font-size:clamp(1.25rem,4.6vw,1.85rem)!important;font-weight:500!important;line-height:1.05!important;letter-spacing:0!important;text-transform:none!important}
+body.user-mode .day-nav-button{position:relative!important;overflow:hidden!important;text-indent:-9999px!important;display:grid!important;place-items:center!important;width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#07346f!important;font-size:0!important;line-height:1!important}
+body.user-mode .day-nav-button::before{content:""!important;position:absolute!important;left:50%!important;top:50%!important;display:block!important;width:14px!important;height:14px!important;margin:0!important;border-top:4px solid currentColor!important;border-right:4px solid currentColor!important;border-radius:2px!important}
+body.user-mode #previousDayButton::before{transform:translate(-50%,-50%) rotate(225deg)!important}
+body.user-mode #nextDayButton::before{transform:translate(-50%,-50%) rotate(45deg)!important}
 body.user-mode .calendar-button{border:0!important;background:#d9eafb!important;color:#07346f!important;box-shadow:none!important;border-radius:20px!important;font-weight:800!important}
 body.user-mode .today-schedule .day-dose,body.user-mode .compact-dose{border:0!important;border-left:0!important;box-shadow:none!important;background:#f7fbff!important}
 body.user-mode .today-schedule .day-dose::before,body.user-mode .compact-dose::before{display:none!important;content:none!important}
@@ -644,46 +617,5 @@ body.user-mode .dose-meal-group{border:0!important;box-shadow:none!important;bac
 body.user-mode .today-schedule .dose-top>b{background:#d9eafb!important;color:#07346f!important}
 body.user-mode .compact-check-button:not(.taken),body.user-mode .status-button:not(.taken){border:0!important;background:#d9eafb!important;color:#07346f!important;box-shadow:none!important}
 body.user-mode .compact-check-button.taken,body.user-mode .status-button.taken{border:0!important;background:#0a65d8!important;color:#fff!important;box-shadow:none!important}
-
-/* Cabecera: iconos alineados, más grandes y sin caja blanca. */
-body.user-mode .user-header{grid-template-columns:50px minmax(0,1fr) 50px!important;min-height:62px!important;height:62px!important;align-items:center!important}
-body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;align-self:center!important;display:grid!important;place-items:center!important;background:transparent!important;border:0!important;box-shadow:none!important}
-body.user-mode .user-menu-open span:first-child{width:48px!important;height:48px!important;display:grid!important;place-items:center!important}
-body.user-mode .user-menu-open span:first-child::before{font-size:1.75rem!important;line-height:1!important}
-body.user-mode .header-preferences-button{transform:none!important}
-body.user-mode .header-preferences-button span{font-size:1.75rem!important;line-height:1!important;display:grid!important;place-items:center!important}
-body.user-mode .user-header-icon{width:48px!important;height:48px!important;border-radius:14px!important;background:transparent!important;box-shadow:none!important;object-fit:contain!important}
-body.user-mode .user-header-actions{align-items:center!important}
-@media(max-width:760px){body.user-mode .user-header{grid-template-columns:48px minmax(0,1fr) 48px!important;min-height:60px!important;height:60px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}body.user-mode .user-menu-open span:first-child{width:46px!important;height:46px!important}body.user-mode .user-menu-open span:first-child::before,body.user-mode .header-preferences-button span{font-size:1.68rem!important}body.user-mode .user-header-icon{width:46px!important;height:46px!important;border-radius:13px!important}}
-
-/* Ajuste final fecha/flechas: sin carácter heredado y fecha más ligera. */
-body.user-mode #todayDate{font-weight:500!important}
-body.user-mode .day-nav-button{position:relative!important;overflow:hidden!important;text-indent:-9999px!important;color:#07346f!important}
-body.user-mode .day-nav-button::before{position:absolute!important;left:50%!important;top:50%!important;margin:0!important}
-body.user-mode #previousDayButton::before{transform:translate(-50%,-50%) rotate(225deg)!important}
-body.user-mode #nextDayButton::before{transform:translate(-50%,-50%) rotate(45deg)!important}
-
-/* Afinado de cabecera y fondo de medicación. */
-body.user-mode .user-menu-open span:first-child::before{font-size:1.6rem!important;transform:translateY(2px)!important}
-@media(max-width:760px){body.user-mode .user-menu-open span:first-child::before{font-size:1.55rem!important;transform:translateY(2px)!important}}
-body.user-mode #medicines,
-body.user-mode #medicineList,
-body.user-mode #medicineDetail{background:#eef7fb!important}
-body.user-mode #medicines .card-list,
-body.user-mode .medicine-summary-card,
-body.user-mode .medicine-detail-card{background:#eef7fb!important}
-body.user-mode .medicine-summary-card,
-body.user-mode .medicine-detail-card{border:0!important;box-shadow:none!important}
-
-/* Fondo interior uniforme y fecha diaria menos dominante. */
-body.user-mode .user-shell,
-body.user-mode .user-content,
-body.user-mode .user-content .view,
-body.user-mode #today,
-body.user-mode .today-toolbar,
-body.user-mode .today-heading,
-body.user-mode .today-schedule,
-body.user-mode .card-list,
-body.user-mode .day-group,
-body.user-mode .compact-dose-list{background:#eef7fb!important}
-body.user-mode #todayDate{font-size:clamp(1.25rem,4.6vw,1.85rem)!important;font-weight:500!important;letter-spacing:0!important}
+body.user-mode #medicines,body.user-mode #medicineList,body.user-mode #medicineDetail,body.user-mode #medicines .card-list,body.user-mode .medicine-summary-card,body.user-mode .medicine-detail-card{background:#eef7fb!important}
+body.user-mode .medicine-summary-card,body.user-mode .medicine-detail-card{border:0!important;box-shadow:none!important}
