@@ -576,7 +576,7 @@ function isConfirmedMedicine(medicine){return medicine?.confirmed!==false}
 function renderAll(){ renderSchedule(); renderMedicines(); applyLanguage(); }
 function renderSchedule(){
   const days=[new Date()];days[0].setHours(12,0,0,0);
-  const confirmed=state.medicines.filter(isConfirmedMedicine).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+  const confirmed=visibleMedicines().sort((a,b)=>(a.time||"").localeCompare(b.time||""));
   $("#schedule").innerHTML=days.map((date,index)=>{
     const iso=date.toISOString().slice(0,10);
     const medicines=confirmed.filter(m=>(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso));
@@ -662,24 +662,25 @@ async function hydrateMedicineImage(medicine){
 function medicineImageMarkup(medicine){
   const imageUrl=medicine?.imageUrl||medicine?.medicineImageUrl||medicine?.photoUrl||"";
   if(imageUrl)return '<img class="medicine-photo" src="'+safe(imageUrl)+'" alt="'+safe(medicineShortName(medicine))+'">';
-  return '<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>';
+  return '<span class="medicine-photo-placeholder" aria-hidden="true">💊</span>';
 }
 function isMedicineArchived(medicine){return Boolean(medicine?.deletedAt)}
-function activeMedicines(){const today=todayIso();return state.medicines.filter(m=>isConfirmedMedicine(m)&&!isMedicineArchived(m)&&(!m.endDate||m.endDate>=today))}
+function visibleMedicines(){return state.medicines.filter(m=>isConfirmedMedicine(m)&&!isMedicineArchived(m))}
+function activeMedicines(){const today=todayIso();return visibleMedicines().filter(m=>!m.endDate||m.endDate>=today)}
 function renderMedicines(){
   const list=$("#medicineList"),detail=$("#medicineDetail");
   const heading=$(".medicines-heading");
   if(heading)heading.hidden=false;
   if(detail){detail.hidden=true;detail.innerHTML=""}
   list.hidden=false;
-  const medicines=activeMedicines();
+  const medicines=visibleMedicines();
   list.innerHTML=medicines.map(m=>{
     const title=medicineShortName(m);
     const generic=m.activeIngredient?'<small class="medicine-generic-name">'+safe(m.activeIngredient)+'</small>':"";
     return '<button type="button" class="medicine-card medicine-summary-card" data-medicine-detail="'+safe(m.id)+'">'+medicineImageMarkup(m)+'<span><b>'+safe(title)+'</b>'+generic+'</span></button>';
   }).join("")||'<div class="panel">'+t("Todav?a no tienes medicamentos confirmados.")+'</div>';
   medicines.forEach(hydrateMedicineImage);
-  $$('img.medicine-photo',list).forEach(image=>image.onerror=()=>{image.outerHTML='<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>'});
+  $$('img.medicine-photo',list).forEach(image=>image.onerror=()=>{image.outerHTML='<span class="medicine-photo-placeholder" aria-hidden="true">💊</span>'});
   $$('[data-medicine-detail]',list).forEach(button=>button.onclick=()=>showMedicineDetail(button.dataset.medicineDetail));
 }
 function showMedicineDetail(id){
@@ -756,6 +757,8 @@ async function loadMedicines(){
   if(demo||!state.user) return;
   const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"medicines"));
   state.medicines=snap.docs.map(d=>({id:d.id,...d.data()})).filter(medicine=>medicine.confirmed!==false);
+  state.lastMedicineLoad={path:`users/${state.user.uid}/medicines`,count:state.medicines.length,email:state.user.email||""};
+  console.info("Tu Medicación: medicamentos cargados",state.lastMedicineLoad);
 }
 async function loadIntakes(){
   if(demo||!state.user){state.intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");return}
@@ -1155,7 +1158,7 @@ function renderSideEffectsMedicines(){
     if(lead)lead.textContent=language==="en"?"Select one of your confirmed medicines.":"Selecciona uno de tus medicamentos confirmados.";
     if(notice)notice.innerHTML=`<b>${language==="en"?"Official health information":"Información sanitaria oficial"}</b><br>${language==="en"?"If you have severe or unexpected symptoms, contact a healthcare professional. In an emergency, call 112.":"Si tienes síntomas graves o inesperados, contacta con un profesional sanitario. En urgencias, llama al 112."}`;
   }
-  const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=activeMedicines();detail.hidden=true;$("#effectsStatus").textContent="";
+  const results=$("#effectsResults"),detail=$("#effectsDetail"),medicines=visibleMedicines();detail.hidden=true;$("#effectsStatus").textContent="";
   results.innerHTML=medicines.map((item,index)=>`<button class="effects-medicine-button" data-own-medicine="${index}"><span class="effects-pill-icon" aria-hidden="true"></span><span><b>${safe(medicineShortName(item))}</b></span><span class="effects-arrow-icon" aria-hidden="true"></span></button>`).join("")||`<div class="panel">${t("Todavía no tienes medicamentos confirmados.")}</div>`;
   $$('[data-own-medicine]',results).forEach(button=>button.onclick=()=>loadSideEffects(medicines[Number(button.dataset.ownMedicine)]));
 }
@@ -1667,7 +1670,7 @@ renderSchedule=function(){
   if(!hasStructured)return originalRenderSchedule();
   const today=new Date();today.setHours(12,0,0,0);const iso=today.toISOString().slice(0,10);
   const weekday=["sun","mon","tue","wed","thu","fri","sat"][today.getDay()];
-  const doses=state.medicines.filter(m=>isConfirmedMedicine(m)&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
+  const doses=visibleMedicines().filter(m=>(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
     const days=m.schedule?.days||["mon","tue","wed","thu","fri","sat","sun"];if(!days.includes(weekday))return[];
     const meals=m.schedule?.meals||[{key:"custom",label:m.instructions||"Toma",time:m.time||""}];
     return meals.map(meal=>({medicine:m,meal}));
@@ -1682,12 +1685,12 @@ function weekStartFor(date){const next=cloneDay(date),day=next.getDay()||7;next.
 function medicineCalendarColor(index){return ["#247a5a","#2f6fbb","#d8792f","#8b5cc7","#c5456b","#118a99","#ad8b22","#56606b"][index%8]}
 function medicineColorMap(){
   const map={};
-  state.medicines.filter(isConfirmedMedicine).forEach((medicine,index)=>{map[medicine.id]=medicineCalendarColor(index)});
+  visibleMedicines().forEach((medicine,index)=>{map[medicine.id]=medicineCalendarColor(index)});
   return map;
 }
 function dosesForDate(date){
   const iso=date.toISOString().slice(0,10),weekday=["sun","mon","tue","wed","thu","fri","sat"][date.getDay()];
-  return state.medicines.filter(m=>isConfirmedMedicine(m)&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
+  return visibleMedicines().filter(m=>(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
     if(m.schedule?.meals?.length){
       const days=m.schedule.days||["mon","tue","wed","thu","fri","sat","sun"];
       if(!days.includes(weekday))return[];
@@ -1743,7 +1746,7 @@ function complianceStatsForMedicine(medicine,startDate,endDate){
 }
 function complianceStats(medicineId=null,startDate=null,endDate=null){
   const end=endDate?cloneDay(endDate):yesterdayDate();
-  const meds=state.medicines.filter(m=>isConfirmedMedicine(m)&&(medicineId?m.id===medicineId:true));
+  const meds=visibleMedicines().filter(m=>medicineId?m.id===medicineId:true);
   const stats=meds.map(m=>complianceStatsForMedicine(m,startDate||medicineFirstDate(m),end));
   const expected=stats.reduce((sum,item)=>sum+item.expected,0),taken=stats.reduce((sum,item)=>sum+item.taken,0);
   return {medicineId,medicines:stats,expected,taken,percent:expected?Math.round((taken/expected)*100):0};
@@ -1758,7 +1761,7 @@ function renderComplianceSummary(){
     if(title)title.textContent=language==="en"?"Adherence":"Cumplimiento";
     if(lead)lead.textContent=language==="en"?"Percentage calculated from completed treatment from the start date up to yesterday.":"Porcentaje calculado con el tratamiento realizado desde el inicio hasta ayer.";
   }
-  const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...activeMedicines().map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
+  const total=complianceStats(),rows=[{id:"total",name:language==="en"?"Total":"Total",stats:total},...visibleMedicines().map(m=>({id:m.id,name:medicineShortName(m),stats:complianceStats(m.id)}))];
   $("#complianceResults").innerHTML=rows.map(row=>`<button type="button" class="compliance-card" data-compliance="${safe(row.id)}"><span><b>${safe(row.name)}</b><small>${row.stats.taken}/${row.stats.expected} ${language==="en"?"treatments completed":"tratamientos realizados"}</small></span><strong>${row.stats.percent}%</strong></button>`).join("")||`<p class="empty-day">${language==="en"?"No medicines yet.":"Todavía no hay medicamentos."}</p>`;
   $$("[data-compliance]").forEach(button=>button.onclick=()=>showComplianceDetail(button.dataset.compliance));
 }
@@ -1847,7 +1850,7 @@ function renderWeekCalendar(){
     return `<button type="button" class="week-day-card" data-week-day="${safe(iso)}"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${uiText("Sin tratamiento","No treatment")}</p>`}</button>`;
   }).join("");
   $$("[data-week-day]",$("#weekCalendarDays")).forEach(button=>button.onclick=()=>{const next=new Date(`${button.dataset.weekDay}T12:00:00`);if(Number.isNaN(next.getTime()))return;selectedScheduleDate=next;hideWeekCalendar()});
-  const used=state.medicines.filter(m=>isConfirmedMedicine(m)&&days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
+  const used=visibleMedicines().filter(m=>days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
   $("#weekCalendarLegend").innerHTML=used.length?`<h3>${t("Leyenda")}</h3>${used.map(m=>`<div class="legend-row"><i style="background:${safe(colors[m.id]||"#247a5a")}"></i><span>${safe(medicineShortName(m))}</span></div>`).join("")}`:"";
 }
 function showWeekCalendar(){
