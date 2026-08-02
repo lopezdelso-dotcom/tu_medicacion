@@ -238,6 +238,46 @@ exports.updateUserPreferences=onCall({region:"europe-west1"},async request=>{
   return {ok:true,...updates};
 });
 
+exports.repairCurrentUserMedicines=onCall({region:"europe-west1"},async request=>{
+  if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesión.");
+  const db=getFirestore();
+  const uid=request.auth.uid;
+  const email=String(request.auth.token.email||"").trim().toLowerCase();
+  if(!email)throw new HttpsError("invalid-argument","El usuario no tiene correo.");
+  const currentRef=db.doc(`users/${uid}`);
+  const current=await currentRef.get();
+  if(!current.exists||current.data().status!=="approved")throw new HttpsError("permission-denied","La cuenta no está aprobada.");
+  const currentMedicines=await currentRef.collection("medicines").get();
+  if(!currentMedicines.empty)return {ok:true,copied:0,currentCount:currentMedicines.size,reason:"current-not-empty"};
+
+  const emailVariants=[...new Set([email,request.auth.token.email,current.data().email].filter(Boolean).map(value=>String(value).trim()))];
+  const candidates=[];
+  for(const variant of emailVariants){
+    const snap=await db.collection("users").where("email","==",variant).get();
+    snap.docs.forEach(doc=>{if(doc.id!==uid&&!candidates.some(item=>item.id===doc.id))candidates.push(doc)});
+  }
+
+  let copied=0,sourceUid="";
+  for(const candidate of candidates){
+    const medicinesSnap=await candidate.ref.collection("medicines").get();
+    if(medicinesSnap.empty)continue;
+    sourceUid=candidate.id;
+    const batch=db.batch();
+    medicinesSnap.docs.forEach(doc=>{
+      const data=doc.data();
+      if(data.deletedAt)return;
+      const target=currentRef.collection("medicines").doc(doc.id);
+      batch.set(target,{...data,migratedFrom:sourceUid,migratedAt:new Date()},{merge:true});
+      copied++;
+    });
+    if(copied){
+      await batch.commit();
+      break;
+    }
+  }
+  return {ok:true,copied,currentCount:currentMedicines.size,sourceUid};
+});
+
 exports.deleteUserAccount=onCall({region:"europe-west1"},async request=>{
   if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesiÃ³n.");
   const db=getFirestore();

@@ -757,6 +757,18 @@ async function loadMedicines(){
   if(demo||!state.user) return;
   const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"medicines"));
   state.medicines=snap.docs.map(d=>({id:d.id,...d.data()})).filter(medicine=>medicine.confirmed!==false);
+  if(!state.medicines.length&&fb.functions){
+    try{
+      const repair=await fb.httpsCallable(fb.functions,"repairCurrentUserMedicines")({});
+      console.info("Tu Medicación: reparación de medicamentos",repair.data||repair);
+      if(repair.data?.copied){
+        const repairedSnap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"medicines"));
+        state.medicines=repairedSnap.docs.map(d=>({id:d.id,...d.data()})).filter(medicine=>medicine.confirmed!==false);
+      }
+    }catch(error){
+      console.warn("Tu Medicación: no se pudo reparar la carga de medicamentos",error);
+    }
+  }
   state.lastMedicineLoad={path:`users/${state.user.uid}/medicines`,count:state.medicines.length,email:state.user.email||""};
   console.info("Tu Medicación: medicamentos cargados",state.lastMedicineLoad);
 }
