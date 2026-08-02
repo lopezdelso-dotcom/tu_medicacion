@@ -1867,8 +1867,11 @@ function formatSelectedDate(){
   const locale=language==="en"?"en-GB":"es-ES",today=new Date();today.setHours(12,0,0,0);
   const diff=Math.round((selectedScheduleDate-today)/86400000);
   const label=diff===0?t("Hoy"):diff===1?t("MaÃ±ana"):diff===-1?t("Ayer"):new Intl.DateTimeFormat(locale,{weekday:"long"}).format(selectedScheduleDate);
-  const date=new Intl.DateTimeFormat(locale,{day:"numeric",month:"long",year:"numeric"}).format(selectedScheduleDate);
-  if($("#todayDate"))$("#todayDate").textContent=date.toUpperCase();
+  const dayMonth=new Intl.DateTimeFormat(locale,{day:"numeric",month:"long"}).format(selectedScheduleDate);
+  const year=new Intl.DateTimeFormat(locale,{year:"numeric"}).format(selectedScheduleDate);
+  if($("#todayDate")){
+    $("#todayDate").innerHTML=`<span>${dayMonth.toUpperCase()}</span><small>${year}</small>`;
+  }
   if($("#todayTitle"))$("#todayTitle").textContent="";
 }
 renderSchedule=function(){
