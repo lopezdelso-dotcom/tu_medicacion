@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="mobile.css?v=20260727-81">
   <link rel="stylesheet" href="admin.css?v=20260727-81">
   <link rel="stylesheet" href="supervisor.css?v=20260727-81">
-  <link rel="stylesheet" href="user-controls.css?v=20260802-9">
+  <link rel="stylesheet" href="user-controls.css?v=20260802-10">
   <link rel="stylesheet" href="selection-flow.css?v=20260801-1">
   <link rel="stylesheet" href="ocr.css?v=20260727-81">
   <link rel="stylesheet" href="medication.css?v=20260727-81">
@@ -299,6 +299,12 @@
           </div>
         </main>
       </div>
+      <nav id="bottomUserNav" class="bottom-user-nav" aria-label="Navegación principal">
+        <button type="button" data-bottom-view="medicines" aria-label="Medicación"><span aria-hidden="true">💊</span><small>Medicación</small></button>
+        <button type="button" data-bottom-view="today" aria-label="Tratamiento"><span aria-hidden="true">✓</span><small>Tratamiento</small></button>
+        <button type="button" data-bottom-view="achievements" data-bottom-group="progress" aria-label="Logros y cumplimiento"><span aria-hidden="true">🏅</span><small>Logros</small></button>
+        <button type="button" data-bottom-view="sideEffects" aria-label="Efectos secundarios"><span aria-hidden="true">ⓘ</span><small>Efectos</small></button>
+      </nav>
     </section>
     <section id="adminView" class="admin-view" hidden>
       <header class="admin-header"><div><span class="admin-badge">ADMINISTRACI?N</span><h1>Panel de control</h1><p id="adminIdentity"></p></div><button id="adminLogoutButton" class="secondary">Cerrar sesi?n</button></header>
@@ -366,6 +372,6 @@
     </div>
   </div>
   <script src="firebase-config.js?v=20260731-2"></script>
-  <script type="module" src="app.js?v=20260802-9"></script>
+  <script type="module" src="app.js?v=20260802-10"></script>
 </body>
 </html>

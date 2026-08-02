@@ -605,3 +605,15 @@ body.user-mode .header-preferences-button span{font-size:2rem!important;line-hei
 body.user-mode .install-app-button{position:absolute!important;right:64px!important;top:50%!important;transform:translateY(-50%)!important;min-height:38px!important;padding:.35rem .55rem!important;border-color:#0a65d8!important;background:#0a65d8!important;box-shadow:none!important;font-size:.75rem!important}
 body.user-mode .user-menu #userAccessibilityButton{display:none!important}
 @media(max-width:760px){body.user-mode .user-header{grid-template-columns:52px minmax(0,1fr) 52px!important;min-height:68px!important;padding:.45rem .65rem!important}body.user-mode .user-header-icon{width:50px!important;height:50px!important;border-radius:15px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important}body.user-mode .user-menu-open span:first-child::before,body.user-mode .header-preferences-button span{font-size:1.85rem!important}}
+
+/* Barra inferior fija de navegación principal. */
+body.user-mode .user-content{padding-bottom:6.2rem!important}
+.bottom-user-nav{position:fixed;left:50%;bottom:.75rem;transform:translateX(-50%);z-index:85;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;width:min(520px,calc(100vw - 1rem));padding:.5rem;border:1px solid rgba(10,101,216,.18);border-radius:26px;background:rgba(247,251,255,.94);box-shadow:0 14px 34px rgba(7,52,111,.18);backdrop-filter:blur(12px)}
+.bottom-user-nav button{appearance:none;display:grid;place-items:center;gap:.18rem;min-width:0;min-height:58px;border:0;border-radius:20px;background:transparent;color:#0a65d8;padding:.35rem .2rem;font:inherit;font-weight:700;line-height:1;box-shadow:none}
+.bottom-user-nav button span{display:grid;place-items:center;width:30px;height:30px;border-radius:12px;background:#d9eafb;color:#0a65d8;font-size:1.18rem;line-height:1}
+.bottom-user-nav button small{max-width:100%;font-size:.66rem;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#07346f;font-weight:700}
+.bottom-user-nav button.active{background:#0a65d8;color:#fff;box-shadow:0 6px 18px rgba(10,101,216,.28)}
+.bottom-user-nav button.active span{background:#fff;color:#0a65d8}
+.bottom-user-nav button.active small{color:#fff}
+body:not(.user-mode) .bottom-user-nav{display:none!important}
+@media(max-width:420px){.bottom-user-nav{bottom:.45rem;width:calc(100vw - .7rem);padding:.42rem;border-radius:22px}.bottom-user-nav button{min-height:54px;border-radius:17px}.bottom-user-nav button span{width:28px;height:28px;font-size:1.08rem}.bottom-user-nav button small{font-size:.58rem}}

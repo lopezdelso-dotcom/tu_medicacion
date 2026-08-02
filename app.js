@@ -545,6 +545,7 @@ function openView(id,options={}){
   if(!userViewIds.includes(id)&&id!=="admin")id="today";
   $$(".view").forEach(v=>{v.hidden=v.id!==id;v.classList.toggle("active-view",v.id===id)});
   $$(".user-menu [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  updateBottomNav(id);
   if(id==="admin") renderRequests();
   if(id==="sideEffects") renderSideEffectsMedicines();
   if(id==="reminders") renderReminders();
@@ -561,6 +562,15 @@ function openView(id,options={}){
       suppressHashNavigation=false;
     }
   }
+}
+function updateBottomNav(id){
+  const activeGroup=(id==="achievements"||id==="compliance")?"progress":id;
+  $$("[data-bottom-view]").forEach(button=>{
+    const group=button.dataset.bottomGroup||button.dataset.bottomView;
+    const active=group===activeGroup;
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-current",active?"page":"false");
+  });
 }
 function renderAll(){ renderSchedule(); renderMedicines(); applyLanguage(); }
 function renderSchedule(){
@@ -803,6 +813,7 @@ $$('[data-open]').forEach(b=>b.onclick=()=>{document.body.classList.add("modal-o
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest("dialog").close());
 $$('dialog').forEach(dialog=>dialog.addEventListener("close",()=>{if(!$("dialog[open]"))document.body.classList.remove("modal-open")}));
 $$('[data-view]').forEach(b=>b.onclick=()=>openView(b.dataset.view));
+$$('[data-bottom-view]').forEach(b=>b.onclick=()=>openView(b.dataset.bottomView));
 $$('[data-view-button]').forEach(b=>b.onclick=()=>openView(b.dataset.viewButton));
 window.addEventListener("hashchange",()=>{
   if(suppressHashNavigation||!state.user||!document.body.classList.contains("user-mode"))return;
@@ -1443,6 +1454,8 @@ function updateMedicationCopy(){
   const uploadLabel=$("#uploadChoice");if(uploadLabel){$("b",uploadLabel).textContent=t("Hacer foto o elegir imagen");$("small",uploadLabel).textContent=t("JPG o PNG Â· mÃ¡ximo 10 MB")}
   const menuButton=$("#openUserMenu");if(menuButton)menuButton.innerHTML=`<span aria-hidden="true">\u2630</span>`;
   const calendarButton=$("#calendarButton");if(calendarButton)calendarButton.textContent=`\uD83D\uDCC5 ${t("Ver semana completa")}`;
+  const bottomLabels={medicines:language==="en"?"Medication":"Medicación",today:language==="en"?"Treatment":"Tratamiento",achievements:language==="en"?"Progress":"Logros",sideEffects:language==="en"?"Effects":"Efectos"};
+  $$("[data-bottom-view]").forEach(button=>{const label=$("small",button);if(label)label.textContent=bottomLabels[button.dataset.bottomView]||label.textContent});
 }
 function cleanLandingCopy(){
   const brand=$(".brand b");if(brand)brand.textContent=language==="en"?"My Medication":"Tu medicación";
