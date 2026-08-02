@@ -674,3 +674,16 @@ body.user-mode .medicine-summary-card,
 body.user-mode .medicine-detail-card{background:#eef7fb!important}
 body.user-mode .medicine-summary-card,
 body.user-mode .medicine-detail-card{border:0!important;box-shadow:none!important}
+
+/* Fondo interior uniforme y fecha diaria menos dominante. */
+body.user-mode .user-shell,
+body.user-mode .user-content,
+body.user-mode .user-content .view,
+body.user-mode #today,
+body.user-mode .today-toolbar,
+body.user-mode .today-heading,
+body.user-mode .today-schedule,
+body.user-mode .card-list,
+body.user-mode .day-group,
+body.user-mode .compact-dose-list{background:#eef7fb!important}
+body.user-mode #todayDate{font-size:clamp(1.25rem,4.6vw,1.85rem)!important;font-weight:500!important;letter-spacing:0!important}
