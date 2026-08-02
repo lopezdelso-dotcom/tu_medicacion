@@ -581,3 +581,12 @@ body:not(.user-mode):not(.admin-mode) #contenido{display:flex!important;justify-
   .landing-access .hero-copy{width:100%!important;padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important}
   .access-panel{width:calc(100% - 2rem)!important;margin-left:auto!important;margin-right:auto!important}
 }
+
+/* Acabado visual portada: fondo azul suave y opciones menos pesadas. */
+body:not(.user-mode):not(.admin-mode),
+body:not(.user-mode):not(.admin-mode) #contenido,
+.landing-access{background-color:#eef7fb!important}
+.access-panel{background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(238,247,251,.9))!important}
+.access-option{font-weight:500!important}
+.access-option-text{font-weight:500!important;font-size:clamp(1.08rem,2.4vw,1.38rem)!important;letter-spacing:0!important}
+@media(max-width:760px){.access-option-text{font-size:1.05rem!important;font-weight:500!important}}
