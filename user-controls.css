@@ -128,8 +128,6 @@ body .user-menu-open::after,body .plain-button.user-menu-open::after{content:""!
 .register-dialog .primary{background:#0a65d8!important;box-shadow:none!important;color:#fff!important;border-radius:999px!important;min-height:60px!important}
 .register-dialog .confirm{font-size:.88rem!important;line-height:1.25!important}
 #landing[hidden],#appView[hidden],#adminView[hidden]{display:none!important}
-body.booting #contenido,body.booting .topbar,body.booting #preferencesPanel{visibility:hidden!important}
-body.booting{background:#eef7fb!important}
 .register-dialog .add-photo-preview{border-color:#0a65d8!important;background:linear-gradient(145deg,#eaf5ff,#f7fbff)!important;color:#0a65d8!important}
 .register-dialog .add-photo-text{color:#07346f!important}
 .register-dialog .mini-photo-button{border-color:#0a65d8!important;color:#0a65d8!important;background:#fff!important}
