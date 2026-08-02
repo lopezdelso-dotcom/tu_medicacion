@@ -1869,7 +1869,7 @@ function formatSelectedDate(){
   const label=diff===0?t("Hoy"):diff===1?t("MaÃ±ana"):diff===-1?t("Ayer"):new Intl.DateTimeFormat(locale,{weekday:"long"}).format(selectedScheduleDate);
   const date=new Intl.DateTimeFormat(locale,{day:"numeric",month:"long",year:"numeric"}).format(selectedScheduleDate);
   if($("#todayDate"))$("#todayDate").textContent=date.toUpperCase();
-  if($("#todayTitle"))$("#todayTitle").textContent=language==="en"?"Treatment":"Tratamiento";
+  if($("#todayTitle"))$("#todayTitle").textContent="";
 }
 renderSchedule=function(){
   normaliseSelectedScheduleDate();formatSelectedDate();

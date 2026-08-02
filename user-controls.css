@@ -628,3 +628,19 @@ body.user-mode .header-preferences-button{width:38px!important;height:38px!impor
 body.user-mode .header-preferences-button span{font-size:1.45rem!important}
 body.user-mode .install-app-button{right:52px!important;min-height:32px!important;font-size:.68rem!important}
 @media(max-width:760px){body.user-mode .user-header{min-height:52px!important;height:52px!important;padding:.3rem .6rem!important;grid-template-columns:40px minmax(0,1fr) 40px!important}body.user-mode .user-menu-open,body.user-mode .header-preferences-button{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important}body.user-mode .user-menu-open span:first-child{width:36px!important;height:36px!important}body.user-mode .user-menu-open span:first-child::before{font-size:1.25rem!important}body.user-mode .header-preferences-button span{font-size:1.35rem!important}body.user-mode .user-header-icon{width:36px!important;height:36px!important;border-radius:11px!important}}
+
+/* Vista diaria limpia: fecha protagonista, flechas sin recuadro y tarjetas suaves. */
+body.user-mode #today .today-toolbar{grid-template-columns:44px minmax(0,1fr) 44px!important;gap:.25rem!important;align-items:center!important;margin:.1rem 0 .75rem!important}
+body.user-mode #todayTitle{display:none!important}
+body.user-mode #todayDate{display:block!important;margin:0!important;color:#07346f!important;font-size:clamp(1.55rem,6vw,2.35rem)!important;font-weight:900!important;line-height:1.05!important;letter-spacing:.01em!important;text-transform:none!important}
+body.user-mode .day-nav-button{display:grid!important;place-items:center!important;width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#07346f!important;font-size:0!important;line-height:1!important}
+body.user-mode .day-nav-button::before{content:""!important;display:block!important;width:14px!important;height:14px!important;border-top:4px solid currentColor!important;border-right:4px solid currentColor!important;border-radius:2px!important}
+body.user-mode #previousDayButton::before{transform:rotate(225deg)!important}
+body.user-mode #nextDayButton::before{transform:rotate(45deg)!important}
+body.user-mode .calendar-button{border:0!important;background:#d9eafb!important;color:#07346f!important;box-shadow:none!important;border-radius:20px!important;font-weight:800!important}
+body.user-mode .today-schedule .day-dose,body.user-mode .compact-dose{border:0!important;border-left:0!important;box-shadow:none!important;background:#f7fbff!important}
+body.user-mode .today-schedule .day-dose::before,body.user-mode .compact-dose::before{display:none!important;content:none!important}
+body.user-mode .dose-meal-group{border:0!important;box-shadow:none!important;background:#eef7fb!important}
+body.user-mode .today-schedule .dose-top>b{background:#d9eafb!important;color:#07346f!important}
+body.user-mode .compact-check-button:not(.taken),body.user-mode .status-button:not(.taken){border:0!important;background:#d9eafb!important;color:#07346f!important;box-shadow:none!important}
+body.user-mode .compact-check-button.taken,body.user-mode .status-button.taken{border:0!important;background:#0a65d8!important;color:#fff!important;box-shadow:none!important}
