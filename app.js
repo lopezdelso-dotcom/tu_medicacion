@@ -572,10 +572,11 @@ function updateBottomNav(id){
     button.setAttribute("aria-current",active?"page":"false");
   });
 }
+function isConfirmedMedicine(medicine){return medicine?.confirmed!==false}
 function renderAll(){ renderSchedule(); renderMedicines(); applyLanguage(); }
 function renderSchedule(){
   const days=[new Date()];days[0].setHours(12,0,0,0);
-  const confirmed=state.medicines.filter(m=>m.confirmed).sort((a,b)=>a.time.localeCompare(b.time));
+  const confirmed=state.medicines.filter(isConfirmedMedicine).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
   $("#schedule").innerHTML=days.map((date,index)=>{
     const iso=date.toISOString().slice(0,10);
     const medicines=confirmed.filter(m=>(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso));
@@ -664,7 +665,7 @@ function medicineImageMarkup(medicine){
   return '<span class="medicine-photo-placeholder" aria-hidden="true">?Å¸â€™Å </span>';
 }
 function isMedicineArchived(medicine){return Boolean(medicine?.deletedAt)}
-function activeMedicines(){const today=todayIso();return state.medicines.filter(m=>m.confirmed&&!isMedicineArchived(m)&&(!m.endDate||m.endDate>=today))}
+function activeMedicines(){const today=todayIso();return state.medicines.filter(m=>isConfirmedMedicine(m)&&!isMedicineArchived(m)&&(!m.endDate||m.endDate>=today))}
 function renderMedicines(){
   const list=$("#medicineList"),detail=$("#medicineDetail");
   const heading=$(".medicines-heading");
@@ -1666,7 +1667,7 @@ renderSchedule=function(){
   if(!hasStructured)return originalRenderSchedule();
   const today=new Date();today.setHours(12,0,0,0);const iso=today.toISOString().slice(0,10);
   const weekday=["sun","mon","tue","wed","thu","fri","sat"][today.getDay()];
-  const doses=state.medicines.filter(m=>m.confirmed&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
+  const doses=state.medicines.filter(m=>isConfirmedMedicine(m)&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
     const days=m.schedule?.days||["mon","tue","wed","thu","fri","sat","sun"];if(!days.includes(weekday))return[];
     const meals=m.schedule?.meals||[{key:"custom",label:m.instructions||"Toma",time:m.time||""}];
     return meals.map(meal=>({medicine:m,meal}));
@@ -1681,12 +1682,12 @@ function weekStartFor(date){const next=cloneDay(date),day=next.getDay()||7;next.
 function medicineCalendarColor(index){return ["#247a5a","#2f6fbb","#d8792f","#8b5cc7","#c5456b","#118a99","#ad8b22","#56606b"][index%8]}
 function medicineColorMap(){
   const map={};
-  state.medicines.filter(m=>m.confirmed).forEach((medicine,index)=>{map[medicine.id]=medicineCalendarColor(index)});
+  state.medicines.filter(isConfirmedMedicine).forEach((medicine,index)=>{map[medicine.id]=medicineCalendarColor(index)});
   return map;
 }
 function dosesForDate(date){
   const iso=date.toISOString().slice(0,10),weekday=["sun","mon","tue","wed","thu","fri","sat"][date.getDay()];
-  return state.medicines.filter(m=>m.confirmed&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
+  return state.medicines.filter(m=>isConfirmedMedicine(m)&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
     if(m.schedule?.meals?.length){
       const days=m.schedule.days||["mon","tue","wed","thu","fri","sat","sun"];
       if(!days.includes(weekday))return[];
@@ -1742,7 +1743,7 @@ function complianceStatsForMedicine(medicine,startDate,endDate){
 }
 function complianceStats(medicineId=null,startDate=null,endDate=null){
   const end=endDate?cloneDay(endDate):yesterdayDate();
-  const meds=state.medicines.filter(m=>m.confirmed&&(medicineId?m.id===medicineId:true));
+  const meds=state.medicines.filter(m=>isConfirmedMedicine(m)&&(medicineId?m.id===medicineId:true));
   const stats=meds.map(m=>complianceStatsForMedicine(m,startDate||medicineFirstDate(m),end));
   const expected=stats.reduce((sum,item)=>sum+item.expected,0),taken=stats.reduce((sum,item)=>sum+item.taken,0);
   return {medicineId,medicines:stats,expected,taken,percent:expected?Math.round((taken/expected)*100):0};
@@ -1846,7 +1847,7 @@ function renderWeekCalendar(){
     return `<button type="button" class="week-day-card" data-week-day="${safe(iso)}"><h3>${safe(dayLabel)}</h3>${doses.length?doses.map(item=>`<div class="week-dose-dot"><span>${safe(item.meal.time||"")}</span><i style="background:${safe(colors[item.medicine.id]||"#247a5a")}"></i></div>`).join(""):`<p>${uiText("Sin tratamiento","No treatment")}</p>`}</button>`;
   }).join("");
   $$("[data-week-day]",$("#weekCalendarDays")).forEach(button=>button.onclick=()=>{const next=new Date(`${button.dataset.weekDay}T12:00:00`);if(Number.isNaN(next.getTime()))return;selectedScheduleDate=next;hideWeekCalendar()});
-  const used=state.medicines.filter(m=>m.confirmed&&days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
+  const used=state.medicines.filter(m=>isConfirmedMedicine(m)&&days.some(day=>dosesForDate(day).some(item=>item.medicine.id===m.id)));
   $("#weekCalendarLegend").innerHTML=used.length?`<h3>${t("Leyenda")}</h3>${used.map(m=>`<div class="legend-row"><i style="background:${safe(colors[m.id]||"#247a5a")}"></i><span>${safe(medicineShortName(m))}</span></div>`).join("")}`:"";
 }
 function showWeekCalendar(){
