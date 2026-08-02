@@ -539,3 +539,24 @@ body:not(.user-mode):not(.admin-mode) #contenido{display:flex!important;justify-
 @media(min-width:761px) and (max-width:1180px) and (orientation:landscape){.landing-access{width:min(78vw,941px)!important}.landing-access .hero-copy{justify-content:flex-end!important;padding-bottom:clamp(2rem,5svh,4rem)!important}.landing-message{margin-bottom:auto!important}}
 @media(min-width:761px) and (max-width:1180px) and (orientation:portrait){.landing-access{width:min(100vw,760px)!important}.landing-message{max-width:52%!important}.access-panel{width:min(680px,calc(100% - 2rem))!important}}
 @media(min-width:1181px){.landing-access{width:min(72vw,941px)!important}}
+
+/* Corrección tablet: no duplicar textos sobre la imagen y mantener el panel abajo. */
+@media(min-width:761px){
+  .landing-message{display:none!important}
+  .landing-access .hero-copy{justify-content:flex-end!important;padding-top:0!important;padding-bottom:clamp(2rem,5svh,4rem)!important}
+  .access-panel{position:relative!important;z-index:3!important;margin-bottom:0!important;transform:none!important}
+}
+@media(min-width:761px) and (max-width:1180px){
+  .landing-message{display:none!important}
+  .landing-access{width:min(86vw,941px)!important;background-size:100% auto!important}
+  .landing-access .hero-copy{padding-left:clamp(1rem,3vw,2rem)!important;padding-right:clamp(1rem,3vw,2rem)!important}
+  .access-panel{width:min(680px,calc(100% - 2rem))!important}
+}
+@media(min-width:761px) and (max-width:1180px) and (orientation:landscape){
+  .landing-access{width:min(86vw,941px)!important}
+  .landing-access .hero-copy{padding-bottom:clamp(1rem,4svh,2.2rem)!important}
+}
+@media(min-width:761px) and (max-width:1180px) and (orientation:portrait){
+  .landing-access{width:min(92vw,760px)!important}
+  .landing-access .hero-copy{padding-bottom:clamp(2rem,5svh,4rem)!important}
+}
