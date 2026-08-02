@@ -1682,17 +1682,12 @@ function dosesForDate(date){
   const iso=date.toISOString().slice(0,10),weekday=["sun","mon","tue","wed","thu","fri","sat"][date.getDay()];
   return state.medicines.filter(m=>m.confirmed&&(!m.startDate||m.startDate<=iso)&&(!m.endDate||m.endDate>=iso)).flatMap(m=>{
     if(m.schedule?.meals?.length){
-      const days=normalisedScheduleDays(m.schedule.days);
-      if(days.length&&!days.includes(weekday))return[];
+      const days=m.schedule.days||["mon","tue","wed","thu","fri","sat","sun"];
+      if(!days.includes(weekday))return[];
       return m.schedule.meals.map(meal=>({medicine:m,meal}));
     }
     return [{medicine:m,meal:{key:"custom",label:m.instructions||t("Toma"),time:m.time||""}}];
   }).sort((a,b)=>(a.meal.time||"").localeCompare(b.meal.time||""));
-}
-function normalisedScheduleDays(days){
-  if(!Array.isArray(days)||!days.length)return ["mon","tue","wed","thu","fri","sat","sun"];
-  const map={0:"sun",1:"mon",2:"tue",3:"wed",4:"thu",5:"fri",6:"sat",7:"sun",domingo:"sun",dom:"sun",sunday:"sun",sun:"sun",lunes:"mon",lun:"mon",monday:"mon",mon:"mon",martes:"tue",mar:"tue",tuesday:"tue",tue:"tue",miercoles:"wed","miércoles":"wed",mie:"wed","mié":"wed",wednesday:"wed",wed:"wed",jueves:"thu",jue:"thu",thursday:"thu",thu:"thu",viernes:"fri",vie:"fri",friday:"fri",fri:"fri",sabado:"sat","sábado":"sat",sab:"sat","sáb":"sat",saturday:"sat",sat:"sat"};
-  return days.map(day=>map[String(day).trim().toLowerCase()]||String(day).trim().toLowerCase()).filter(Boolean);
 }
 let complianceMonth=new Date();
 function yesterdayDate(){const date=new Date();date.setHours(12,0,0,0);date.setDate(date.getDate()-1);return date}
@@ -1706,8 +1701,8 @@ function scheduledItemsForMedicineDate(medicine,date){
   const first=medicine.startDate||medicine.createdAt?.slice?.(0,10)||"";
   if((first&&first>iso)||(medicine.endDate&&medicine.endDate<iso))return[];
   if(medicine.schedule?.meals?.length){
-    const days=normalisedScheduleDays(medicine.schedule.days);
-    if(days.length&&!days.includes(weekday))return[];
+    const days=medicine.schedule.days||["mon","tue","wed","thu","fri","sat","sun"];
+    if(!days.includes(weekday))return[];
     return medicine.schedule.meals.map(meal=>({medicine,meal}));
   }
   return [{medicine,meal:{key:"custom",label:medicine.instructions||t("Toma"),time:medicine.time||""}}];
