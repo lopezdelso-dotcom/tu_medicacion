@@ -662,3 +662,15 @@ body.user-mode .day-nav-button{position:relative!important;overflow:hidden!impor
 body.user-mode .day-nav-button::before{position:absolute!important;left:50%!important;top:50%!important;margin:0!important}
 body.user-mode #previousDayButton::before{transform:translate(-50%,-50%) rotate(225deg)!important}
 body.user-mode #nextDayButton::before{transform:translate(-50%,-50%) rotate(45deg)!important}
+
+/* Afinado de cabecera y fondo de medicación. */
+body.user-mode .user-menu-open span:first-child::before{font-size:1.6rem!important;transform:translateY(2px)!important}
+@media(max-width:760px){body.user-mode .user-menu-open span:first-child::before{font-size:1.55rem!important;transform:translateY(2px)!important}}
+body.user-mode #medicines,
+body.user-mode #medicineList,
+body.user-mode #medicineDetail{background:#eef7fb!important}
+body.user-mode #medicines .card-list,
+body.user-mode .medicine-summary-card,
+body.user-mode .medicine-detail-card{background:#eef7fb!important}
+body.user-mode .medicine-summary-card,
+body.user-mode .medicine-detail-card{border:0!important;box-shadow:none!important}
