@@ -89,6 +89,21 @@ async function decide(id,status,requests){
   }catch(error){notify("No se pudo guardar la decisi?n.")}
 }
 $("#standaloneLogout").onclick=async()=>{if(fb)await fb.signOut(fb.auth);showLogin()};
+$("#cleanupSupervisorData").onclick=async()=>{
+  if(!fb)return;
+  if(!window.confirm("¿Eliminar de Firestore los datos relacionados con supervisores? Esta acción no afecta a usuarios, medicamentos ni tratamientos."))return;
+  const button=$("#cleanupSupervisorData");
+  button.disabled=true;
+  try{
+    const result=await fb.httpsCallable(fb.functions,"cleanupSupervisorData")({});
+    const data=result.data||{};
+    notify(`Supervisores limpiados. Usuarios actualizados: ${data.usersUpdated||0}.`);
+  }catch(error){
+    notify("No se pudo limpiar la información de supervisores.");
+  }finally{
+    button.disabled=false;
+  }
+};
 $("#pendingMenu").onclick=()=>{setAdminSection("pending");loadRequests()};
 $("#usersMenu").onclick=()=>{setAdminSection("users");loadUsers()};
 function setAdminSection(section){const users=section==="users";$("#pendingMenu").classList.toggle("active",!users);$("#usersMenu").classList.toggle("active",users);$("#adminSectionTitle").textContent=users?"Usuarios":"Altas pendientes";$("#adminSectionDescription").textContent=users?"Bloquea, reactiva o elimina cuentas de usuario.":"Comprueba los datos antes de aprobar una cuenta.";$("#adminCountLabel").textContent=users?"Usuarios":"Pendientes"}

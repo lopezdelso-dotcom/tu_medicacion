@@ -3,7 +3,7 @@ const {onSchedule}=require("firebase-functions/v2/scheduler");
 const {defineSecret}=require("firebase-functions/params");
 const {initializeApp}=require("firebase-admin/app");
 const {getAuth}=require("firebase-admin/auth");
-const {getFirestore}=require("firebase-admin/firestore");
+const {getFirestore,FieldValue}=require("firebase-admin/firestore");
 const {getStorage}=require("firebase-admin/storage");
 const {getMessaging}=require("firebase-admin/messaging");
 const {DocumentProcessorServiceClient}=require("@google-cloud/documentai");
@@ -126,6 +126,21 @@ exports.checkPasswordResetEligibility=onCall({region:"europe-west1"},async reque
   const profile=snapshot.data();
   if(profile.role==="admin"||profile.status==="approved")return {eligible:true,status:profile.status||"approved"};
   return {eligible:false,status:profile.status||"pending"};
+});
+
+exports.getCurrentUserTreatmentData=onCall({region:"europe-west1"},async request=>{
+  if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesión.");
+  const db=getFirestore(),uid=request.auth.uid;
+  const profileSnap=await db.doc(`users/${uid}`).get();
+  if(!profileSnap.exists||profileSnap.data().status!=="approved")throw new HttpsError("permission-denied","La cuenta no está aprobada.");
+  const medicinesSnap=await profileSnap.ref.collection("medicines").get();
+  const intakesSnap=await profileSnap.ref.collection("intakes").get();
+  const medicines=medicinesSnap.docs.map(doc=>({id:doc.id,...doc.data()}))
+    .filter(medicine=>medicine.confirmed!==false&&!medicine.hiddenFromMedication)
+    .map(medicine=>JSON.parse(JSON.stringify(medicine)));
+  const intakes={};
+  intakesSnap.docs.forEach(doc=>{intakes[doc.id]=JSON.parse(JSON.stringify({id:doc.id,...doc.data()}))});
+  return {ok:true,medicines,intakes};
 });
 
 exports.searchMhraMedicines=onCall({region:"europe-west1",timeoutSeconds:30},async request=>{
@@ -276,6 +291,51 @@ exports.repairCurrentUserMedicines=onCall({region:"europe-west1"},async request=
     }
   }
   return {ok:true,copied,currentCount:currentMedicines.size,sourceUid};
+});
+
+exports.cleanupSupervisorData=onCall({region:"europe-west1",timeoutSeconds:120},async request=>{
+  if(!request.auth)throw new HttpsError("unauthenticated","Debes iniciar sesión.");
+  const db=getFirestore();
+  const caller=await db.doc(`users/${request.auth.uid}`).get();
+  if(!caller.exists||caller.data().role!=="admin"||caller.data().status!=="approved")throw new HttpsError("permission-denied","Acceso exclusivo para administradores.");
+
+  const supervisorFields=[
+    "supervisor","supervisors","supervisorName","supervisorEmail","supervisorPhone","supervisorStatus",
+    "supervisorEnabled","supervisorAcceptedAt","supervisorInvitedAt","supervisorInvitationId",
+    "supervisorInviteId","supervisorInviteToken","supervisorInviteEmail","supervisorInviteName",
+    "invitedSupervisor","invitedSupervisorEmail","familySupervisor","familySupervisorEmail",
+    "relativeName","relativeEmail","familyName","familyEmail"
+  ];
+  const subcollections=["supervisors","supervisorInvites","supervisorInvitations","familyAccess","familyInvites"];
+  let usersUpdated=0,subcollectionsDeleted=0,topCollectionsDeleted=0;
+
+  const users=await db.collection("users").get();
+  for(const userDoc of users.docs){
+    const updates={};
+    supervisorFields.forEach(field=>{if(Object.prototype.hasOwnProperty.call(userDoc.data(),field))updates[field]=FieldValue.delete()});
+    if(Object.keys(updates).length){
+      await userDoc.ref.update(updates);
+      usersUpdated++;
+    }
+    for(const name of subcollections){
+      const docs=await userDoc.ref.collection(name).listDocuments();
+      for(const docRef of docs){
+        await db.recursiveDelete(docRef);
+        subcollectionsDeleted++;
+      }
+    }
+  }
+
+  for(const name of ["supervisorInvites","supervisorInvitations","supervisorAccess","familyInvites"]){
+    const docs=await db.collection(name).listDocuments();
+    for(const docRef of docs){
+      await db.recursiveDelete(docRef);
+      topCollectionsDeleted++;
+    }
+  }
+
+  await db.collection("adminAudit").add({action:"cleanup_supervisor_data",adminUid:request.auth.uid,usersUpdated,subcollectionsDeleted,topCollectionsDeleted,createdAt:new Date()});
+  return {ok:true,usersUpdated,subcollectionsDeleted,topCollectionsDeleted};
 });
 
 exports.deleteUserAccount=onCall({region:"europe-west1"},async request=>{

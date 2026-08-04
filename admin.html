@@ -28,7 +28,7 @@
     <section id="standalonePanel" class="admin-view" hidden>
       <header class="admin-header"><div><span class="admin-badge">ADMINISTRACIÓN</span><h1>Panel de control</h1><p id="standaloneIdentity"></p></div><button id="standaloneLogout" class="secondary">Cerrar sesión</button></header>
       <div class="admin-layout">
-        <aside class="admin-sidebar"><b>Gestión interna</b><nav class="admin-menu" aria-label="Gestión de usuarios"><button id="pendingMenu" class="active">Solicitudes de alta</button><button id="usersMenu">Usuarios</button></nav><p>Esta área está reservada exclusivamente para administradores.</p></aside>
+        <aside class="admin-sidebar"><b>Gestión interna</b><nav class="admin-menu" aria-label="Gestión de usuarios"><button id="pendingMenu" class="active">Solicitudes de alta</button><button id="usersMenu">Usuarios</button></nav><button id="cleanupSupervisorData" class="danger" type="button">Limpiar supervisores</button><p>Esta área está reservada exclusivamente para administradores.</p></aside>
         <section class="admin-content"><div class="admin-title"><div><span class="eyebrow">GESTIÓN DE USUARIOS</span><h2 id="adminSectionTitle">Altas pendientes</h2><p id="adminSectionDescription">Comprueba los datos antes de aprobar una cuenta.</p></div><div class="admin-count"><strong id="standaloneCount">0</strong><span id="adminCountLabel">Pendientes</span></div></div><div id="standaloneRequests" class="card-list"></div></section>
       </div>
     </section>

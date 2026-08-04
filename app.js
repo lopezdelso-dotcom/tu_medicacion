@@ -664,7 +664,7 @@ function medicineImageMarkup(medicine){
   if(imageUrl)return '<img class="medicine-photo" src="'+safe(imageUrl)+'" alt="'+safe(medicineShortName(medicine))+'">';
   return '<span class="medicine-photo-placeholder" aria-hidden="true">💊</span>';
 }
-function isMedicineArchived(medicine){return Boolean(medicine?.deletedAt)}
+function isMedicineArchived(medicine){return Boolean(medicine?.hiddenFromMedication)}
 function visibleMedicines(){return state.medicines.filter(m=>isConfirmedMedicine(m)&&!isMedicineArchived(m))}
 function activeMedicines(){const today=todayIso();return visibleMedicines().filter(m=>!m.endDate||m.endDate>=today)}
 function renderMedicines(){
@@ -712,7 +712,7 @@ async function deleteMedicine(id){
   if(!medicine)return;
   if(!window.confirm(`${t("Â¿Eliminar este medicamento?")}\n${medicine.name} ${medicine.dose||""}`))return;
   try{
-    const updates={deletedAt:new Date().toISOString(),endDate:todayIso()};
+    const updates={deletedAt:new Date().toISOString(),endDate:todayIso(),hiddenFromMedication:true};
     Object.assign(medicine,updates);
     if(fb&&state.user)await fb.updateDoc(fb.doc(fb.db,"users",state.user.uid,"medicines",id),updates);
     else localStorage.setItem("mm_medicines",JSON.stringify(state.medicines));
@@ -755,6 +755,19 @@ async function decideRequest(id,status){
 }
 async function loadMedicines(){
   if(demo||!state.user) return;
+  if(fb.functions){
+    try{
+      const result=await fb.httpsCallable(fb.functions,"getCurrentUserTreatmentData")({});
+      const data=result.data||{};
+      state.medicines=Array.isArray(data.medicines)?data.medicines.filter(medicine=>medicine.confirmed!==false):[];
+      state.intakes=data.intakes&&typeof data.intakes==="object"?data.intakes:state.intakes;
+      state.lastMedicineLoad={path:"function:getCurrentUserTreatmentData",count:state.medicines.length,email:state.user.email||""};
+      console.info("Tu Medicación: medicamentos cargados por función",state.lastMedicineLoad);
+      return;
+    }catch(error){
+      console.warn("Tu Medicación: no se pudo cargar por función, usando lectura directa",error);
+    }
+  }
   const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"medicines"));
   state.medicines=snap.docs.map(d=>({id:d.id,...d.data()})).filter(medicine=>medicine.confirmed!==false);
   if(!state.medicines.length&&fb.functions){
@@ -774,6 +787,7 @@ async function loadMedicines(){
 }
 async function loadIntakes(){
   if(demo||!state.user){state.intakes=JSON.parse(localStorage.getItem("mm_intakes")||"{}");return}
+  if(state.lastMedicineLoad?.path==="function:getCurrentUserTreatmentData")return;
   const snap=await fb.getDocs(fb.collection(fb.db,"users",state.user.uid,"intakes"));
   state.intakes={};
   snap.docs.forEach(d=>{state.intakes[d.id]={id:d.id,...d.data()}});
